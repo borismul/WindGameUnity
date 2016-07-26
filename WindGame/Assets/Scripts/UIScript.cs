@@ -8,6 +8,9 @@ public class UIScript : MonoBehaviour {
     GameObject worldObj;
 
     [SerializeField]
+    GameObject exitButton;
+
+    [SerializeField]
     GameObject menuButton;
 
     [SerializeField]
@@ -49,6 +52,7 @@ public class UIScript : MonoBehaviour {
         speedButton10x.GetComponent<Button>().onClick.AddListener(SetSpeed10x);
         menuButton.GetComponent<Button>().onClick.AddListener(Menu);
         closeMenuButton.GetComponent<Button>().onClick.AddListener(Menu);
+        exitButton.GetComponent<Button>().onClick.AddListener(Exit);
 
         menuScreen.SetActive(false);
     }
@@ -106,5 +110,10 @@ public class UIScript : MonoBehaviour {
             menuScreen.SetActive(true);
             world.gameSpeed = 0;
         }
+    }
+
+    void Exit()
+    {
+        Application.Quit();
     }
 }
