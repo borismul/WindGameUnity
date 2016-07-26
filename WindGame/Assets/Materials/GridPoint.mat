@@ -6,12 +6,13 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Material_001
+  m_Name: GridPoint
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
   m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -78,27 +79,6 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Detail
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _SpecGlossMap
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Cube
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -107,7 +87,7 @@ Material:
       data:
         first:
           name: _DstBlend
-        second: 0
+        second: 10
       data:
         first:
           name: _Cutoff
@@ -119,11 +99,11 @@ Material:
       data:
         first:
           name: _ZWrite
-        second: 1
+        second: 0
       data:
         first:
           name: _Glossiness
-        second: 0.23
+        second: 0.5
       data:
         first:
           name: _BumpScale
@@ -143,7 +123,7 @@ Material:
       data:
         first:
           name: _Mode
-        second: 0
+        second: 3
       data:
         first:
           name: _Metallic
@@ -156,12 +136,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.01676037, g: 0.45588237, b: 0.01676037, a: 1}
-      data:
-        first:
-          name: _SpecColor
-        second: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-      data:
-        first:
-          name: _ReflectColor
-        second: {r: 1, g: 1, b: 1, a: 0.5}
+        second: {r: 0, g: 0.37931037, b: 1, a: 0.5}
