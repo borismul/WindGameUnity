@@ -157,12 +157,17 @@ public class BuildMenuController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && plantGrid.canBuild && plantGrid.occupant == null)
         {
             Destroy(curInstantiated);
-            curInstantiated = (GameObject)Instantiate(curSelected, plantPos, Quaternion.identity);
-            Grid.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
+            BuildNow(plantGrid, plantPos);
             curInstantiated = null;
             Destroy(gameObject.transform.parent.gameObject);
             CancelInvoke("UpdateSelectedPosition");
         }
+    }
+
+    void BuildNow(GridTile plantGrid, Vector3 plantPos)
+    {
+        curInstantiated = (GameObject)Instantiate(curSelected, plantPos, Quaternion.identity);
+        Grid.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
     }
 
 
