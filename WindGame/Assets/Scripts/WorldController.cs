@@ -12,7 +12,7 @@ public class WorldController : MonoBehaviour
     public float publicAcceptance;
     public float operationalCosts;
     public float gameSpeed;
-    public System.Collections.Generic.List<GameObject> turbines;
+    public static System.Collections.Generic.List<GameObject> turbines;
 
     // Use this for initialization
     void Start()
