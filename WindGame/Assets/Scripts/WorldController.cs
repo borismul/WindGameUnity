@@ -12,7 +12,7 @@ public class WorldController : MonoBehaviour
     public float publicAcceptance;
     public float operationalCosts;
     public float gameSpeed;
-    public System.Collections.Generic.List<GameObject> turbines;
+    public static System.Collections.Generic.List<GameObject> turbines;
 
     // Use this for initialization
     void Start()
@@ -22,15 +22,21 @@ public class WorldController : MonoBehaviour
         {
             turbines.Add(turbineObj);
         }
+        date = new System.DateTime(800, 10, 10);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //If paused don't update
+        if (gameSpeed == 0)
+            return;
+
+        capital += gameSpeed;
         //Calculate gameDeltaTime in hours
         //gameDeltaTime is amount of hours
-        float gameDeltaTime = Time.deltaTime / (1/60) * gameSpeed;
-        date.AddHours(gameDeltaTime);
+        float gameDeltaTime = Time.deltaTime * gameSpeed;
+        date = date.AddHours(gameDeltaTime);
 
         GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
         foreach (GameObject turbineObj in turbines)
