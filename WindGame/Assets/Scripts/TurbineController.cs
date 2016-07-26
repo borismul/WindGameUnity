@@ -45,16 +45,12 @@ public class TurbineController : MonoBehaviour {
         // Give the gameobjects their right rotations
         blades.transform.rotation = Quaternion.Euler(new Vector3(bladesRotX, bladesRotY, bladesRotZ));
         nacelle.transform.rotation = Quaternion.Euler(nacelleRotX, nacelleRotY, nacelleRotZ);
-
-        //Calculate time that passed and call other update method
-        float deltaTime = 1;
-        Update(deltaTime);
     }
 
-    void Update(float deltaTime)
+    public void Update(float gameDeltaTime)
     {
         if (health - decay >= 0)
-            health -= decay * deltaTime;
+            health -= decay * gameDeltaTime;
     }
 
     // Method that determines the rotation speed, based on the Incomming flow speed (Uinfinity), the tip speed ration (TSR) and the Radius of the acuator disk (R)

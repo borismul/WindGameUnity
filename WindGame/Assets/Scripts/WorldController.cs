@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldController : MonoBehaviour {
+public class WorldController : MonoBehaviour
+{
     public string missionName;
     public System.DateTime date;
     public float capital;
@@ -10,24 +11,44 @@ public class WorldController : MonoBehaviour {
     public float interestRate;
     public float publicAcceptance;
     public float operationalCosts;
+    public float gameSpeed;
+    public System.Collections.Generic.List<GameObject> turbines;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-    void Update()
+    // Use this for initialization
+    void Start()
     {
-        //Calculate deltaTime and call Update(float deltaTime) here
+        GameObject[] turbinesObj = GameObject.FindGameObjectsWithTag("turbine");
+        foreach (GameObject turbineObj in turbinesObj)
+        {
+            turbines.Add(turbineObj);
+        }
     }
 
-	void Update (float deltaTime) {
+    // Update is called once per frame
+    void Update()
+    {
+        //Calculate gameDeltaTime in hours
+        //gameDeltaTime is amount of hours
+        float gameDeltaTime = Time.deltaTime / (1/60) * gameSpeed;
+        date.AddHours(gameDeltaTime);
+
+        GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
+        foreach (GameObject turbineObj in turbines)
+        {
+            TurbineController turbine = turbineObj.GetComponent<TurbineController>();
+            turbine.Update(gameDeltaTime);
+        }
+
+        this.Update(gameDeltaTime);
+    }
+
+    void Update(float gameDeltaTime)
+    {
         this.updatePower();
         this.updateOperationalCosts();
-        this.updateCapital(deltaTime);
+        this.updateCapital(gameDeltaTime);
         this.updatePublicAcceptance();
-	}
+    }
 
     void updatePower()
     {
@@ -67,7 +88,7 @@ public class WorldController : MonoBehaviour {
     {
         GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
         float negPublic = 0;
-        foreach (GameObject turbineObj in turbines) 
+        foreach (GameObject turbineObj in turbines)
         {
             negPublic += 0.5f;
         }
