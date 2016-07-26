@@ -6,10 +6,34 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cloud
+    100004: House
+    100006: Skyscraper
+    100008: Terrain
+    100010: Tree
     400000: //RootNode
+    400002: Cloud
+    400004: House
+    400006: Skyscraper
+    400008: Terrain
+    400010: Tree
     2300000: //RootNode
+    2300002: Cloud
+    2300004: House
+    2300006: Skyscraper
+    2300008: Terrain
+    2300010: Tree
     3300000: //RootNode
+    3300002: Cloud
+    3300004: House
+    3300006: Skyscraper
+    3300008: Terrain
+    3300010: Tree
     4300000: Terrain
+    4300002: Tree
+    4300004: Cloud
+    4300006: Skyscraper
+    4300008: House
     7400000: Default Take
     9500000: //RootNode
   materials:
