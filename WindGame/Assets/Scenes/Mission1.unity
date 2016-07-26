@@ -228,14 +228,14 @@ MonoBehaviour:
   maxZoomSpeed: 40
   translationFormulaPow: 0.8
   camLerpTrans: 10
-  camLerpScroll: 8
+  camLerpScroll: 3
   camLerpRot: 10
   maxHeight: 500
   minHeight: 10
   maxTilt: 70
   minTilt: 0
   maxTiltHeight: 200
-  tiltFormulaPow: 0.6
+  tiltFormulaPow: 0.5
 --- !u!81 &583164450
 AudioListener:
   m_ObjectHideFlags: 0
