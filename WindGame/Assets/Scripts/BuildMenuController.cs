@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class BuildMenuController : MonoBehaviour
 {
@@ -16,22 +17,29 @@ public class BuildMenuController : MonoBehaviour
     public GameObject instantHere;
     public Camera infoCamera;
     public Text nameText;
-
+    public Button loadTurbinesButton;
+    public Button loadOthersButton;
     public Text infoText;
+    public float cutOffRadius;
+    bool isTurbine;
 
+    List<Button> menuButtons = new List<Button>();
     GameObject curSelected;
 
     GameObject curInstantiated;
 
     bool canCancel;
 
-    public float cutOffRadius;
 
     void Start()
     {
+        if (RadialMenuController.radMenuInst != null)
+            Destroy(RadialMenuController.radMenuInst);
+
         cancelButton.onClick.AddListener(Cancel);
         buildButton.onClick.AddListener(BuildButton);
-        LoadTurbines();
+        loadTurbinesButton.onClick.AddListener(LoadTurbines);
+        loadOthersButton.onClick.AddListener(LoadOthers);
         canCancel = true;
     }
 
@@ -55,6 +63,7 @@ public class BuildMenuController : MonoBehaviour
 
     void LoadTurbines()
     {
+        DeleteMenuButtons();
         for (int i = 0; i < turbines.Length; i++)
         {
             int index = i;
@@ -63,38 +72,53 @@ public class BuildMenuController : MonoBehaviour
             turbBut.gameObject.GetComponentInChildren<Text>().text = turbines[i].name;
             turbBut.transform.localScale = Vector3.one;
             turbBut.onClick.AddListener(delegate { LoadTurbineButton(index); });
+            menuButtons.Add(turbBut);
         }
         
     }
 
     void LoadTurbineButton(int index)
     {
+        isTurbine = true;
         if (curInstantiated != null)
             Destroy(curInstantiated);
 
         nameText.text = turbines[index].name;
         infoText.text = turbineText[index].text;
         curSelected = turbines[index];
-        curInstantiated = (GameObject)Instantiate(curSelected, instantHere.transform.position, Quaternion.identity);
+        curInstantiated = (GameObject)Instantiate(curSelected);
+        curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
+
     }
 
     void LoadOthers()
     {
+        DeleteMenuButtons();
         for (int i = 0; i < others.Length; i++)
         {
             int index = i;
             Button turbBut = Instantiate(turbineButton);
             turbBut.transform.SetParent(overviewPanel.transform);
-            turbBut.gameObject.GetComponentInChildren<Text>().text = turbines[i].name;
+            turbBut.gameObject.GetComponentInChildren<Text>().text = others[i].name;
             turbBut.transform.localScale = Vector3.one;
-            print(i);
             turbBut.onClick.AddListener(delegate { LoadOthersButton(index); });
+            menuButtons.Add(turbBut);
         }
+    }
+
+    void DeleteMenuButtons()
+    {
+        foreach (Button menBut in menuButtons)
+        {
+            Destroy(menBut.gameObject);
+        }
+        menuButtons = new List<Button>();
     }
 
     void LoadOthersButton(int index)
     {
+        isTurbine = false;
         if (curInstantiated != null)
             Destroy(curInstantiated);
 
@@ -103,6 +127,8 @@ public class BuildMenuController : MonoBehaviour
         curSelected = others[index];
         curInstantiated = (GameObject)Instantiate(curSelected, instantHere.transform.position, Quaternion.identity);
         curInstantiated.transform.SetParent(instantHere.transform);
+        curInstantiated.transform.localScale = Vector3.one * 10;
+
     }
 
     void BuildButton()
@@ -131,7 +157,8 @@ public class BuildMenuController : MonoBehaviour
             plantPos = plantGrid.position;
             if (curInstantiated == null)
             {
-                curInstantiated = (GameObject)Instantiate(curSelected, plantPos, Quaternion.identity);
+                curInstantiated = (GameObject)Instantiate(curSelected);
+                curInstantiated.transform.position = plantPos;
 
             }
             else
@@ -166,8 +193,19 @@ public class BuildMenuController : MonoBehaviour
 
     void BuildNow(GridTile plantGrid, Vector3 plantPos)
     {
-        curInstantiated = (GameObject)Instantiate(curSelected, plantPos, Quaternion.identity);
-        Grid.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
+        curInstantiated = (GameObject)Instantiate(curSelected);
+        curInstantiated.transform.position = plantPos;
+
+        if (isTurbine)
+        {
+            Grid.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
+            WorldController.turbines.Add(curInstantiated);
+        }
+        else
+        {
+            Grid.SetOccupant(plantGrid, curInstantiated, 1);
+        }
+
     }
 
 

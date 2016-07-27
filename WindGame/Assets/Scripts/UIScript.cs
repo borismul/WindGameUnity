@@ -55,6 +55,8 @@ public class UIScript : MonoBehaviour {
         exitButton.GetComponent<Button>().onClick.AddListener(Exit);
 
         menuScreen.SetActive(false);
+
+        SetSpeed1x();
     }
 
     // Update is called once per frame

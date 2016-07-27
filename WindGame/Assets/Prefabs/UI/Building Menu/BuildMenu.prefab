@@ -1291,18 +1291,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turbines:
   - {fileID: 131986, guid: 53cbd128219819746b832dfbbd7e70b3, type: 2}
-  others: []
+  others:
+  - {fileID: 123102, guid: 77044fe5b3bed04459111b21274b3b34, type: 2}
+  - {fileID: 197470, guid: 71319ca727c70c14ea3ac4ea195bef82, type: 2}
+  - {fileID: 157890, guid: 357d325da3db4f845a13fdf45724e6a3, type: 2}
   turbineText:
   - {fileID: 11481988, guid: 2bb8030149222e54b9c78b5cea5fc04c, type: 2}
-  othersText: []
+  othersText:
+  - {fileID: 11481988, guid: 5f1ce0d351f51274a9e276c78ad68d5c, type: 2}
+  - {fileID: 11481988, guid: 89a34c76eb4593249a1f15e800b95702, type: 2}
+  - {fileID: 11481988, guid: 88e91450c4afd334aa3ec8e794a8497e, type: 2}
   turbineButton: {fileID: 11460628, guid: 15d856f3b00c63d4db57e4020d226238, type: 2}
   overviewPanel: {fileID: 118082}
   cancelButton: {fileID: 11400804}
   buildButton: {fileID: 11401156}
   instantHere: {fileID: 121666}
   infoCamera: {fileID: 2016804}
-  shader: {fileID: 0}
   nameText: {fileID: 11489288}
+  loadTurbinesButton: {fileID: 11490136}
+  loadOthersButton: {fileID: 11471422}
   infoText: {fileID: 11433976}
   cutOffRadius: 25
 --- !u!114 &11465376

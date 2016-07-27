@@ -6,7 +6,7 @@ public class RadialMenuController : MonoBehaviour {
     public GameObject radMenu;
     bool justOpened;
 
-    static GameObject radMenuInst;
+    public static GameObject radMenuInst;
 
     public static GameObject buildMenu;
 
@@ -34,7 +34,7 @@ public class RadialMenuController : MonoBehaviour {
 
         radMenuInst = (GameObject)Instantiate(radMenu, Vector3.zero, Quaternion.identity);
         radMenuInst.transform.GetChild(0).position = position;
-        radMenuInst.GetComponent<RectTransform>().localScale = Vector3.one;
+        radMenuInst.transform.GetChild(0).localScale = Vector3.one*0.65f;
         justOpened = true;
     }
 
