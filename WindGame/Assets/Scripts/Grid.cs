@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour {
 
-    public float centerX;
-    public float centerY;
-    public float centerZ;
+    float centerX;
+    float centerY;
+    float centerZ;
     public float length;
     public float width;
     public float height;
@@ -19,6 +19,9 @@ public class Grid : MonoBehaviour {
 
 	void Start ()
     {
+        centerX = TerrainController.statLength / 2;
+        centerZ = TerrainController.statLength / 2;
+
         GenGrid();
 	}
 

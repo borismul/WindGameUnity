@@ -9,6 +9,7 @@ public class Chunk : MonoBehaviour{
     float textureSize = 3;
 
     int cubeSize;
+    float cubeHeight;
 
     float stretch;
 
@@ -28,12 +29,13 @@ public class Chunk : MonoBehaviour{
     // Use this for initialization
     void Start ()
     {
-        chunkWidth = TerrainController.chunkSize;
-        chunkLength = TerrainController.chunkSize;
-        maxHeight = TerrainController.maxHeight;
-        cubeSize = TerrainController.cubeSize;
-        stretch = TerrainController.stretch;
-        seed = TerrainController.seed;
+        chunkWidth = TerrainController.statChunkSize;
+        chunkLength = TerrainController.statChunkSize;
+        maxHeight = TerrainController.statMaxHeight;
+        cubeSize = TerrainController.statCubeSize;
+        cubeHeight = TerrainController.statCubeHeight;
+        stretch = TerrainController.statStretch;
+        seed = TerrainController.statSeed;
         Random.seed = seed;
         offset1 = new Vector3(Random.value * 10000, Random.value * 10000, Random.value * 10000);
         offset2 = new Vector3(Random.value * 10000, Random.value * 10000, Random.value * 10000);
@@ -64,7 +66,7 @@ public class Chunk : MonoBehaviour{
                     {
                         if (isNull)
                         {
-                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos, zPos - transform.position.z);
+                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos * cubeHeight/cubeSize, zPos - transform.position.z);
                             map[i-1, j-1] = pos;
                         }   
 
@@ -74,7 +76,7 @@ public class Chunk : MonoBehaviour{
                     {
                         if (!isNull)
                         {
-                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos, zPos - transform.position.z);
+                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos * cubeHeight / cubeSize, zPos - transform.position.z);
                             map[i-1, j-1] = pos;
                         }
                         isNull = true;
@@ -90,7 +92,7 @@ public class Chunk : MonoBehaviour{
     {
         float heightSwing = maxHeight - baseHeight;
 
-        float noise = 1 + baseHeight + heightSwing * ((1 + Noise.Generate((x + offset.x) / stretch, (y + offset.y * 10000) / stretch, (z + offset.z * 10000) / stretch)) / 2);
+        float noise = 1 + baseHeight + heightSwing * ((1 + Noise.Generate((x + offset.x) / stretch, (y + offset.y * 10000)/stretch, (z + offset.z * 10000) / stretch)) / 2);
         return noise;
     }
 
@@ -111,31 +113,31 @@ public class Chunk : MonoBehaviour{
                 pos[3] = map[i + 1, j];
 
                 int type;
-                if (pos[0].y > maxHeight * 0.8f)
+                if (pos[0].y > maxHeight * cubeHeight/cubeSize * 0.8f)
                     type = 1;
-                else if (pos[0].y > maxHeight * 0.7f)
+                else if (pos[0].y > maxHeight * cubeHeight / cubeSize * 0.7f)
                     type = 7;
-                else if (pos[0].y > maxHeight * 0.3f)
+                else if (pos[0].y > maxHeight * cubeHeight / cubeSize * 0.3f)
                 {
                     int[] choices = new int[] { 0, 3, 6 };
-                    int choice = Random.Range(0, 3);
+                    int choice = Random.Range(0, 0);
                     type = choices[choice];
                 }
                 else
                 {
                     int[] choices = new int[] { 5, 8 };
-                    int choice = Random.Range(0, 2);
+                    int choice = Random.Range(1, 1);
                     type = choices[choice];
                 }
                 CreatePlane(pos, type);
-
-                mesh.vertices = vert.ToArray();
-                mesh.triangles = tri.ToArray();
-                mesh.uv = uv.ToArray();
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
             }
         }
+        mesh.vertices = vert.ToArray();
+        mesh.triangles = tri.ToArray();
+        mesh.uv = uv.ToArray();
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     void CreatePlane(Vector3[] pos, int type = 0)

@@ -45,12 +45,14 @@ public class CameraController : MonoBehaviour {
     float scrollInput;
     bool middleMouse;
     bool overRuleCam;
-
+    bool setStartPos;
+    bool haveControl;
+    
 
 	// Unity Methods //
 
     // Determine initial conditions
-    void Start()
+    void StartSelf()
     {
         targetPos = transform.position;
         previousPos = transform.position;
@@ -59,6 +61,37 @@ public class CameraController : MonoBehaviour {
     // Update inputs and process
     void Update ()
     {
+        if (!TerrainController.levelLoaded)
+        {
+            Camera.main.orthographic = true;
+            Camera.main.orthographicSize = TerrainController.statLength/2f;
+            targetRot = new Vector3(90, 0, 0);
+            transform.rotation = Quaternion.Euler(targetRot);
+            targetPos = new Vector3(TerrainController.statLength / 2f, 500, TerrainController.statwidth / 2f);
+            transform.position = targetPos;
+        }
+        else
+        {
+            if (!setStartPos)
+            {
+                targetPos = new Vector3(TerrainController.statLength / 2f, 500, TerrainController.statwidth / 2f - TerrainController.grid.width);
+                transform.position = targetPos;
+                UpdateCamHeight();
+                print(camHeight);
+                targetPos = new Vector3(TerrainController.statLength / 2f, 200 + transform.position.y - camHeight, TerrainController.statwidth / 2f - TerrainController.grid.width);
+                setStartPos = true;
+                Camera.main.orthographic = false;
+            }
+        }
+
+        if(setStartPos && !haveControl && Vector3.Distance(transform.position, targetPos) < 1)
+        {
+            haveControl = true;
+        }
+
+        if (!haveControl)
+            return;
+
         GetInput();
         ProcessInput();
     }
@@ -66,12 +99,18 @@ public class CameraController : MonoBehaviour {
     // Determine camera height wrt the ground
     void FixedUpdate()
     {
+        if (!TerrainController.levelLoaded)
+            return;
+
         UpdateCamHeight();
     }
 
     // Update camera position and rotation
     void LateUpdate()
     {
+        if (!TerrainController.levelLoaded)
+            return;
+
         transform.position = UpdatePosition();
         transform.rotation = UpdateRotation();
     }
