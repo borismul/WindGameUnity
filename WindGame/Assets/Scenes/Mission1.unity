@@ -508,15 +508,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
-  length: 5000
-  width: 5000
+  length: 1500
+  width: 1500
   seed: 0
   maxHeight: 500
   stretch: 200
-  chunkSize: 90
-  cubeSize: 14
-  cubeHeight: 7
+  chunkSize: 30
+  cubeSize: 10
+  cubeHeight: 5
   gridPrefab: {fileID: 180262, guid: 638c0043389e934498a0378fffd68ad6, type: 2}
+  tree: {fileID: 4300002, guid: 3f5317706d9fbee41acc907bfcf43d31, type: 3}
+  treeTop: {fileID: 4300004, guid: 3f5317706d9fbee41acc907bfcf43d31, type: 3}
 --- !u!4 &1497063422
 Transform:
   m_ObjectHideFlags: 0

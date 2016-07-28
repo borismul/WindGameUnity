@@ -74,10 +74,12 @@ public class CameraController : MonoBehaviour {
         {
             if (!setStartPos)
             {
+                if (TerrainController.grid == null)
+                    return;
+
                 targetPos = new Vector3(TerrainController.statLength / 2f, 500, TerrainController.statwidth / 2f - TerrainController.grid.width);
                 transform.position = targetPos;
                 UpdateCamHeight();
-                print(camHeight);
                 targetPos = new Vector3(TerrainController.statLength / 2f, 200 + transform.position.y - camHeight, TerrainController.statwidth / 2f - TerrainController.grid.width);
                 setStartPos = true;
                 Camera.main.orthographic = false;

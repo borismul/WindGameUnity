@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TerrainController : MonoBehaviour {
 
@@ -20,6 +21,10 @@ public class TerrainController : MonoBehaviour {
     [Header("Grid Details")]
     public GameObject gridPrefab;
 
+    [Header("Terrain Extra's")]
+    public Mesh tree;
+    public Mesh treeTop;
+
     public static int statChunkSize;
     public static int statMaxHeight;
     public static int statCubeSize;
@@ -28,16 +33,22 @@ public class TerrainController : MonoBehaviour {
     public static int statwidth;
     public static int statLength;
     public static float statCubeHeight;
+    public static Mesh statTreeMesh;
+    public static Mesh statTreeTopMesh;
+
 
     public static bool levelLoaded;
     bool instGrid;
 
     public static Grid grid;
 
+    public static List<GridTile> world;
 
 	// Use this for initialization
 	void Start ()
     {
+        world = new List<GridTile>();
+
         if (seed == 0)
             statSeed = Random.Range(0, int.MaxValue);
         else
@@ -48,8 +59,9 @@ public class TerrainController : MonoBehaviour {
         statStretch = stretch;
         statwidth = width;
         statLength = length;
-        print(cubeHeight);
         statMaxHeight = maxHeight * (cubeSize / cubeHeight);
+        statTreeMesh = tree;
+        statTreeTopMesh = treeTop;
 
 
         StartCoroutine(BuildTerrain());

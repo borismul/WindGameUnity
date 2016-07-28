@@ -43,9 +43,9 @@ MonoBehaviour:
   length: 500
   width: 500
   height: 2000
-  gridResolution: 15
+  gridResolution: 10
   drawAnalyseZone: 0
-  debugGrid: 1
+  debugGrid: 0
   gridPoint: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
 --- !u!1001 &100100000
 Prefab:

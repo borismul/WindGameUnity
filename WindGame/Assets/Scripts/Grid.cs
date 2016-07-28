@@ -15,15 +15,18 @@ public class Grid : MonoBehaviour {
     public bool debugGrid;
     public GameObject gridPoint;
 
-    static List<GridTile> grid = new List<GridTile>();
+    public static List<GridTile> grid;
 
 	void Start ()
     {
+        grid = TerrainController.world;
         centerX = TerrainController.statLength / 2;
         centerZ = TerrainController.statLength / 2;
 
-        GenGrid();
-	}
+        //GenGrid();
+        if (debugGrid) 
+            ShowGrid();
+    }
 
     void OnDrawGizmos()
     {
