@@ -8,13 +8,22 @@ public class UIScript : MonoBehaviour {
     GameObject worldObj;
 
     [SerializeField]
+    GameObject missionControllerObj;
+
+    [SerializeField]
     GameObject exitButton;
 
     [SerializeField]
     GameObject menuButton;
 
     [SerializeField]
+    GameObject menuText;
+
+    [SerializeField]
     GameObject closeMenuButton;
+
+    [SerializeField]
+    GameObject objectivesValue;
 
     [SerializeField]
     GameObject menuScreen;
@@ -41,12 +50,14 @@ public class UIScript : MonoBehaviour {
     GameObject speedButton10x;
 
     WorldController world;
+    Mission1Controller missionController;
 
     float oldspeed;
 
     // Use this for initialization
     void Start () {
         world = worldObj.GetComponent<WorldController>();
+        missionController = missionControllerObj.GetComponent<Mission1Controller>();
         pauseButton.GetComponent<Button>().onClick.AddListener(Pause);
         speedButton1x.GetComponent<Button>().onClick.AddListener(SetSpeed1x);
         speedButton10x.GetComponent<Button>().onClick.AddListener(SetSpeed10x);
@@ -73,6 +84,23 @@ public class UIScript : MonoBehaviour {
 
         currtext = dateText.GetComponent<Text>();
         currtext.text = world.date.Date.ToString();
+
+        if (menuScreen.activeSelf)
+        {
+            Text txt = objectivesValue.GetComponent<Text>();
+            string result = "";
+            for (int i = 0; i < missionController.objectives.Length; i++){
+                if (missionController.objectivesCompleted[i])
+                {
+                    result += "<color=green> ";
+                } else
+                {
+                    result += "<color=red> ";
+                }
+                result += missionController.objectives[i] + "</color> \n";
+            }
+            txt.text = result;
+        }
     }
 
     void Pause()
@@ -112,6 +140,30 @@ public class UIScript : MonoBehaviour {
             menuScreen.SetActive(true);
             world.gameSpeed = 0;
         }
+    }
+
+    public void GameOver()
+    {
+        menuText.GetComponent<Text>().text = "Mission Failed";
+        world.gameSpeed = 0;
+        menuScreen.SetActive(true);
+        menuButton.SetActive(false);
+        closeMenuButton.SetActive(false);
+        pauseButton.SetActive(false);
+        speedButton10x.SetActive(false);
+        speedButton1x.SetActive(false);
+    }
+
+    public void GameWon()
+    {
+        menuText.GetComponent<Text>().text = "Mission Finished";
+        world.gameSpeed = 0;
+        menuScreen.SetActive(true);
+        menuButton.SetActive(false);
+        closeMenuButton.SetActive(false);
+        pauseButton.SetActive(false);
+        speedButton10x.SetActive(false);
+        speedButton1x.SetActive(false);
     }
 
     void Exit()
