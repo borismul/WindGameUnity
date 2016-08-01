@@ -1294,7 +1294,7 @@ MonoBehaviour:
   others:
   - {fileID: 123102, guid: 77044fe5b3bed04459111b21274b3b34, type: 2}
   - {fileID: 197470, guid: 71319ca727c70c14ea3ac4ea195bef82, type: 2}
-  - {fileID: 157890, guid: 357d325da3db4f845a13fdf45724e6a3, type: 2}
+  - {fileID: 140344, guid: 357d325da3db4f845a13fdf45724e6a3, type: 2}
   turbineText:
   - {fileID: 11481988, guid: 2bb8030149222e54b9c78b5cea5fc04c, type: 2}
   othersText:
@@ -1311,7 +1311,7 @@ MonoBehaviour:
   loadTurbinesButton: {fileID: 11490136}
   loadOthersButton: {fileID: 11471422}
   infoText: {fileID: 11433976}
-  cutOffRadius: 25
+  cutOffRadius: 50
 --- !u!114 &11465376
 MonoBehaviour:
   m_ObjectHideFlags: 1

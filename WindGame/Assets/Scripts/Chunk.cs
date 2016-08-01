@@ -1,311 +1,221 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Chunk : MonoBehaviour{
 
-    int chunkWidth;
-    int chunkLength;
+public class Chunk : MonoBehaviour {
+
+    // The TerrainController that created this chunk
+    TerrainController terrain;
+
+    // Level details
     int maxHeight;
-    float textureSize = 3;
-
-    int cubeSize;
-    float cubeHeight;
-
-    float stretch;
-
     int seed;
 
+    // Noise details
+    int terOctaves;
+    float terFrequency;
+    float terPersistance;
+    int bioOctaves;
+    float bioFrequency;
+    float bioPersistance;
+    List<BiomeMesh> biomeMeshes;
+
+    // Chunk Details
+    GameObject chunkPrefab;
+    int chunkSize;
+    int tileSize;
+    int tileSlope;
+
+    // List of 3D, 2D offsets that is used to calculate noise at different x,y,z and x,y
+    List<Vector3> offset3D = new List<Vector3>();
+    List<Vector2> offset2D = new List<Vector2>();
+    // Number of offsets to create
+    int nOffset = 20;
+
+    // Lists of vertices, triangles and uvs for the mesh of the chunk
     List<Vector3> vert = new List<Vector3>();
     List<int> tri = new List<int>();
     List<Vector2> uv = new List<Vector2>();
-    List<Vector3> norm = new List<Vector3>();
 
+    // Ammount of textures in a line on the chunk texture
+    int texturesPerLine = 4;
+
+    // Map terrain and biome of this chunk
     Vector3[,] map;
-    int[,] biome;
+    int[,] biomeMap;
 
-    Vector3 offset1;
-    Vector3 offset2;
-    Vector2 offset3;
-
-    Mesh treeMesh;
-    Mesh treeTop;
-
-    Mesh finalTree = new Mesh();
-
-    List<CombineInstance> meshes = new List<CombineInstance>();
-
+    // Maximum number of vertices in one mesh
+    int maxVert = 30000;
 
     // Use this for initialization
     void Start ()
     {
-        chunkWidth = TerrainController.statChunkSize;
-        chunkLength = TerrainController.statChunkSize;
-        maxHeight = TerrainController.statMaxHeight;
-        cubeSize = TerrainController.statCubeSize;
-        cubeHeight = TerrainController.statCubeHeight;
-        stretch = TerrainController.statStretch;
-        seed = TerrainController.statSeed;
+        Initialize();
+        GenerateTerrain();
+        GenerateGridTiles();
+        GenerateTerrainMesh();
+        SetMesh();
+    }
+
+    void Initialize()
+    {
+        // get the terrainController
+        terrain = TerrainController.thisTerrainController;
+
+        // Obtain level details
+        maxHeight = terrain.maxHeight;
+        seed = terrain.seed;
+
+        // Obtain noise details
+        terOctaves = terrain.terrainOctaves;
+        terFrequency = terrain.terrainFrequency;
+        terPersistance = terrain.terrainPersistance;
+
+        bioOctaves = terrain.biomeOctaves;
+        bioFrequency = terrain.biomeFrequency;
+        bioPersistance = terrain.biomePersistance;
+
+        biomeMeshes = terrain.biomeMeshes;
+
+        // Obtain chunk Details
+        GameObject chunkPrefab = terrain.chunkPrefab;
+        chunkSize = terrain.chunkSize;
+        tileSize = terrain.tileSize;
+        tileSlope = terrain.tileSlope;
+
+        // set seed
         Random.seed = seed;
-        treeMesh = TerrainController.statTreeMesh;
-        treeTop = TerrainController.statTreeTopMesh;
-        offset1 = new Vector3(Random.value * 10000, Random.value * 10000, Random.value * 10000);
-        offset2 = new Vector3(Random.value * 10000, Random.value * 10000, Random.value * 10000);
-        offset3 = new Vector2(Random.value * 10000, Random.value * 10000);
 
-        FinalTree();
+        // Initialize the terrain map of this chunk
+        map = new Vector3[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
+        biomeMap = new int[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
 
-        createMesh();
+        // Generate the noise offsets
+        GenerateNoiseOffsets(nOffset);
     }
 
-    void FinalTree()
+    void GenerateTerrain()
     {
-        CombineInstance[] treeParts = new CombineInstance[2];
-        CombineInstance treePart1 = new CombineInstance();
-        CombineInstance treePart2 = new CombineInstance();
-        List<Vector2> uvs = new List<Vector2>();
-        for (int i = 0; i < treeMesh.vertexCount; i++)
+        int numTiles = chunkSize / tileSize;
+        int numJ = maxHeight / tileSlope;
+
+        for (int i = 0; i < numTiles + 1; i++)
         {
-            uvs.Add(new Vector2(3f/4f, 3f / 4f));
-        }
-
-
-        treePart1.mesh = treeMesh;
-        treeMesh.uv = uvs.ToArray();
-        treePart1.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 0, 0), Vector3.one);
-        treeParts[0] = treePart1;
-        treePart2.mesh = treeTop;
-        treePart2.transform = Matrix4x4.TRS(Vector3.zero + new Vector3(0, 8, 0), Quaternion.Euler(-90,0,0), new Vector3(2,2,2f));
-        treeParts[1] = treePart2;
-        finalTree.CombineMeshes(treeParts, true, true);
-
-    }
-    void createMesh()
-    {
-        map = new Vector3[chunkLength / cubeSize + 1, chunkWidth / cubeSize + 1];
-        biome = new int[chunkLength / cubeSize + 1, chunkWidth / cubeSize + 1];
-
-        for (int i = 1; i < chunkLength / cubeSize + 2; i++)
-        {
-            for (int j = 1; j < chunkWidth / cubeSize + 2; j++)
+            for (int k = 0; k < numTiles + 1; k++)
             {
-                bool isNull = false;
-                float xPos = i * cubeSize - 0.5f * cubeSize + transform.position.x;
-                float zPos = j * cubeSize - 0.5f * cubeSize + transform.position.z;
-                float biomeNoise = GenerateNoise(xPos, zPos, stretch, 0, 3, offset3);
+                Vector3 pos = new Vector3(i * tileSize, 0, k * tileSize);
 
-                if (biomeNoise > 3)
-                {
-                    biome[i - 1, j - 1] = 1;
-                }
-                else
-                {
-                    biome[i - 1, j - 1] = 0;
-                }
-
-
-                for (int k = 1; k < (maxHeight + 3) / cubeSize + 1; k++)
-                {
-                    float yPos = k * cubeSize - 0.5f * cubeSize + transform.position.y;
-
-
-                    float noise = GenerateNoise(xPos, yPos, zPos, stretch, 0, 2, offset1);
-                    noise += GenerateNoise(xPos, yPos, zPos, stretch * 10, 0, maxHeight - 2, offset2);
-
-
-                    if (noise > k* cubeSize)
-                    {
-                        if (isNull)
-                        {
-                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos * cubeHeight/cubeSize, zPos - transform.position.z);
-                            map[i-1, j-1] = pos;
-                        }   
-
-                        isNull = false;
-                    }
-                    else
-                    {
-                        if (!isNull)
-                        {
-                            Vector3 pos = new Vector3(xPos - transform.position.x, yPos * cubeHeight / cubeSize, zPos - transform.position.z);
-                            map[i-1, j-1] = pos;
-                        }
-                        isNull = true;
-                    }
-                }
+                GenerateTerrainMap(i, k, pos);
+                GenerateBiomes(i, k, pos);
             }
         }
-
-        BuildChunk();
     }
 
-    float GenerateNoise(float x, float y, float z, float stretch, float baseHeight, float maxHeight, Vector3 offset)
+    void GenerateTerrainMap(int i, int k, Vector3 pos)
     {
-        float heightSwing = maxHeight - baseHeight;
-
-        float noise = 1 + baseHeight + heightSwing * ((1 + Noise.Generate((x + offset.x) / stretch, (y + offset.y * 10000)/stretch, (z + offset.z * 10000) / stretch)) / 2);
-        return noise;
+        Vector2 pos2D = new Vector2(pos.x + transform.position.x, pos.z + transform.position.z);
+        pos.y = maxHeight * (Noise.PerlinNoise(pos2D, offset2D[0], terOctaves, terPersistance, terFrequency, 0, 1)) + 1;
+        map[i, k] = pos;
     }
-    float GenerateNoise(float x, float z, float stretch, float baseHeight, float maxHeight, Vector2 offset)
+
+    void GenerateBiomes(int i, int k, Vector3 pos)
     {
-        float heightSwing = maxHeight - baseHeight;
-
-        float noise = 1 + baseHeight + heightSwing * ((1 + Noise.Generate((x + offset.x) / stretch, (z + offset.y * 10000) / stretch)) / 2);
-        return noise;
+        float noise = (terrain.biomes.Length) * (Noise.PerlinNoise(new Vector2(pos.x, pos.z) + new Vector2(transform.position.x, transform.position.z), offset2D[1], bioOctaves, bioPersistance, bioFrequency, 0, 1));
+        biomeMap[i, k] = Mathf.Clamp(Mathf.FloorToInt(noise), 0, terrain.biomes.Length - 1);
     }
 
-    void BuildChunk()
+    void GenerateGridTiles()
+    {
+        int startI = Mathf.RoundToInt(transform.position.x / tileSize);
+        int startK = Mathf.RoundToInt(transform.position.z / tileSize);
+
+        for (int i = 0; i < chunkSize / tileSize; i++)
+        {
+            List<GridTile> gridTiles = new List<GridTile>();
+            for (int k = 0; k < chunkSize / tileSize; k++)
+            {
+                terrain.world[startI + i,startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], true, null));
+            }
+        }
+    }
+
+    void GenerateTerrainMesh()
+    {
+        for (int i = 0; i < chunkSize / tileSize; i++)
+        {
+            for (int k = 0; k < chunkSize / tileSize; k++)
+            {
+                Vector3 LB = map[i, k];
+
+                List<Vector3> pos = new List<Vector3>();
+
+                Vector3 LT = map[i, k + 1];
+                Vector3 RT = map[i + 1, k + 1];
+                Vector3 RB = map[i + 1, k];
+
+                pos.Add(LB);
+                pos.Add(LT);
+                pos.Add(RT);
+                pos.Add(RB);
+
+                CreatePlane(pos, biomeMap[i,k]);
+            }
+        }
+    }
+
+    void GenerateNoiseOffsets(int nOffset)
+    {
+        for (int i = 0; i < nOffset; i++)
+        {
+            Vector2 D2 = new Vector2(Random.value * 10000, Random.value * 10000);
+            Vector3 D3 = new Vector3(Random.value * 10000, Random.value * 10000, Random.value * 10000);
+
+            offset2D.Add(D2);
+            offset3D.Add(D3);
+        }
+    }
+
+    void SetMesh()
     {
         Mesh mesh = new Mesh();
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        meshFilter.mesh = mesh;
-
-        for (int i = 0; i < chunkLength / cubeSize; i++)
-        {
-            for (int j = 0; j < chunkWidth / cubeSize; j++)
-            {
-                Vector3[] pos = new Vector3[4];
-                pos[0] = map[i, j];
-                pos[1] = map[i, j + 1];
-                pos[2] = map[i + 1, j + 1];
-                pos[3] = map[i + 1, j];
-
-                int type;
-                if (pos[0].y > maxHeight * cubeHeight/cubeSize * 0.8f)
-                    type = 1;
-                else if (pos[0].y > maxHeight * cubeHeight / cubeSize * 0.7f)
-                    type = 7;
-                else if (pos[0].y > maxHeight * cubeHeight / cubeSize * 0.3f)
-                {
-                    int[] choices = new int[] { 0, 3, 6 };
-                    int choice = Random.Range(0, 0);
-                    type = choices[choice];
-                }
-                else
-                {
-                    int[] choices = new int[] { 5, 8 };
-                    int choice = Random.Range(1, 1);
-                    type = choices[choice];
-                }
-                CreatePlane(pos, type, biome[i,j], Mathf.Abs(Interpolate(pos[0].x, pos[1].x, pos[2].x, pos[3].x))/cubeHeight - pos[0].y);
-            }
-        }
-        Mesh terrainMesh = new Mesh();
-        terrainMesh.vertices = vert.ToArray();
-        terrainMesh.triangles = tri.ToArray();
-        terrainMesh.uv = uv.ToArray();
-        CombineInstance terrainMeshInt = new CombineInstance();
-        terrainMeshInt.mesh = terrainMesh;
-        terrainMeshInt.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
-        meshes.Add(terrainMeshInt);
-        mesh.CombineMeshes(meshes.ToArray(), true, true);
+        mesh.vertices = vert.ToArray();
+        mesh.triangles = tri.ToArray();
+        mesh.uv = uv.ToArray();
         mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-
-        GetComponent<MeshCollider>().sharedMesh = terrainMesh;
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
-    void CreatePlane(Vector3[] pos, int type, int biome, float steepness)
+    void CreatePlane(List<Vector3> vertices, int biome)
     {
         int index = vert.Count;
-
-        vert.Add(pos[0]);
-        vert.Add(pos[1]);
-        vert.Add(pos[2]);
-        vert.Add(pos[3]);
+        vert.AddRange(vertices);
 
         tri.Add(index);
         tri.Add(index + 1);
-        tri.Add(index + 3);
-        tri.Add(index + 1);
+        tri.Add(index + 2);
+        tri.Add(index);
         tri.Add(index + 2);
         tri.Add(index + 3);
 
-        float uvCornerX = 0;
-        float uvCornerY = 0;
-
-        switch (type)
-        {
-            case 0:
-                uvCornerX = 0;
-                uvCornerY = 0;
-                break;
-            case 1:
-                uvCornerX = 1;
-                uvCornerY = 0;
-                break;
-
-            case 2:
-                uvCornerX = 2;
-                uvCornerY = 0;
-                break;
-
-            case 3:
-                uvCornerX = 0;
-                uvCornerY = 1;
-                break;
-
-            case 4:
-                uvCornerX = 1;
-                uvCornerY = 1;
-                break;
-
-            case 5:
-                uvCornerX = 2;
-                uvCornerY = 1;
-                break;
-
-            case 6:
-                uvCornerX = 0;
-                uvCornerY = 2;
-                break;
-
-            case 7:
-                uvCornerX = 1;
-                uvCornerY = 2;
-                break;
-
-            case 8:
-                uvCornerX = 2;
-                uvCornerY = 2;
-                break;
-
-        }
-        uv.Add(new Vector2(uvCornerX / textureSize, uvCornerY / textureSize));
-        uv.Add(new Vector2(uvCornerX / textureSize, uvCornerY / textureSize + 1/textureSize));
-        uv.Add(new Vector2(uvCornerX / textureSize + 1/textureSize, uvCornerY / textureSize + 1/textureSize));
-        uv.Add(new Vector2(uvCornerX / textureSize + 1/textureSize, uvCornerY / textureSize));
-        float yPos = Interpolate(pos[0].y, pos[1].y, pos[2].y, pos[3].y);
-
-        if (biome == 1 && steepness < 1)
-        {
-            float scaleXZ = Random.Range(0.9f, 1.5f);
-            float scaleY = scaleXZ * Random.Range(0.8f, 2);
-            meshes.Add(BuildTree(pos[0], yPos, new Vector3(scaleXZ, scaleY, scaleXZ), Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0))));
-        }
-
-        TerrainController.world.Add(new GridTile(new Vector3(pos[0].x + cubeSize * 0.5f + transform.position.x, yPos, pos[0].z + cubeSize * 0.5f + transform.position.z), biome, true, null));
+        uv.AddRange(DetermineUV(biome));
     }
 
-    float Interpolate(float corner0, float corner1, float corner2, float corner3)
+    List<Vector2> DetermineUV(int biome)
     {
-        float value;
-        float value2;
-        value = corner0 + (corner2 - corner0) / 3 * (cubeHeight / cubeSize);
-        value2 = corner1 + (corner3 - corner1) / 3 * (cubeHeight / cubeSize);
+        List<Vector2> uv = new List<Vector2>();
+        int row = (biome / texturesPerLine);
+        int col = biome - row * texturesPerLine;
+        float offset = 0.05f / texturesPerLine;
+        float textureSize = 1f / texturesPerLine;
+        Vector2 corner = new Vector2((float)col / texturesPerLine, (float)row / texturesPerLine);
 
-        value = Mathf.Min(new float[] { value, value2 });
+        uv.Add(new Vector2(corner.x + offset, corner.y + offset));
+        uv.Add(new Vector2(corner.x + offset, corner.y + textureSize - offset));
+        uv.Add(new Vector2(corner.x + textureSize - offset, corner.y + textureSize - offset));
+        uv.Add(new Vector2(corner.x + textureSize - offset, corner.y + offset));
 
-        return value;
+        return uv;
     }
 
-    CombineInstance BuildTree(Vector3 corner0, float yPos, Vector3 scale, Quaternion rotation)
-    {
-        Vector3 position = new Vector3(corner0.x + cubeSize * 0.5f, yPos, corner0.z + cubeSize * 0.5f);
-        CombineInstance tree = new CombineInstance();
-
-        Matrix4x4 mat = Matrix4x4.TRS(position, rotation, scale);
-        tree.mesh = finalTree;
-        tree.transform = mat;
-        return tree;
-    }
 }

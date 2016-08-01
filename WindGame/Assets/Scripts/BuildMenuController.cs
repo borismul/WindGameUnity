@@ -74,7 +74,7 @@ public class BuildMenuController : MonoBehaviour
             turbBut.onClick.AddListener(delegate { LoadTurbineButton(index); });
             menuButtons.Add(turbBut);
         }
-        
+
     }
 
     void LoadTurbineButton(int index)
@@ -142,7 +142,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
-        InvokeRepeating("UpdateSelectedPosition", 0, 1/60f);
+        InvokeRepeating("UpdateSelectedPosition", 0, 1 / 60f);
     }
 
     void UpdateSelectedPosition()
@@ -153,7 +153,7 @@ public class BuildMenuController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            plantGrid = Grid.FindClosestGridTile(hit.point);
+            plantGrid = GridTile.FindClosestGridTile(hit.point);
             plantPos = plantGrid.position;
             if (curInstantiated == null)
             {
@@ -198,17 +198,17 @@ public class BuildMenuController : MonoBehaviour
 
         if (isTurbine)
         {
-            Grid.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
+            GridTile.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
             WorldController.turbines.Add(curInstantiated);
         }
         else
         {
-            Grid.SetOccupant(plantGrid, curInstantiated, 1);
+            GridTile.SetOccupant(plantGrid, curInstantiated, 1);
         }
 
     }
 
 
 
-    
+
 }

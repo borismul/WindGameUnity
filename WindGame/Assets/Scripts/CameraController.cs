@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour
+{
 
     [Header("Camera Speeds")]
     public float maxTranslationSpeed = 50;
@@ -47,9 +48,9 @@ public class CameraController : MonoBehaviour {
     bool overRuleCam;
     bool setStartPos;
     bool haveControl;
-    
 
-	// Unity Methods //
+
+    // Unity Methods //
 
     // Determine initial conditions
     void StartSelf()
@@ -59,40 +60,8 @@ public class CameraController : MonoBehaviour {
     }
 
     // Update inputs and process
-    void Update ()
+    void Update()
     {
-        if (!TerrainController.levelLoaded)
-        {
-            Camera.main.orthographic = true;
-            Camera.main.orthographicSize = TerrainController.statLength/2f;
-            targetRot = new Vector3(90, 0, 0);
-            transform.rotation = Quaternion.Euler(targetRot);
-            targetPos = new Vector3(TerrainController.statLength / 2f, 500, TerrainController.statwidth / 2f);
-            transform.position = targetPos;
-        }
-        else
-        {
-            if (!setStartPos)
-            {
-                if (TerrainController.grid == null)
-                    return;
-
-                targetPos = new Vector3(TerrainController.statLength / 2f, 500, TerrainController.statwidth / 2f - TerrainController.grid.width);
-                transform.position = targetPos;
-                UpdateCamHeight();
-                targetPos = new Vector3(TerrainController.statLength / 2f, 200 + transform.position.y - camHeight, TerrainController.statwidth / 2f - TerrainController.grid.width);
-                setStartPos = true;
-                Camera.main.orthographic = false;
-            }
-        }
-
-        if(setStartPos && !haveControl && Vector3.Distance(transform.position, targetPos) < 1)
-        {
-            haveControl = true;
-        }
-
-        if (!haveControl)
-            return;
 
         GetInput();
         ProcessInput();
@@ -101,7 +70,7 @@ public class CameraController : MonoBehaviour {
     // Determine camera height wrt the ground
     void FixedUpdate()
     {
-        if (!TerrainController.levelLoaded)
+        if (!TerrainController.thisTerrainController.levelLoaded)
             return;
 
         UpdateCamHeight();
@@ -110,7 +79,7 @@ public class CameraController : MonoBehaviour {
     // Update camera position and rotation
     void LateUpdate()
     {
-        if (!TerrainController.levelLoaded)
+        if (!TerrainController.thisTerrainController.levelLoaded)
             return;
 
         transform.position = UpdatePosition();
@@ -142,7 +111,7 @@ public class CameraController : MonoBehaviour {
             xMouse = 0;
             yMouse = 0;
         }
-        
+
         // If the mousewheel is scrolled set overrule back to false, so automatic tilt will take over again
         if (scrollInput != 0)
             overRuleCam = false;
@@ -202,7 +171,7 @@ public class CameraController : MonoBehaviour {
     {
         // initialize the camera height to 0
         float targetY = 0;
-        
+
         // Determine a factor that makes the camera go slower per scroll step, if the camera is lower to the ground
         float zoomHeightFactor = (((camHeight - minHeight) / maxHeight - minHeight));
 
@@ -284,7 +253,7 @@ public class CameraController : MonoBehaviour {
     {
         // Determine the tilt angle of the camera
         float tiltDeg = Tilt();
-        
+
         // set it as the x euler angle (pitch) and keep the y eulerangle the same (yaw), while keeping the z eulerangle (roll) always 0
         Vector3 targetRot = new Vector3(tiltDeg, transform.rotation.eulerAngles.y, 0f);
         return targetRot;
@@ -293,7 +262,7 @@ public class CameraController : MonoBehaviour {
     // Method determine the tilt angle based on the camera height
     float Tilt()
     {
-        
+
         // Calculate a percentage of how high the camera is in the variable tilt range
         float heightPercentage = 0;
         if (camHeight < maxTiltHeight)
@@ -320,10 +289,10 @@ public class CameraController : MonoBehaviour {
         float eulY = xMouse * camSpeedRot * Time.deltaTime;
 
         // Add the angles to the previous rotation, and obtain the target
-        Vector3 tempRot = currentRot + new Vector3(eulX, eulY, 0);
+        Vector3 tempRot = currentRot + new Vector3(0, eulY, 0);
 
         // Clamp the x eulerangle rotation (pitch) to [-90, 90] so the camera can't get opside down
-        Vector3 targetRot =new Vector3(Mathf.Clamp(tempRot.x, -90, 90), tempRot.y, 0);
+        Vector3 targetRot = new Vector3(Mathf.Clamp(tempRot.x, -90, 90), tempRot.y, 0);
 
         return targetRot;
     }
@@ -333,7 +302,7 @@ public class CameraController : MonoBehaviour {
     {
         // Hit a raycast down on the ground
         RaycastHit hit;
-        
+
         // TEMPORARY if the ground can't be hit set the camera back to the previous location (camera went of terrain) TEMPORARY //
         if (!Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
             targetPos = previousPos;

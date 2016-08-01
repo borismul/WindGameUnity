@@ -37,13 +37,63 @@ using UnityEngine;
 using System.Collections;
 
 
-public class Noise :MonoBehaviour
+public class Noise : MonoBehaviour
 {
     /// <summary>
     /// 1D simplex noise
     /// </summary>
     /// <param name="x"></param>
     /// <returns></returns>
+    /// 
+
+
+    public static float PerlinNoise(Vector3 position, Vector3 offset, int octaves, float persistance, float frequency, float min, float max)
+    {
+        float noise = 0;
+        float amplitude = 1;
+        float maxValue = 1;
+        for (int i = 1; i < octaves+1; i++)
+        {
+            Vector3 finPos = Mathf.Pow(frequency, i)/ 500 * (position + offset);
+
+            float curNoise = Noise.Generate(finPos.x, finPos.y, finPos.z);
+            curNoise += 1;
+            curNoise /= 2;
+            noise += curNoise;
+
+            maxValue += amplitude;
+            frequency *= 2;
+            amplitude *= persistance;
+        }
+
+        noise = min + (max - min) * (noise / maxValue);
+        return noise;
+    }
+
+    public static float PerlinNoise(Vector2 position, Vector2 offset, int octaves, float persistance, float frequency, float min, float max)
+    {
+        float noise = 0;
+        float amplitude = 1;
+        float maxValue = 1;
+        for (int i = 0; i < octaves; i++)
+        { 
+            Vector3 finPos = frequency * (position + offset);
+
+            noise += Noise.Generate(finPos.x, finPos.y) * amplitude;
+
+            maxValue += amplitude;
+            frequency *= 2;
+            amplitude *= persistance;
+        }
+
+        noise += 1;
+        noise /= 2;
+
+        noise = (max - min) * noise + min;
+
+        return noise;
+    }
+
     public static float Generate(float x)
     {
         int i0 = FastFloor(x);

@@ -10,8 +10,8 @@ GameObject:
   - 4: {fileID: 401822}
   - 33: {fileID: 3385986}
   - 23: {fileID: 2304484}
-  - 114: {fileID: 11486344}
   - 64: {fileID: 6421576}
+  - 114: {fileID: 11471534}
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged
@@ -77,7 +77,7 @@ MeshCollider:
   serializedVersion: 2
   m_Convex: 0
   m_Mesh: {fileID: 0}
---- !u!114 &11486344
+--- !u!114 &11471534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 133574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5febf2a1bd288d41b035341a6334898, type: 3}
+  m_Script: {fileID: 11500000, guid: 89f6b46d441c1b542b64a0fdbe3c7fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000
