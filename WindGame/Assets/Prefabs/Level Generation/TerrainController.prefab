@@ -47,7 +47,7 @@ MonoBehaviour:
   - biomeObjects:
     - prefab: {fileID: 140344, guid: 357d325da3db4f845a13fdf45724e6a3, type: 2}
       emptyPrefab: {fileID: 133184, guid: ab247bd40844a0d4fa05ba8b6c131d30, type: 2}
-      occurance: 0.02
+      occurance: 0.1
   - biomeObjects: []
   - biomeObjects:
     - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
@@ -66,6 +66,7 @@ MonoBehaviour:
   tileSize: 4
   tileSlope: 2
   levelLoaded: 0
+  debugPrefab: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

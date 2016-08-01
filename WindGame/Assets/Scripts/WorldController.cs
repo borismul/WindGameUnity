@@ -31,8 +31,7 @@ public class WorldController : MonoBehaviour
         //If paused don't update
         if (gameSpeed == 0)
             return;
-
-        capital += gameSpeed;
+        
         //Calculate gameDeltaTime in hours
         //gameDeltaTime is amount of hours
         float gameDeltaTime = Time.deltaTime * gameSpeed;
@@ -63,7 +62,7 @@ public class WorldController : MonoBehaviour
         foreach (GameObject turbineObj in turbines)
         {
             TurbineController turbine = turbineObj.GetComponent<TurbineController>();
-            pow += turbine.baseOutput;
+            pow += turbine.powerDelivered;
         }
         totalPower = pow;
     }
@@ -75,19 +74,19 @@ public class WorldController : MonoBehaviour
         foreach (GameObject turbineObj in turbines)
         {
             TurbineController turbine = turbineObj.GetComponent<TurbineController>();
-            costs += turbine.operationalCosts;
+            costs += turbine.costOfMaintenance;
         }
         operationalCosts = costs;
     }
 
-    void updateCapital(float deltaTime)
+    void updateCapital(float gameDeltaTime)
     {
         capital += totalPower * this.costOfElectricity / 1000000;
         double hourlyInterestRate = System.Math.Pow((1 + this.interestRate), 1 / 365 * 24);
-        double variation = System.Math.Pow(hourlyInterestRate, deltaTime) - 1;
+        double variation = System.Math.Pow(hourlyInterestRate, gameDeltaTime) - 1;
         double costOfCapital = System.Math.Min(this.capital * variation, 0);
         costOfCapital -= operationalCosts;
-        capital += (float)costOfCapital * deltaTime;
+        capital += (float)costOfCapital * gameDeltaTime;
     }
 
     void updatePublicAcceptance()
@@ -98,6 +97,6 @@ public class WorldController : MonoBehaviour
         {
             negPublic += 0.5f;
         }
-        publicAcceptance = totalPower / 2.1f + negPublic * 1;
+        publicAcceptance = totalPower / 2.1f - negPublic * 1;
     }
 }
