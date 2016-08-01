@@ -61,7 +61,6 @@ public class TerrainController : MonoBehaviour {
         thisTerrainController = this;
 
         // Create a new world
-        print(tileSize);
         world = new GridTile[length / tileSize, width / tileSize];
 
         // Set the seed to a random value if set seed is 0, else keep it

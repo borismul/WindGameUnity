@@ -376,29 +376,17 @@ Prefab:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
-      propertyPath: length
-      value: 2000
-      objectReference: {fileID: 0}
-    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
-      propertyPath: width
-      value: 2000
-      objectReference: {fileID: 0}
-    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
-      propertyPath: gridDebug
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].emptyPrefab
       value: 
-      objectReference: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
-      propertyPath: tileSize
-      value: 4
-      objectReference: {fileID: 0}
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].occurance
-      value: 0.1
+      value: 0.05
       objectReference: {fileID: 0}
-    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
-      propertyPath: debugPrefab
-      value: 
-      objectReference: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
   m_IsPrefabParent: 0
@@ -554,58 +542,6 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 126490, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
   m_PrefabInternal: {fileID: 1694643308}
---- !u!1 &1497063420
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1497063422}
-  - 114: {fileID: 1497063421}
-  m_Layer: 0
-  m_Name: WorldController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1497063421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1497063420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c427726aa5889174d8082225163af879, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
-  length: 1500
-  width: 1500
-  seed: 0
-  maxHeight: 500
-  stretch: 200
-  chunkSize: 30
-  cubeSize: 10
-  cubeHeight: 5
-  gridPrefab: {fileID: 180262, guid: 638c0043389e934498a0378fffd68ad6, type: 2}
-  tree: {fileID: 4300002, guid: 3f5317706d9fbee41acc907bfcf43d31, type: 3}
-  treeTop: {fileID: 4300004, guid: 3f5317706d9fbee41acc907bfcf43d31, type: 3}
---- !u!4 &1497063422
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1497063420}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
 --- !u!1001 &1694643308
 Prefab:
   m_ObjectHideFlags: 0
