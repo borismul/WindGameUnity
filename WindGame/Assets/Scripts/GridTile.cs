@@ -37,6 +37,4 @@ public class GridTile {
 
         return world[x,z];
     }
-
-
 }

@@ -14,7 +14,6 @@ public class TerrainObject : MonoBehaviour {
     public bool hasReloaded;
 
     List<Mesh> nonCombinedMesh = new List<Mesh>();
-    Mesh currentMesh = new Mesh();
     Mesh result = new Mesh();
 
     List<CombineInstance> instances = new List<CombineInstance>();
@@ -22,7 +21,7 @@ public class TerrainObject : MonoBehaviour {
     // Use this for initialization
     void Awake ()
     {
-	    foreach(Material mat in GetComponent<MeshRenderer>().materials)
+	    for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
         {
             newComponents.Add(new List<Mesh>());
             nonCombinedMesh.Add(new Mesh());
@@ -72,7 +71,6 @@ public class TerrainObject : MonoBehaviour {
         {
             isFull = true;
         }
-
     }
 
     public void RemoveMesh(Mesh[] mesh)

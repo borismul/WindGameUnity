@@ -45,15 +45,18 @@ MonoBehaviour:
   maxHeight: 300
   biomes:
   - biomeObjects:
-    - prefab: {fileID: 140344, guid: 357d325da3db4f845a13fdf45724e6a3, type: 2}
-      emptyPrefab: {fileID: 133184, guid: ab247bd40844a0d4fa05ba8b6c131d30, type: 2}
-      occurance: 0.1
+    - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+      emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+      occurance: 0.3
   - biomeObjects: []
   - biomeObjects:
     - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
       emptyPrefab: {fileID: 125940, guid: ec59005bb099fff46bca0ecd771b3126, type: 2}
       occurance: 0.1
-  - biomeObjects: []
+  - biomeObjects:
+    - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+      emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+      occurance: 0.01
   seed: 1
   terrainOctaves: 5
   terrainPersistance: 0.5
@@ -65,6 +68,7 @@ MonoBehaviour:
   chunkSize: 200
   tileSize: 4
   tileSlope: 2
+  city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   levelLoaded: 0
   debugPrefab: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
 --- !u!1001 &100100000

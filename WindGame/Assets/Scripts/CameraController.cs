@@ -44,13 +44,12 @@ Vector3 previousPos;
     float xInput;
     float zInput;
     float xMouse;
-    float yMouse;
 
     float scrollInput;
     bool middleMouse;
     bool overRuleCam;
     bool setStartPos;
-    bool hasStared;
+    bool hasStarted;
     public bool haveControl;
 
     TerrainController terrain;
@@ -65,7 +64,6 @@ Vector3 previousPos;
 
         CameraStart();
     }
-
 
     // Update inputs and process
     void Update()
@@ -116,7 +114,7 @@ Vector3 previousPos;
         float zPos = terrain.width / 2;
         float yPos = terrain.width/2 / Mathf.Tan(Mathf.Deg2Rad * 30);
         transform.position = new Vector3(xPos, yPos, zPos);
-        transform.rotation = Quaternion.Euler(90, 0, 0);
+        transform.rotation = Quaternion.Euler(89, 0, 0);
         Camera.main.orthographic = true;
         Camera.main.orthographicSize = terrain.width / 2;
         Camera.main.backgroundColor = Color.black;
@@ -131,18 +129,19 @@ Vector3 previousPos;
         Camera.main.orthographic = false;
         UpdateCamHeight();
 
-        targetPos = new Vector3(transform.position.x, transform.position.y - camHeight + maxHeight, transform.position.z);
+        targetPos = new Vector3(CityController.city.centerTile.position.x, transform.position.y - camHeight + maxHeight, CityController.city.centerTile.position.z - CityController.city.startRadius * 3);
         camScrollLerpSet = camLerpScrollStart;
         setStartPos = true;
     }
 
     void CheckStart()
     {
-        if(terrain.levelLoaded && !hasStared)
+        if(terrain.levelLoaded && !hasStarted)
         {
-            if(Vector3.Distance(transform.position, targetPos) < 5)
+            transform.LookAt(CityController.city.centerTile.occupant.transform);
+            if (Vector3.Distance(transform.position, targetPos) < 5)
             {
-                hasStared = true;
+                hasStarted = true;
                 haveControl = true;
                 camScrollLerpSet = camLerpScroll;
             }
@@ -162,7 +161,6 @@ Vector3 previousPos;
         if (middleMouse)
         {
             xMouse = Input.GetAxis("Mouse X");
-            yMouse = Input.GetAxis("Mouse Y");
 
             // Set overrule to true so the camera is moved wrt mouse movement
             overRuleCam = true;
@@ -170,7 +168,6 @@ Vector3 previousPos;
         else
         {
             xMouse = 0;
-            yMouse = 0;
         }
 
         // If the mousewheel is scrolled set overrule back to false, so automatic tilt will take over again
@@ -279,7 +276,7 @@ Vector3 previousPos;
     Vector3 UpdatePosition()
     {
         Vector3 heightPos;
-        if (!hasStared)
+        if (!hasStarted)
         {
             camScrollLerpSet *= 1.001f;
             heightPos = Vector3.MoveTowards(new Vector3(0, transform.position.y, 0), new Vector3(0, targetPos.y, 0), camScrollLerpSet * Time.deltaTime);
@@ -356,7 +353,6 @@ Vector3 previousPos;
     Vector3 ManualRot(Vector3 currentRot)
     {
         // Determine the camera rotation in x and y axis speed based on mouse user input
-        float eulX = -yMouse * camSpeedRot * Time.deltaTime;
         float eulY = xMouse * camSpeedRot * Time.deltaTime;
 
         // Add the angles to the previous rotation, and obtain the target

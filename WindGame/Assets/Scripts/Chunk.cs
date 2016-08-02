@@ -18,13 +18,11 @@ public class Chunk : MonoBehaviour {
     int bioOctaves;
     float bioFrequency;
     float bioPersistance;
-    List<BiomeMesh> biomeMeshes;
 
     // Chunk Details
     GameObject chunkPrefab;
     int chunkSize;
     int tileSize;
-    int tileSlope;
 
     // List of 3D, 2D offsets that is used to calculate noise at different x,y,z and x,y
     List<Vector3> offset3D = new List<Vector3>();
@@ -43,9 +41,6 @@ public class Chunk : MonoBehaviour {
     // Map terrain and biome of this chunk
     Vector3[,] map;
     int[,] biomeMap;
-
-    // Maximum number of vertices in one mesh
-    int maxVert = 30000;
 
     int previousHighlightI;
     int previousHighlightK;
@@ -79,13 +74,9 @@ public class Chunk : MonoBehaviour {
         bioFrequency = terrain.biomeFrequency;
         bioPersistance = terrain.biomePersistance;
 
-        biomeMeshes = terrain.biomeMeshes;
-
         // Obtain chunk Details
-        GameObject chunkPrefab = terrain.chunkPrefab;
         chunkSize = terrain.chunkSize;
         tileSize = terrain.tileSize;
-        tileSlope = terrain.tileSlope;
 
         // set seed
         Random.seed = seed;
@@ -101,7 +92,6 @@ public class Chunk : MonoBehaviour {
     void GenerateTerrain()
     {
         int numTiles = chunkSize / tileSize;
-        int numJ = maxHeight / tileSlope;
 
         for (int i = 0; i < numTiles + 1; i++)
         {
@@ -135,7 +125,6 @@ public class Chunk : MonoBehaviour {
 
         for (int i = 0; i < chunkSize / tileSize; i++)
         {
-            List<GridTile> gridTiles = new List<GridTile>();
             for (int k = 0; k < chunkSize / tileSize; k++)
             {
                 terrain.world[startI + i, startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], true, null));

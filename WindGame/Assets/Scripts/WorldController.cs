@@ -93,7 +93,7 @@ public class WorldController : MonoBehaviour
     {
         GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
         float negPublic = 0;
-        foreach (GameObject turbineObj in turbines)
+        for (int i = 0; i < turbines.Length; i++)
         {
             negPublic += 0.5f;
         }
