@@ -134,6 +134,7 @@ MonoBehaviour:
   minTilt: 40
   maxTiltHeight: 200
   tiltFormulaPow: 0.6
+  startHeight: 50
 --- !u!81 &583164450
 AudioListener:
   m_ObjectHideFlags: 0
@@ -286,7 +287,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &852267054
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +344,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[3].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 408742, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -373,7 +378,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 408742, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].emptyPrefab
@@ -385,7 +390,27 @@ Prefab:
       objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].occurance
-      value: 0.05
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: tileSize
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[3].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[3].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[3].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: seed
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
@@ -471,7 +496,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 455218, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
@@ -579,7 +604,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445484, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22445484, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
       propertyPath: m_AnchoredPosition.x

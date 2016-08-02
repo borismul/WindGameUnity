@@ -30,7 +30,10 @@ public class CameraController : MonoBehaviour
     public float maxTiltHeight = 200;
     public float tiltFormulaPow = 0.6f;
 
-    Vector3 previousPos;
+    [Header("Start Variables")]
+    public float camLerpScrollStart;
+
+Vector3 previousPos;
 
     Vector3 targetPos;
     Vector3 targetRot;
@@ -47,21 +50,37 @@ public class CameraController : MonoBehaviour
     bool middleMouse;
     bool overRuleCam;
     bool setStartPos;
-    bool haveControl;
+    bool hasStared;
+    public bool haveControl;
 
+    TerrainController terrain;
+    float camScrollLerpSet;
 
     // Unity Methods //
 
     // Determine initial conditions
-    void StartSelf()
+    void Start()
     {
-        targetPos = transform.position;
-        previousPos = transform.position;
+        terrain = TerrainController.thisTerrainController;
+
+        CameraStart();
     }
+
 
     // Update inputs and process
     void Update()
     {
+        if (!terrain.levelLoaded)
+            return;
+
+        if (!setStartPos)
+        {
+            StartGame();
+        }
+        CheckStart();
+
+        if (!haveControl)
+            return;
 
         GetInput();
         ProcessInput();
@@ -70,7 +89,7 @@ public class CameraController : MonoBehaviour
     // Determine camera height wrt the ground
     void FixedUpdate()
     {
-        if (!TerrainController.thisTerrainController.levelLoaded)
+        if (!terrain.levelLoaded)
             return;
 
         UpdateCamHeight();
@@ -79,14 +98,56 @@ public class CameraController : MonoBehaviour
     // Update camera position and rotation
     void LateUpdate()
     {
-        if (!TerrainController.thisTerrainController.levelLoaded)
+        if (!terrain.levelLoaded)
             return;
 
         transform.position = UpdatePosition();
+
+        if (!haveControl)
+            return;
+
         transform.rotation = UpdateRotation();
     }
 
     // Own Methods //
+    void CameraStart()
+    {
+        float xPos = terrain.length / 2;
+        float zPos = terrain.width / 2;
+        float yPos = terrain.width/2 / Mathf.Tan(Mathf.Deg2Rad * 30);
+        transform.position = new Vector3(xPos, yPos, zPos);
+        transform.rotation = Quaternion.Euler(90, 0, 0);
+        Camera.main.orthographic = true;
+        Camera.main.orthographicSize = terrain.width / 2;
+        Camera.main.backgroundColor = Color.black;
+        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+
+        targetPos = transform.position;
+        previousPos = transform.position;
+    }
+
+    void StartGame()
+    {
+        Camera.main.orthographic = false;
+        UpdateCamHeight();
+
+        targetPos = new Vector3(transform.position.x, transform.position.y - camHeight + maxHeight, transform.position.z);
+        camScrollLerpSet = camLerpScrollStart;
+        setStartPos = true;
+    }
+
+    void CheckStart()
+    {
+        if(terrain.levelLoaded && !hasStared)
+        {
+            if(Vector3.Distance(transform.position, targetPos) < 5)
+            {
+                hasStared = true;
+                haveControl = true;
+                camScrollLerpSet = camLerpScroll;
+            }
+        }
+    }
 
     // Method determines the user inputs required for the camera
     void GetInput()
@@ -217,8 +278,18 @@ public class CameraController : MonoBehaviour
     // Method updates the position of the camera based on the current position and the target position
     Vector3 UpdatePosition()
     {
-        // Move the camera towards the target by small steps, going slower if it gets closer to the target (Lerp function)
-        Vector3 heightPos = Vector3.Lerp(new Vector3(0, transform.position.y, 0), new Vector3(0, targetPos.y, 0), camLerpScroll * Time.deltaTime);
+        Vector3 heightPos;
+        if (!hasStared)
+        {
+            camScrollLerpSet *= 1.001f;
+            heightPos = Vector3.MoveTowards(new Vector3(0, transform.position.y, 0), new Vector3(0, targetPos.y, 0), camScrollLerpSet * Time.deltaTime);
+
+        }
+        else
+        {
+            // Move the camera towards the target by small steps, going slower if it gets closer to the target (Lerp function)
+            heightPos = Vector3.Lerp(new Vector3(0, transform.position.y, 0), new Vector3(0, targetPos.y, 0), camScrollLerpSet * Time.deltaTime);
+        }
         Vector3 transPos = Vector3.Lerp(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(targetPos.x, 0, targetPos.z), camLerpTrans * Time.deltaTime);
 
         // Combine the height and translational movement to a current position

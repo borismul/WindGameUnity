@@ -47,14 +47,18 @@ public class Chunk : MonoBehaviour {
     // Maximum number of vertices in one mesh
     int maxVert = 30000;
 
+    int previousHighlightI;
+    int previousHighlightK;
+
+    Mesh mesh;
+
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         Initialize();
         GenerateTerrain();
         GenerateGridTiles();
         GenerateTerrainMesh();
-        SetMesh();
     }
 
     void Initialize()
@@ -134,13 +138,17 @@ public class Chunk : MonoBehaviour {
             List<GridTile> gridTiles = new List<GridTile>();
             for (int k = 0; k < chunkSize / tileSize; k++)
             {
-                terrain.world[startI + i,startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], true, null));
+                terrain.world[startI + i, startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], true, null));
             }
         }
     }
 
-    void GenerateTerrainMesh()
+    public void GenerateTerrainMesh()
     {
+        vert = new List<Vector3>();
+        tri = new List<int>();
+        uv = new List<Vector2>();
+
         for (int i = 0; i < chunkSize / tileSize; i++)
         {
             for (int k = 0; k < chunkSize / tileSize; k++)
@@ -158,9 +166,11 @@ public class Chunk : MonoBehaviour {
                 pos.Add(RT);
                 pos.Add(RB);
 
-                CreatePlane(pos, biomeMap[i,k]);
+                CreatePlane(pos, biomeMap[i, k]);
             }
         }
+
+        SetMesh(false);
     }
 
     void GenerateNoiseOffsets(int nOffset)
@@ -175,12 +185,25 @@ public class Chunk : MonoBehaviour {
         }
     }
 
-    void SetMesh()
+    void SetMesh(bool easy)
     {
-        Mesh mesh = new Mesh();
+        if(mesh == null)
+        {
+            mesh = new Mesh();
+        }
         mesh.vertices = vert.ToArray();
         mesh.triangles = tri.ToArray();
         mesh.uv = uv.ToArray();
+
+        if (easy)
+        {
+            mesh.normals = GetComponent<MeshFilter>().mesh.normals;
+            Destroy(GetComponent<MeshFilter>().mesh);
+            //GetComponent<MeshFilter>().mesh.Clear();
+            GetComponent<MeshFilter>().mesh = mesh;
+            return;
+        }
+        Destroy(GetComponent<MeshFilter>().mesh);
         mesh.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshCollider>().sharedMesh = mesh;
@@ -201,12 +224,44 @@ public class Chunk : MonoBehaviour {
         uv.AddRange(DetermineUV(biome));
     }
 
+    public void HighLightTile(int iHighLight, int kHighLight)
+    {
+        int startIndex = (iHighLight * chunkSize / tileSize + kHighLight) * 4;
+
+        List<Vector2> uvs = DetermineUV(texturesPerLine * texturesPerLine - texturesPerLine + biomeMap[iHighLight, kHighLight]);
+
+        for (int i = 0; i < 4; i++)
+        {
+            uv[startIndex + i] = uvs[i];
+        }
+
+        if(previousHighlightI != iHighLight || previousHighlightK != kHighLight)
+            DeHighLight();
+
+        previousHighlightI = iHighLight;
+        previousHighlightK = kHighLight;
+    }
+
+    public void DeHighLight()
+    {
+        int startIndex = (previousHighlightI * chunkSize / tileSize + previousHighlightK) * 4;
+
+        List<Vector2> uvs = DetermineUV(biomeMap[previousHighlightI, previousHighlightK]);
+
+        for (int i = 0; i < 4; i++)
+        {
+            uv[startIndex + i] = uvs[i];
+        }
+
+        SetMesh(true);
+    }
+
     List<Vector2> DetermineUV(int biome)
     {
         List<Vector2> uv = new List<Vector2>();
         int row = (biome / texturesPerLine);
         int col = biome - row * texturesPerLine;
-        float offset = 0.05f / texturesPerLine;
+        float offset = 0.12f / texturesPerLine;
         float textureSize = 1f / texturesPerLine;
         Vector2 corner = new Vector2((float)col / texturesPerLine, (float)row / texturesPerLine);
 

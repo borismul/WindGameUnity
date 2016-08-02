@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class GridTile {
 
     public Vector3 position;
@@ -38,35 +38,5 @@ public class GridTile {
         return world[x,z];
     }
 
-    public static void SetOccupant(GridTile tile, GameObject occupant, float cutOffRadius)
-    {
-        tile.occupant = occupant;
-        TerrainController terrain = TerrainController.thisTerrainController;
-        int tileSize = terrain.tileSize;
 
-        int thisX = Mathf.RoundToInt((tile.position.x - 0.5f * tileSize) / tileSize);
-        int thisZ = Mathf.RoundToInt((tile.position.z - 0.5f * tileSize) / tileSize);
-
-        int startX = thisX - Mathf.RoundToInt(cutOffRadius / tileSize)/2;
-        int startZ = thisZ - Mathf.RoundToInt(cutOffRadius / tileSize)/2;
-
-        int maxX = terrain.length / tileSize;
-        int maxZ = terrain.width / tileSize;
-
-        for (int i = 0; i<cutOffRadius/tileSize; i++)
-        {
-            for (int j = 0; j < cutOffRadius / tileSize; j++)
-            {
-                if (startX + i <= 0 || startX + i > maxX || startZ + j <= 0 || startZ + j > maxZ)
-                    continue;
-
-                GridTile checkGridTile = terrain.world[startX + i, startZ + j];
-                if (Vector3.Distance(checkGridTile.position, tile.position) < cutOffRadius)
-                {
-                    checkGridTile.canBuild = false;
-                }
-            }
-        }
-
-    }
 }

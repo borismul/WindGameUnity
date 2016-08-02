@@ -164,7 +164,7 @@ public class BuildMenuController : MonoBehaviour
             else
                 curInstantiated.transform.position = plantPos;
 
-            if (plantGrid.canBuild && plantGrid.occupant == null)
+            if (plantGrid.canBuild)
             {
                 foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
                 {
@@ -181,7 +181,7 @@ public class BuildMenuController : MonoBehaviour
                 }
             }
         }
-        if (Input.GetMouseButtonDown(0) && plantGrid.canBuild && plantGrid.occupant == null)
+        if (Input.GetMouseButtonDown(0) && plantGrid.canBuild)
         {
             Destroy(curInstantiated);
             BuildNow(plantGrid, plantPos);
@@ -198,17 +198,12 @@ public class BuildMenuController : MonoBehaviour
 
         if (isTurbine)
         {
-            GridTile.SetOccupant(plantGrid, curInstantiated, cutOffRadius);
+            TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.SetOccupant(plantGrid, curInstantiated, cutOffRadius));
             WorldController.turbines.Add(curInstantiated);
         }
         else
         {
-            GridTile.SetOccupant(plantGrid, curInstantiated, 1);
+            TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.SetOccupant(plantGrid, curInstantiated, 1));
         }
-
     }
-
-
-
-
 }

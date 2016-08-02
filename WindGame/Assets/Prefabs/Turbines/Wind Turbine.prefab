@@ -252,15 +252,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blades: {fileID: 128338}
   nacelle: {fileID: 119560}
-  operationalCosts: 0.19999999
-  health: 0
-  decay: 0
-  height: 0
-  active: 0
-  nrBlades: 0
-  baseOutput: 10
-  power: 0
   buildProgress: 0
+  height: 0
+  nrBlades: 0
+  repairCosts: 0
+  modeOfOperation: 0
+  revenue1: 0
+  revenue2: 0
+  randTerm: 0
+  maximumHealth: 0
+  totalCosts: 0
+  health: 0
+  power: 0
+  powerDelivered: 0
+  costOfMaintenance: 0
+  parameterRatedPower: 2.3
+  parameterCapacityFactor: 0.25
+  parameterPowerFractionsSafeModeOperation: 0.8
+  parameterPowerFractionLoss: 0.2
+  parameterCostWEU: 1.8
+  parameterHealth: -0.0000026741789
+  parameterHealthModeOperation: 0.5
+  parameterLosses: 0.95
+  parameterMaintenanceWEU1: 0.25
+  parameterMaintenanceRepairWEU: 0.5
+  parameterValueEnergy1: 0
+  parameterValueEnergy2: 0
+  parameterRevenue2: 0
+  publicAcceptance: -0.1
+  parameterAcceptanceWEU1: 0
+  parameterAcceptanceWEU2: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

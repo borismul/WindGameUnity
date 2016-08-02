@@ -47,7 +47,7 @@ public class TerrainController : MonoBehaviour {
     Rand rand;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         Initialize();
         StartCoroutine(BuildTerrain());
@@ -111,7 +111,6 @@ public class TerrainController : MonoBehaviour {
                 yield return null;
             }
         }
-        levelLoaded = true;
         StartCoroutine(GenerateBiomeAttributes());
     }
 
@@ -148,24 +147,30 @@ public class TerrainController : MonoBehaviour {
 
             }
         }
-        
-
-        BuildMeshesAll();
+        StartCoroutine(BuildMeshesAll());
     }
 
-    void BuildMeshesAll()
+    IEnumerator BuildMeshesAll()
     {
         foreach (List<List<GameObject>> biomeList in worldObjects)
         {
             foreach (List<GameObject> objList in biomeList)
             {
+                int index = -1;
                 foreach (GameObject curObject in objList)
                 {
-                    if(!curObject.GetComponent<TerrainObject>().hasReloaded)
+                    if(index % 10 == 0)
+                        yield return null;
+
+                    index++;
+                    if(!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
                         curObject.GetComponent<TerrainObject>().Reload();
                 }
             }
         }
+
+        levelLoaded = true;
+
     }
 
     void GenerateObject(Vector3 position, int biome, int objIndex, GridTile gridTile)
@@ -199,7 +204,7 @@ public class TerrainController : MonoBehaviour {
 
     }
 
-    Mesh MoveMesh(Mesh mesh, Vector3 trans, Quaternion rotate)
+    public static Mesh MoveMesh(Mesh mesh, Vector3 trans, Quaternion rotate)
     {
         Mesh result = new Mesh();
         Vector3[] vertNew = new Vector3[mesh.vertexCount];
@@ -224,9 +229,14 @@ public class TerrainController : MonoBehaviour {
     }
 
     // Get a mesh of a gameobject
-    Mesh[] GetSubmeshes(GameObject obj)
+    public static Mesh[] GetSubmeshes(GameObject obj)
     {
         Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
+
+        if (mesh.vertexCount == 0)
+        {
+            mesh = obj.GetComponent<MeshFilter>().mesh;
+        }
         Mesh[] allMeshes = new Mesh[mesh.subMeshCount];
         for (int i = 0; i < mesh.subMeshCount; i++)
         {
@@ -282,6 +292,73 @@ public class TerrainController : MonoBehaviour {
 
 
         return allMeshes;
+    }
+
+    public IEnumerator SetOccupant(GridTile tile, GameObject occupant, float cutOffRadius)
+    {
+        TerrainController terrain = TerrainController.thisTerrainController;
+        int tileSize = terrain.tileSize;
+
+        int thisX = Mathf.RoundToInt((tile.position.x - 0.5f * tileSize) / tileSize);
+        int thisZ = Mathf.RoundToInt((tile.position.z - 0.5f * tileSize) / tileSize);
+
+        int startX = thisX - Mathf.RoundToInt(cutOffRadius / tileSize) / 2;
+        int startZ = thisZ - Mathf.RoundToInt(cutOffRadius / tileSize) / 2;
+
+        int maxX = terrain.length / tileSize;
+        int maxZ = terrain.width / tileSize;
+
+        for (int i = 0; i < cutOffRadius / tileSize; i++)
+        {
+            for (int j = 0; j < cutOffRadius / tileSize; j++)
+            {
+                if (startX + i < 0 || startX + i > maxX || startZ + j < 0 || startZ + j > maxZ)
+                    continue;
+
+                GridTile checkGridTile = terrain.world[startX + i, startZ + j];
+                if (Vector3.Distance(checkGridTile.position, tile.position) < cutOffRadius && checkGridTile.occupant != null)
+                {
+                    checkGridTile.canBuild = false;
+                    RemoveOccupant(checkGridTile);
+                    yield return null;
+                }
+            }
+        }
+
+        tile.occupant = occupant;
+    }
+
+    public void RemoveOccupant(GridTile tile)
+    {
+        Mesh[] removeMesh = null;
+        if (tile.occupant != null)
+        {
+            TerrainObject terrainObj = tile.occupant.GetComponent<TerrainObject>();
+            if (terrainObj == null)
+            {
+                TerrainController.Destroy(tile.occupant);
+            }
+
+            Mesh[] objMeshes = TerrainController.thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
+            CombineInstance[] combiner = new CombineInstance[objMeshes.Length];
+            removeMesh = new Mesh[objMeshes.Length];
+            for (int k = 0; k < objMeshes.Length; k++)
+            {
+                removeMesh[k] = TerrainController.MoveMesh(objMeshes[k], tile.position - terrainObj.transform.position, Quaternion.Euler(-90, 0, 0));
+            }
+            terrainObj.RemoveMesh(removeMesh);
+            terrainObj.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+
+            tile.occupant = null;
+        }
+
+        if (removeMesh != null)
+        {
+            foreach (Mesh destroyMesh in removeMesh)
+            {
+                TerrainController.Destroy(destroyMesh);
+            }
+        }
     }
 
     [System.Serializable]
