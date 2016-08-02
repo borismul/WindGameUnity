@@ -118,8 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62616281eae57249a0a63ef7d02ae20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTranslationSpeed: 100
-  minTranslationSpeed: 40
+  maxTranslationSpeed: 300
+  minTranslationSpeed: 80
   camSpeedRot: 30
   scrollSpeed: 1000
   baseZoomSpeed: 1
@@ -134,7 +134,8 @@ MonoBehaviour:
   minTilt: 40
   maxTiltHeight: 200
   tiltFormulaPow: 0.6
-  startHeight: 50
+  camLerpScrollStart: 150
+  haveControl: 0
 --- !u!81 &583164450
 AudioListener:
   m_ObjectHideFlags: 0

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Rand = System.Random;
 
-
 public class TerrainController : MonoBehaviour {
 
     [Header("Terrain Details")]
@@ -107,7 +106,8 @@ public class TerrainController : MonoBehaviour {
         {
             for (int j = 0; j < width / chunkSize; j++)
             {
-                Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
+                GameObject chunk = (GameObject)Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
+                chunk.transform.parent = this.transform;
                 yield return null;
             }
         }
@@ -182,6 +182,7 @@ public class TerrainController : MonoBehaviour {
         {
             curGameObjectList.Add(Instantiate(curGameObjectList[0]));
             count = curGameObjectList.Count;
+            curGameObjectList[count - 1].transform.parent = transform;
             curterrainObject = curGameObjectList[count - 1].GetComponent<TerrainObject>();
             curterrainObject.biome = biome;
             curterrainObject.objectNR = objIndex;
