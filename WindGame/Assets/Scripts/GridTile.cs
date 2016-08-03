@@ -5,24 +5,20 @@ public class GridTile {
 
     public Vector3 position;
     public int biome;
-    public bool canBuild;
-    public GameObject occupant;
-    public GameObject gridPointDebug;
+    public GridTileOccupant occupant;
 
-	public GridTile(Vector3 position, int biome, bool canBuild, GameObject occupant, GameObject gridPointDebug)
+    // 0 is empty tile
+    // 1 holds terrain generated object
+    // 2 is self build. (Maybe more types)
+    public int type;
+    public bool canBuild;            
+
+    public GridTile(Vector3 position, int biome, int type, bool canBuild, GridTileOccupant occupant)
     {
         this.position = position;
         this.biome = biome;
         this.canBuild = canBuild;
-        this.occupant = occupant;
-        this.gridPointDebug = gridPointDebug;
-    }
-
-    public GridTile(Vector3 position, int biome, bool canBuild, GameObject occupant)
-    {
-        this.position = position;
-        this.biome = biome;
-        this.canBuild = canBuild;
+        this.type = type;
         this.occupant = occupant;
     }
 

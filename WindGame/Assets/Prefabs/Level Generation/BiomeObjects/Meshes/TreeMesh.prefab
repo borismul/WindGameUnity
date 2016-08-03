@@ -1,42 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &151212
+--- !u!1 &122666
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 434840}
-  - 33: {fileID: 3315788}
-  - 23: {fileID: 2398004}
-  - 114: {fileID: 11410176}
+  - 4: {fileID: 420846}
+  - 33: {fileID: 3335256}
+  - 23: {fileID: 2348284}
   m_Layer: 0
-  m_Name: NewTree
+  m_Name: TreeMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &434840
+--- !u!4 &420846
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151212}
+  m_GameObject: {fileID: 122666}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &2398004
+--- !u!23 &2348284
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151212}
+  m_GameObject: {fileID: 122666}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,30 +57,13 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3315788
+--- !u!33 &3335256
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151212}
-  m_Mesh: {fileID: 0}
---- !u!114 &11410176
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c83135273d89c604f9108e5f3742712a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  biome: 0
-  objectNR: 0
-  vertexMax: 10000
-  verticesNow: 0
-  isFull: 0
-  hasReloaded: 0
+  m_GameObject: {fileID: 122666}
+  m_Mesh: {fileID: 4300010, guid: 3f5317706d9fbee41acc907bfcf43d31, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -91,5 +73,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 151212}
+  m_RootGameObject: {fileID: 122666}
   m_IsPrefabParent: 1

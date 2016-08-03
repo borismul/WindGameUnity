@@ -14,4 +14,11 @@ public class GridTileOccupant
         this.rotation = rotation;
         this.scale = scale;
     }
+
+    public GridTileOccupant(GameObject obj)
+    {
+        this.obj = obj;
+        rotation = Quaternion.identity;
+        scale = Vector3.one;
+    }
 }

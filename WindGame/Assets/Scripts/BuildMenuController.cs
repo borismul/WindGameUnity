@@ -193,17 +193,10 @@ public class BuildMenuController : MonoBehaviour
 
     void BuildNow(GridTile plantGrid, Vector3 plantPos)
     {
-        curInstantiated = (GameObject)Instantiate(curSelected);
-        curInstantiated.transform.position = plantPos;
-
         if (isTurbine)
         {
-            TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.SetOccupant(plantGrid, curInstantiated, cutOffRadius, true, false, true));
+            TerrainController.thisTerrainController.BuildObject(curSelected, Quaternion.identity, Vector3.one, plantGrid, cutOffRadius, true, false, true);
             WorldController.turbines.Add(curInstantiated);
-        }
-        else
-        {
-            TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.SetOccupant(plantGrid, curInstantiated, 1, true, false, true));
         }
     }
 }

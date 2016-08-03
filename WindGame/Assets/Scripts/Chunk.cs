@@ -127,7 +127,7 @@ public class Chunk : MonoBehaviour {
         {
             for (int k = 0; k < chunkSize / tileSize; k++)
             {
-                terrain.world[startI + i, startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], true, null));
+                terrain.world[startI + i, startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], 0, true, null));
             }
         }
     }

@@ -92,7 +92,12 @@ public class TerrainController : MonoBehaviour {
             {
                 GameObject obj = biome.biomeObjects[i].prefab;
                 float occurance = biome.biomeObjects[i].occurance;
-                biomeMesh.AddMesh(GetSubmeshes(obj), occurance);
+                float minScale = biome.biomeObjects[i].minScale;
+                float maxScale = biome.biomeObjects[i].maxScale;
+                float minRot = biome.biomeObjects[i].minRotation;
+                float maxRot = biome.biomeObjects[i].maxRotation;
+
+                biomeMesh.AddMesh(GetSubmeshes(obj), occurance, minScale, maxScale, minRot, maxRot);
                 worldObjects[index].Add(new List<GameObject>());
                 worldObjects[index][i].Add(biome.biomeObjects[i].emptyPrefab);
             }
@@ -125,6 +130,10 @@ public class TerrainController : MonoBehaviour {
             {
                 BiomeMesh curBiomeMesh = biomeMeshes[world[i,k].biome];
                 List<float> occurances = curBiomeMesh.occurance;
+                List<float> minScale = curBiomeMesh.minScale;
+                List<float> maxScale = curBiomeMesh.maxScale;
+                List<float> minRot = curBiomeMesh.minRot;
+                List<float> maxRot = curBiomeMesh.maxRot;
 
                 float choice = (float)rand.NextDouble();
                 float lower = 0;
@@ -134,7 +143,9 @@ public class TerrainController : MonoBehaviour {
                     upper += occurances[j];
                     if (choice < upper && choice > lower)
                     {
-                        GenerateObject((world[i,k].position), Quaternion.identity, Vector3.one, world[i,k].biome, j, world[i,k]);
+                        float scale = minScale[j] + (float)rand.NextDouble() * (maxScale[j] - minScale[j]);
+                        float rot = minRot[j] + (float)rand.NextDouble() * (maxRot[j] - minRot[j]);
+                        GenerateObject((world[i,k].position), Quaternion.Euler(0, rot, 0), Vector3.one * scale, world[i,k].biome, j, world[i,k]);
                         index++;
                         break;
                     }
@@ -207,19 +218,21 @@ public class TerrainController : MonoBehaviour {
             curterrainObject.hasReloaded = true;
             curterrainObject.Reload();
         }
-        gridTile.occupant = curterrainObject.gameObject;
+        GridTileOccupant gridOccupant = new GridTileOccupant(curterrainObject.gameObject, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale);
+        gridTile.occupant = gridOccupant;
+        gridTile.type = 1;
 
     }
 
-    public static Mesh MoveMesh(Mesh mesh, Vector3 trans, Quaternion rotate, Vector3 scale)
+    Mesh MoveMesh(Mesh mesh, Vector3 trans, Quaternion rotate, Vector3 scale)
     {
         Mesh result = new Mesh();
         Vector3[] vertNew = new Vector3[mesh.vertexCount];
         int index = 0;
         foreach (Vector3 vert in mesh.vertices)
         {
-            vertNew[index] = vert + scale;
-            vertNew[index] = rotate * new Vector3(vert.x, vert.y, vert.z);
+            vertNew[index] = new Vector3(vert.x * scale.x, vert.y* scale.y, vert.z* scale.z);
+            vertNew[index] = rotate * vertNew[index];
             vertNew[index] = vertNew[index] + trans;
 
             index++;
@@ -237,7 +250,7 @@ public class TerrainController : MonoBehaviour {
     }
 
     // Get a mesh of a gameobject
-    public static Mesh[] GetSubmeshes(GameObject obj)
+    Mesh[] GetSubmeshes(GameObject obj)
     {
         Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
 
@@ -302,7 +315,7 @@ public class TerrainController : MonoBehaviour {
         return allMeshes;
     }
 
-    public IEnumerator SetOccupant(GridTile tile, GameObject occupant, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
+    public IEnumerator SetOccupant(GridTile tile, GridTileOccupant occupant, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
     {
 
         RemoveOccupant(tile, false);
@@ -342,54 +355,59 @@ public class TerrainController : MonoBehaviour {
     public void RemoveOccupant(GridTile tile, bool removeSelfBuild)
     {
         Mesh[] removeMesh = null;
-        if (tile.occupant != null)
+        if (tile.type == 0)
+            return;
+        if (tile.type == 2)
         {
-            TerrainObject terrainObj = tile.occupant.GetComponent<TerrainObject>();
-            if (terrainObj == null)
+            if (removeSelfBuild)
             {
-                if (removeSelfBuild)
-                {
-                    TerrainController.Destroy(tile.occupant);
-                    tile.occupant = null;
-                }
-
-                return;
+                Destroy(tile.occupant.obj);
+                tile.occupant = null;
             }
+            return;
+        }
+        else if (tile.type == 1)
+        {
+            TerrainObject terrainObj = tile.occupant.obj.GetComponent<TerrainObject>();
 
-            Mesh[] objMeshes = TerrainController.thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
+            Mesh[] objMeshes = thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
             removeMesh = new Mesh[objMeshes.Length];
             for (int k = 0; k < objMeshes.Length; k++)
             {
-                removeMesh[k] = TerrainController.MoveMesh(objMeshes[k], tile.position - terrainObj.transform.position, Quaternion.Euler(-90, 0, 0), Vector3.one);
+                removeMesh[k] = MoveMesh(objMeshes[k], tile.position - terrainObj.transform.position, tile.occupant.rotation, tile.occupant.scale);
             }
             terrainObj.RemoveMesh(removeMesh);
             terrainObj.GetComponent<MeshFilter>().mesh.RecalculateNormals();
 
             tile.occupant = null;
-        }
 
-        if (removeMesh != null)
-        {
-            foreach (Mesh destroyMesh in removeMesh)
+            if (removeMesh != null)
             {
-                TerrainController.Destroy(destroyMesh);
+                foreach (Mesh destroyMesh in removeMesh)
+                {
+                    Destroy(destroyMesh);
+                }
             }
         }
     }
 
-    public void BuildObject(GameObject obj, Vector3 globalPosition, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
+    public void BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, Vector3 globalPosition, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
     {
         GridTile tile = GridTile.FindClosestGridTile(globalPosition);
-        GameObject objInst = (GameObject)Instantiate(obj, tile.position, Quaternion.Euler(-90,0,0));
-
-        StartCoroutine(SetOccupant(tile, objInst, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
+        GameObject objInst = (GameObject)Instantiate(obj, tile.position, rotation);
+        objInst.transform.localScale = scale;
+        GridTileOccupant tileOccupant = new GridTileOccupant(objInst);
+        tile.type = 2;
+        StartCoroutine(SetOccupant(tile, tileOccupant, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
     }
 
-    public void BuildObject(GameObject obj, GridTile tile, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
+    public void BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, GridTile tile, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
     {
-        GameObject objInst = (GameObject)Instantiate(obj, tile.position, Quaternion.Euler(-90, 0, 0));
-
-        StartCoroutine(SetOccupant(tile, objInst, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
+        GameObject objInst = (GameObject)Instantiate(obj, tile.position, rotation);
+        objInst.transform.localScale = scale;
+        GridTileOccupant tileOccupant = new GridTileOccupant(objInst);
+        tile.type = 2;
+        StartCoroutine(SetOccupant(tile, tileOccupant, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
     }
 
     [System.Serializable]
@@ -405,6 +423,12 @@ public class TerrainController : MonoBehaviour {
         public GameObject emptyPrefab;
         [Range(0, 1)]
         public float occurance;
+        public float minScale;
+        public float maxScale;
+        [Range(0,360)]
+        public float minRotation;
+        [Range(0,360)]
+        public float maxRotation;
     }
 
 }

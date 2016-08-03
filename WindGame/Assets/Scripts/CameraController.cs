@@ -138,7 +138,7 @@ Vector3 previousPos;
     {
         if(terrain.levelLoaded && !hasStarted)
         {
-            transform.LookAt(CityController.city.centerTile.occupant.transform);
+            transform.LookAt(CityController.city.centerTile.occupant.obj.transform);
             if (Vector3.Distance(transform.position, targetPos) < 5)
             {
                 hasStarted = true;

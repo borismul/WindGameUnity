@@ -41,9 +41,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
-  - {fileID: 197470, guid: 71319ca727c70c14ea3ac4ea195bef82, type: 2}
-  - {fileID: 128214, guid: 14f24aa05f0348248a0caf72874cc8a1, type: 2}
-  - {fileID: 165088, guid: 60cf57009146fc246bd60c48abc7b80f, type: 2}
+  - prefab: {fileID: 128214, guid: 14f24aa05f0348248a0caf72874cc8a1, type: 2}
+    scale: 1
+  - prefab: {fileID: 197470, guid: 71319ca727c70c14ea3ac4ea195bef82, type: 2}
+    scale: 0.15
   minLocX: 0.3
   maxLocX: 0.7
   minLocZ: 0.3

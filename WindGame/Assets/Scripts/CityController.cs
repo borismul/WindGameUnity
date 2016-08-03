@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CityController : MonoBehaviour {
 
-    public GameObject[] buildings;
+    public CityObject[] buildings;
     [Range(0,1)]
     public float minLocX;
     [Range(0, 1)]
@@ -42,7 +42,7 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        terrain.BuildObject(buildings[0], centerTile.position, startRadius, true, false, true);
+        terrain.BuildObject(buildings[0].prefab, Quaternion.Euler(-90, 0, 0), Vector3.one * buildings[0].scale, centerTile, startRadius, true, false, true);
 
         int tileSize = terrain.tileSize;
 
@@ -64,7 +64,8 @@ public class CityController : MonoBehaviour {
                 GridTile checkGridTile = terrain.world[startX + i, startZ + j];
                 if (Vector3.Distance(checkGridTile.position, centerTile.position) < startRadius && rand.NextDouble() < density && checkGridTile.canBuild)
                 {
-                    terrain.BuildObject(buildings[rand.Next(0, buildings.Length-1)], checkGridTile, 30, false, false, true);
+                    CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
+                    terrain.BuildObject(buildObject.prefab, Quaternion.Euler(-90,0,0), Vector3.one * buildObject.scale, checkGridTile, 30, false, false, true);
                 }
             }
         }
@@ -75,4 +76,11 @@ public class CityController : MonoBehaviour {
     {
 	    
 	}
+
+    [System.Serializable]
+    public struct CityObject
+    {
+        public GameObject prefab;
+        public float scale;
+    }
 }
