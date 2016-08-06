@@ -78,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biome: 0
   objectNR: 0
-  vertexMax: 10000
+  vertexMax: 8000
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
