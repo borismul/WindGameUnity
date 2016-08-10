@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Rand = System.Random;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.SceneManagement;
 
 public class TerrainController : MonoBehaviour {
 
@@ -29,11 +32,29 @@ public class TerrainController : MonoBehaviour {
     [Header("City Details")]
     public GameObject city;
 
+    [Header("Water Details")]
+    public GameObject waterChunkPrefab;
+    public int waterChunkSize;
+    public int waterTileSize;
+    public int waterOctaves;
+    public float waterPersistance;
+    public float waterFrequency;
+    public float waterLevel;
+    public float maxWaveHeight;
+
+    [Header("Camera")]
+    public GameObject mainCamera;
+
     // Check with this if level is done loading
-    public bool levelLoaded;
+    public bool levelLoaded = false;
 
     // The world, containing all gridtiles in matrix
     public GridTile[,] world;
+
+    public List<Chunk> chunks = new List<Chunk>();
+    public List<WaterChunk> waterChunks = new List<WaterChunk>();
+
+    List<TerrainSaveObject> loadedWorld;
 
     // The Objects in the world
     public List<List<List<GameObject>>> worldObjects = new List<List<List<GameObject>>>();
@@ -44,13 +65,31 @@ public class TerrainController : MonoBehaviour {
     // this current terrainController so it can be obtained easy
     public static TerrainController thisTerrainController;
 
-    public GameObject debugPrefab;
+    GameObject curCity;
+
     // Another random number generator
     Rand rand;
 
-    // Use this for initialization
     void Awake()
     {
+        // Set this to the terraincontroller
+        thisTerrainController = this;
+    }
+
+    void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            Initialize();
+            StartCoroutine(BuildTerrain());
+
+        }
+    }
+
+    public void BuildButton()
+    {
+        DestroyAll();
+        //worldObjects = new List<List<List<GameObject>>>();
         Initialize();
         StartCoroutine(BuildTerrain());
     }
@@ -58,12 +97,8 @@ public class TerrainController : MonoBehaviour {
     // Set all static variables to variables set in the editor
     void Initialize()
     {
-        // Set this to the terraincontroller
-        thisTerrainController = this;
-
         // Create a new world
         world = new GridTile[length / tileSize, width / tileSize];
-
         // Set the seed to a random value if set seed is 0, else keep it
         if (seed == 0)
             seed = Random.Range(0, int.MaxValue);
@@ -109,6 +144,8 @@ public class TerrainController : MonoBehaviour {
     // Create chunks by instantiating the prefabs at the desired locations
     IEnumerator BuildTerrain()
     {
+        if(SceneManager.GetActiveScene().name != "Main Menu")
+            Instantiate(mainCamera);
         for (int i = 0; i < length / chunkSize; i++)
         {
             for (int j = 0; j < width / chunkSize; j++)
@@ -118,7 +155,20 @@ public class TerrainController : MonoBehaviour {
                 yield return null;
             }
         }
+        BuildWater();
         StartCoroutine(GenerateBiomeAttributes());
+    }
+
+    void BuildWater()
+    {
+        for (int i = 0; i < length / waterChunkSize; i++)
+        {
+            for (int j = 0; j < width / waterChunkSize; j++)
+            {
+                GameObject chunk = (GameObject)Instantiate(waterChunkPrefab, new Vector3(i * waterChunkSize, 0, j * waterChunkSize), Quaternion.identity);
+                chunk.transform.parent = this.transform;
+            }
+        }
     }
 
     IEnumerator GenerateBiomeAttributes()
@@ -128,6 +178,9 @@ public class TerrainController : MonoBehaviour {
         {
             for (int k = 0; k < world.GetLength(1); k++)
             {
+                if (world[i, k].position.y < waterLevel)
+                    continue;
+
                 BiomeMesh curBiomeMesh = biomeMeshes[world[i,k].biome];
                 List<float> occurances = curBiomeMesh.occurance;
                 List<float> minScale = curBiomeMesh.minScale;
@@ -176,18 +229,20 @@ public class TerrainController : MonoBehaviour {
                         yield return null;
 
                     index++;
-                    if(!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
+                    if (!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
+                    {
                         curObject.GetComponent<TerrainObject>().Reload();
+                    }
                 }
             }
         }
         InitiateCity();
-        levelLoaded = true;
     }
 
     void InitiateCity()
     {
-        Instantiate(city);
+        curCity = Instantiate(city);
+        levelLoaded = true;
     }
 
     void GenerateObject(Vector3 position, Quaternion rotation, Vector3 scale, int biome, int objIndex, GridTile gridTile)
@@ -249,7 +304,7 @@ public class TerrainController : MonoBehaviour {
         return result;
     }
 
-    // Get a mesh of a gameobject
+    // Get mesh and submeshes of a gameobject
     Mesh[] GetSubmeshes(GameObject obj)
     {
         Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
@@ -391,7 +446,7 @@ public class TerrainController : MonoBehaviour {
         }
     }
 
-    public void BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, Vector3 globalPosition, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
+    public GameObject BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, Vector3 globalPosition, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
     {
         GridTile tile = GridTile.FindClosestGridTile(globalPosition);
         GameObject objInst = (GameObject)Instantiate(obj, tile.position, rotation);
@@ -399,15 +454,114 @@ public class TerrainController : MonoBehaviour {
         GridTileOccupant tileOccupant = new GridTileOccupant(objInst);
         tile.type = 2;
         StartCoroutine(SetOccupant(tile, tileOccupant, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
+        return objInst;
     }
 
-    public void BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, GridTile tile, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
+    public GameObject BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, GridTile tile, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
     {
         GameObject objInst = (GameObject)Instantiate(obj, tile.position, rotation);
         objInst.transform.localScale = scale;
         GridTileOccupant tileOccupant = new GridTileOccupant(objInst);
         tile.type = 2;
         StartCoroutine(SetOccupant(tile, tileOccupant, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
+        return objInst;
+    }
+
+    public void Save(string fileName)
+    {
+        string path = Application.dataPath + "/Resources/Saved Maps/"; ;
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
+        FileStream fileStream = File.Open(path + fileName, FileMode.OpenOrCreate);
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+        List<TerrainSaveObject> terrainSave = new List<TerrainSaveObject>();
+
+        foreach (Chunk chunk in chunks)
+        {
+            terrainSave.Add(new TerrainSaveObject(chunk.map, chunk.biomeMap, chunk.transform.position));
+        }
+        binaryFormatter.Serialize(fileStream, new TerrainSaver(terrainSave, length, width, maxHeight, seed, terrainOctaves, terrainPersistance, terrainFrequency, biomeOctaves, biomePersistance, biomeFrequency, chunkSize, tileSize, tileSlope, waterChunkSize, waterTileSize, waterOctaves, waterPersistance, waterFrequency, waterLevel, maxWaveHeight));
+        fileStream.Close();
+    }
+
+    public IEnumerator Load(string fileName)
+    {
+        string path = "Saved Maps/" + fileName;
+
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        TextAsset loaded = Resources.Load(path) as TextAsset;
+        MemoryStream stream = new MemoryStream(loaded.bytes);
+        TerrainSaver world = (TerrainSaver)binaryFormatter.Deserialize(stream);
+
+        length = world.length;
+        width = world.width;
+        maxHeight = world.maxHeight;
+        seed = world.seed;
+
+        terrainOctaves = world.terrainOctaves;
+        terrainPersistance = world.terrainPersistance;
+        terrainFrequency = world.terrainFrequency;
+        biomeOctaves = world.biomeOctaves;
+        biomePersistance = world.biomePersistance;
+        biomeFrequency = world.biomeFrequency;
+
+        chunkSize = world.chunkSize;
+        tileSize = world.tileSize;
+        tileSlope = world.tileSlope;
+
+        waterChunkSize = world.waterChunkSize;
+        waterTileSize = world.waterTileSize;
+        waterOctaves = world.waterOctaves;
+        waterPersistance = world.waterPersistance;
+        waterFrequency = world.waterFrequency;
+        waterLevel = world.waterLevel;
+        maxWaveHeight = world.maxWaveHeight;
+
+        loadedWorld = world.terrainSaveList;
+        Initialize();
+
+        foreach (TerrainSaveObject obj in loadedWorld)
+        {
+            GameObject curChunk = (GameObject)Instantiate(chunkPrefab, obj.chunkLoc.GetVec3(), Quaternion.identity);
+            Chunk chunkScript = curChunk.GetComponent<Chunk>();
+            chunkScript.map = obj.GetVec3Map();
+            chunkScript.biomeMap = obj.biomeMap;
+        }
+        yield return null;
+        BuildWater();
+        Instantiate(mainCamera);
+        StartCoroutine(GenerateBiomeAttributes());
+    }
+
+    void DestroyAll()
+    {
+        foreach (Chunk chunk in chunks)
+            Destroy(chunk.gameObject);
+
+        foreach (WaterChunk chunk in waterChunks)
+            Destroy(chunk.gameObject);
+
+        chunks.Clear();
+        
+        foreach (List<List<GameObject>> worldList2D in worldObjects)
+        {
+            foreach (List<GameObject> worldList1D in worldList2D)
+            {
+                int index = 0;
+                foreach (GameObject obj in worldList1D)
+                {
+                    if(index != 0)
+                        Destroy(obj);
+                    index++;
+                }
+                worldList1D.Clear();
+            }
+            worldList2D.Clear();
+        }
+
+        Destroy(curCity);
     }
 
     [System.Serializable]
@@ -430,5 +584,6 @@ public class TerrainController : MonoBehaviour {
         [Range(0,360)]
         public float maxRotation;
     }
+
 
 }

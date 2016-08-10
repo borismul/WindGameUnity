@@ -28,7 +28,7 @@ public class Chunk : MonoBehaviour {
     List<Vector3> offset3D = new List<Vector3>();
     List<Vector2> offset2D = new List<Vector2>();
     // Number of offsets to create
-    int nOffset = 20;
+    int nOffset = 3;
 
     // Lists of vertices, triangles and uvs for the mesh of the chunk
     List<Vector3> vert = new List<Vector3>();
@@ -39,8 +39,8 @@ public class Chunk : MonoBehaviour {
     int texturesPerLine = 4;
 
     // Map terrain and biome of this chunk
-    Vector3[,] map;
-    int[,] biomeMap;
+    public Vector3[,] map;
+    public int[,] biomeMap;
 
     int previousHighlightI;
     int previousHighlightK;
@@ -50,8 +50,13 @@ public class Chunk : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        bool generateMap = map == null;
         Initialize();
-        GenerateTerrain();
+
+        if (generateMap)
+        {
+            GenerateTerrain();
+        }
         GenerateGridTiles();
         GenerateTerrainMesh();
     }
@@ -82,22 +87,28 @@ public class Chunk : MonoBehaviour {
         Random.seed = seed;
 
         // Initialize the terrain map of this chunk
-        map = new Vector3[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
-        biomeMap = new int[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
+        if (map == null)
+        {
+            map = new Vector3[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
+            biomeMap = new int[chunkSize / tileSize + 1, chunkSize / tileSize + 1];
+        }
 
         // Generate the noise offsets
         GenerateNoiseOffsets(nOffset);
+
+        terrain.chunks.Add(this);
     }
 
     void GenerateTerrain()
     {
         int numTiles = chunkSize / tileSize;
+        Vector3 pos = new Vector3();
 
         for (int i = 0; i < numTiles + 1; i++)
         {
             for (int k = 0; k < numTiles + 1; k++)
             {
-                Vector3 pos = new Vector3(i * tileSize, 0, k * tileSize);
+                pos.Set(i * tileSize, 0, k * tileSize);
 
                 GenerateTerrainMap(i, k, pos);
                 GenerateBiomes(i, k, pos);
@@ -122,12 +133,29 @@ public class Chunk : MonoBehaviour {
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
+        Vector3 middle = new Vector3();
 
         for (int i = 0; i < chunkSize / tileSize; i++)
         {
             for (int k = 0; k < chunkSize / tileSize; k++)
             {
-                terrain.world[startI + i, startK + k] = (new GridTile(map[i, k] + new Vector3((float)tileSize / 2, (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y, (float)tileSize / 2) + transform.position, biomeMap[i, k], 0, true, null));
+                // Left bottom corner of tile
+                Vector3 mapPosition = map[i, k];
+
+                // Use the tileSize to set the position to the middle of the tile, y is the average of the 4 tile corners
+                float middleX = (float)tileSize / 2;
+                float middleY = (map[i, k].y + map[i, k + 1].y + map[i + 1, k].y + map[i + 1, k + 1].y) / 4 - map[i, k].y;
+                float middleZ = (float)tileSize / 2;
+                middle.Set(middleX, middleY, middleZ);
+
+                // Add a shift to the left bottom corner to place it in the middle of the tile and then add the position of the current chunk to make it a global position.
+                Vector3 finalPosition = mapPosition + middle + transform.position;
+                
+                // Create a new gridtile with its postion and biome.
+                GridTile newTile = new GridTile(finalPosition, biomeMap[i, k], 0, true, null);
+
+                // Add the tile to the world array in terrainController.
+                terrain.world[startI + i, startK + k] = newTile;
             }
         }
     }

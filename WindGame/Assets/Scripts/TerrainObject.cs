@@ -21,7 +21,7 @@ public class TerrainObject : MonoBehaviour {
     // Use this for initialization
     void Awake ()
     {
-	    for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
+        for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
         {
             newComponents.Add(new List<Mesh>());
             nonCombinedMesh.Add(new Mesh());

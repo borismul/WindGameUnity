@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class GridTile {
+using System;
+
+public class GridTile{
 
     public Vector3 position;
     public int biome;

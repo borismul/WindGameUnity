@@ -8,7 +8,6 @@ public class RadialMenu : MonoBehaviour {
     public GameObject buildMenu;
     GameObject instBuildMenu;
 
-
     // Use this for initialization
     void Start ()
     {
