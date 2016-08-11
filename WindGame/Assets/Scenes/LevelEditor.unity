@@ -92,6 +92,58 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 408742, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -199,6 +251,294 @@ Prefab:
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: waterLevel
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[4].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[5].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[6].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[7].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[8].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[9].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[10].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[11].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[12].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[13].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[14].biomeObjects.Array.data[0].maxRotation
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].emptyPrefab
+      value: 
+      objectReference: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].occurance
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].minScale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].maxScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[15].biomeObjects.Array.data[0].maxRotation
+      value: 360
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11404066, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}

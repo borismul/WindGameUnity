@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class WaterChunk : MonoBehaviour {
 
-    List<Vector3> verts = new List<Vector3>();
-    List<int> tris = new List<int>();
-    List<Vector2> uvs = new List<Vector2>();
+    List<Vector3> vert = new List<Vector3>();
+    List<int> tri = new List<int>();
+    List<Vector2> uv = new List<Vector2>();
+    List<Vector3> norm = new List<Vector3>();
 
     TerrainController terrain;
 
@@ -21,10 +22,13 @@ public class WaterChunk : MonoBehaviour {
 
     Mesh mesh = new Mesh();
 
+    Vector3[,] map;
+
     void Start()
     {
         Initialize();
         CreateWater();
+        GenerateTerrainMesh();
         CreateMesh();
     }
 
@@ -49,46 +53,91 @@ public class WaterChunk : MonoBehaviour {
         maxWaveHeight = terrain.maxWaveHeight;
 
         Random.seed = seed;
+
+        map = new Vector3[size / tileSize + 3, size / tileSize + 3];
     }
 
     void CreateWater()
     {
         List<Vector3> panelCorners = new List<Vector3>();
 
-        for (int i = 0; i< size / tileSize; i++)
+        for (int i = 0; i< size / tileSize + 3; i++)
         {
-            for (int j = 0; j < size / tileSize; j++)
+            for (int j = 0; j < size / tileSize + 3; j++)
             {
-                panelCorners.Clear();
-                panelCorners.Add(new Vector3(i * tileSize, level, j * tileSize));
-                panelCorners.Add(new Vector3(i * tileSize, level, j * tileSize + tileSize));
-                panelCorners.Add(new Vector3(i * tileSize + tileSize, level, j * tileSize + tileSize));
-                panelCorners.Add(new Vector3(i * tileSize + tileSize, level, j * tileSize));
-
-                CreatePanel(panelCorners);
+                map[i, j] = new Vector3((i - 1) * tileSize, level, (j - 1) * tileSize);
             }
         }
     }
 
-    void CreatePanel(List<Vector3> panelCorners)
+    public void GenerateTerrainMesh()
     {
-        int index = verts.Count;
-        verts.AddRange(panelCorners);
+        vert.Clear();
+        tri.Clear();
+        uv.Clear();
 
-        tris.Add(index);
-        tris.Add(index + 1);
-        tris.Add(index + 2);
-        tris.Add(index);
-        tris.Add(index + 2);
-        tris.Add(index + 3);
+        int n = map.GetLength(0);
+
+        AddVertsAndUVAndNorm(n);
+        AddTris(n);
+
+        CreateMesh();
+    }
+
+    void AddVertsAndUVAndNorm(int n)
+    {
+        for (int i = 1; i < n - 1; i++)
+        {
+            for (int j = 1; j < n - 1; j++)
+            {
+                vert.Add(map[i, j]);
+                AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
+            }
+        }
+    }
+
+    void AddTris(int n)
+    {
+        for (int i = 0; i < vert.Count - (n - 3 + n - 2); i++)
+        {
+            int rowL = Mathf.FloorToInt(i / (n - 3));
+            int rowU = rowL + 1;
+            int col = i - rowL * (n - 3);
+            int BL = rowL * (n - 2) + col;
+            int BR = BL + 1;
+            int UL = rowU * (n - 2) + col;
+            int UR = UL + 1;
+
+            tri.Add(BL);
+            tri.Add(UR);
+            tri.Add(UL);
+            tri.Add(BL);
+            tri.Add(BR);
+            tri.Add(UR);
+        }
+    }
+
+    void AddNormal(Vector3 curPos, Vector3 left, Vector3 up, Vector3 right, Vector3 down)
+    {
+        left = left - curPos;
+        up = up - curPos;
+        right = right - curPos;
+        down = down - curPos;
+
+        Vector3 normLeftUp = Vector3.Cross(left, up).normalized;
+        Vector3 normUpRight = Vector3.Cross(up, right).normalized;
+        Vector3 normRightDown = Vector3.Cross(right, down).normalized;
+        Vector3 normDownLeft = Vector3.Cross(down, left).normalized;
+
+        Vector3 normal = (normLeftUp + normUpRight + normRightDown + normDownLeft).normalized;
+        norm.Add(normal);
     }
 
     void CreateMesh()
     {
         mesh.Clear();
-        mesh.vertices = verts.ToArray();
-        mesh.triangles = tris.ToArray();
-        mesh.uv = uvs.ToArray();
+        mesh.vertices = vert.ToArray();
+        mesh.triangles = tri.ToArray();
 
         mesh.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -96,12 +145,17 @@ public class WaterChunk : MonoBehaviour {
 
     void UpdateWater()
     {
-        int index = 0;
-        foreach (Vector3 vert in verts)
+        vert.Clear();
+        for (int i = 1; i<map.GetLength(0) - 1; i++)
         {
-            float diff = Noise.PerlinNoise(new Vector2(vert.x, vert.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * Time.timeSinceLevelLoad * 100, octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
-            verts[index] = (new Vector3(verts[index].x, level + diff, verts[index].z));
-            index++;
+            for (int j = 1; j < map.GetLength(1) - 1; j++)
+            {
+                Vector3 vertex = map[i, j];
+                float diff = Noise.PerlinNoise(new Vector2(vertex.x, vertex.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * Time.timeSinceLevelLoad * 100, octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
+                map[i, j] = (new Vector3(vertex.x, level + diff, vertex.z));
+
+                vert.Add(map[i, j]);
+            }
         }
     }
 }

@@ -145,16 +145,17 @@ public class TerrainController : MonoBehaviour {
     IEnumerator BuildTerrain()
     {
         if(SceneManager.GetActiveScene().name != "Main Menu")
-            Instantiate(mainCamera);
+            //Instantiate(mainCamera);
         for (int i = 0; i < length / chunkSize; i++)
         {
             for (int j = 0; j < width / chunkSize; j++)
             {
                 GameObject chunk = (GameObject)Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
                 chunk.transform.parent = this.transform;
-                yield return null;
             }
-        }
+                yield return null;
+
+            }
         BuildWater();
         StartCoroutine(GenerateBiomeAttributes());
     }
@@ -522,14 +523,22 @@ public class TerrainController : MonoBehaviour {
         loadedWorld = world.terrainSaveList;
         Initialize();
 
+        int index = 0;
         foreach (TerrainSaveObject obj in loadedWorld)
         {
             GameObject curChunk = (GameObject)Instantiate(chunkPrefab, obj.chunkLoc.GetVec3(), Quaternion.identity);
             Chunk chunkScript = curChunk.GetComponent<Chunk>();
             chunkScript.map = obj.GetVec3Map();
             chunkScript.biomeMap = obj.biomeMap;
+            loadedWorld[index] = null;
+            System.GC.Collect();
+
+            if(index%1 == 0)
+                yield return null;
+
+            index++;
         }
-        yield return null;
+
         BuildWater();
         Instantiate(mainCamera);
         StartCoroutine(GenerateBiomeAttributes());
@@ -544,6 +553,7 @@ public class TerrainController : MonoBehaviour {
             Destroy(chunk.gameObject);
 
         chunks.Clear();
+        waterChunks.Clear();
         
         foreach (List<List<GameObject>> worldList2D in worldObjects)
         {
