@@ -9,7 +9,6 @@ public class GridTile{
     public int biome;
     public GridTileOccupant occupant;
     public List<Vector3> vert;
-    public List<int> vertIndices;
 
     // 0 is empty tile
     // 1 holds terrain generated object
@@ -17,14 +16,13 @@ public class GridTile{
     public int type;
     public bool canBuild;            
 
-    public GridTile(Vector3 position, List<Vector3> vert, List<int> vertIndices, int biome, int type, bool canBuild, GridTileOccupant occupant)
+    public GridTile(Vector3 position, List<Vector3> vert, int biome, int type, bool canBuild, GridTileOccupant occupant)
     {
         this.position = position;
         this.biome = biome;
         this.canBuild = canBuild;
         this.type = type;
         this.occupant = occupant;
-        this.vertIndices = vertIndices;
         this.vert = vert;
     }
 

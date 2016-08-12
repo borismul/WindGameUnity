@@ -115,7 +115,7 @@ MonoBehaviour:
   camLerpTrans: 8
   camLerpScroll: 8
   camLerpRot: 8
-  maxHeight: 150
+  maxHeight: 400
   minHeight: 50
   maxTilt: 50
   minTilt: 40

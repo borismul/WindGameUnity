@@ -43,8 +43,7 @@ public class Chunk : MonoBehaviour {
     public Vector3[,] map;
     public int[,] biomeMap;
 
-    GridTile previousTile;
-
+    // Mesh of this chunk
     Mesh mesh;
 
     // Use this for initialization
@@ -61,6 +60,7 @@ public class Chunk : MonoBehaviour {
         GenerateTerrainMesh();
     }
 
+    // Initialization of important attributes
     void Initialize()
     {
         // get the terrainController
@@ -99,36 +99,52 @@ public class Chunk : MonoBehaviour {
         terrain.chunks.Add(this);
     }
 
+    // Generate the terrain vertices and their respective biomes
     void GenerateTerrain()
     {
+        // Determine number of tiles in a row
         int numTiles = chunkSize / tileSize;
+
+        // Initialize a position vector
         Vector3 pos = new Vector3();
 
+        // Loop through all grid tiles plus 3 extra. 2 on the borders (which overlap with other chunk) to calculate normals from.
+        // And one more extra to get the desired number of tiles from vertices. (numTiles = numVertex + 1)
         for (int i = 0; i < numTiles + 3; i++)
         {
             for (int k = 0; k < numTiles + 3; k++)
             {
+                // Set the position vector to the the position of the current vertex
                 pos.Set((i-1) * tileSize, 0, (k-1) * tileSize);
-                GenerateTerrainMap(i, k, pos);
-                GenerateBiomes(i, k, pos);
+
+                // Generate the height and biome of the vertex, depending on its horizontal position.
+                map[i,k] = GenerateTerrainMap(i, k, pos);
+                biomeMap[i,k] = GenerateBiomes(i, k, pos);
             }
         }
     }
 
-    void GenerateTerrainMap(int i, int k, Vector3 pos)
+    // Generate noise in y direction at a horizonal plane position, return the vector3 including the noise on the y component.
+    Vector3 GenerateTerrainMap(int i, int k, Vector3 pos)
     {
+        // Put the position in a vector2
         Vector2 pos2D = new Vector2(pos.x + transform.position.x, pos.z + transform.position.z);
+
+        // Determine the perlin noise with the set maximum height depending on octaves, persistance and frequency
         pos.y = maxHeight * (Noise.PerlinNoise(pos2D, offset2D[0], terOctaves, terPersistance, terFrequency, 0, 1)) + 1;
-        map[i, k] = pos;
+        return pos;
     }
 
-    void GenerateBiomes(int i, int k, Vector3 pos)
+    // Generate biome noise at a position on a horizontal plane
+    int GenerateBiomes(int i, int k, Vector3 pos)
     {
+        // Gernerate the perlin noise based on position, octaves, persistance, frequency and number of set biomes.
         float noise = (terrain.biomes.Length) * (Noise.PerlinNoise(new Vector2(pos.x, pos.z) + new Vector2(transform.position.x, transform.position.z), offset2D[1], bioOctaves, bioPersistance, bioFrequency, 0, 1));
-        biomeMap[i, k] = Mathf.Clamp(Mathf.FloorToInt(noise), 0, terrain.biomes.Length - 1);
+        return Mathf.Clamp(Mathf.FloorToInt(noise), 0, terrain.biomes.Length - 1);
     }
 
-    void GenerateGridTile(List<Vector3> positions, List<int> vertIndices, int biome, int iPos, int jPos)
+    // Function generates a grid tile in the world 2d Array in TerrainController
+    void GenerateGridTile(List<Vector3> positions, int biome, int iPos, int jPos)
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
@@ -149,89 +165,120 @@ public class Chunk : MonoBehaviour {
 
        
         Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
-        terrain.world[startI+ iPos, startK + jPos] = new GridTile(position + transform.position, worldPositions, vertIndices, biome, 0, true, null);
+        terrain.world[startI+ iPos, startK + jPos] = new GridTile(position + transform.position, worldPositions, biome, 0, true, null);
     }
 
+    // Generate the mesh of this chunk
     public void GenerateTerrainMesh()
     {
+        // Clear all lists of vertices, triangles, normals and uvs
         vert.Clear();
         tri.Clear();
         uv.Clear();
+        norm.Clear();
 
+        // Determine dimension of map.
         int n = map.GetLength(0);
 
+        // Calculate vertices uvs and normals and add them to the lists
         AddVertsAndUVAndNorm(n);
+
+        // calculate the triangles and grid tiles
         AddTrisAndGridTiles(n);
         
-        SetMesh(false);
+        // Set the mesh the the MeshFilter of this GameOject
+        SetMesh();
     }
 
+    // Calculate vertices, uvs and normal and add them to their corresponding lists
     void AddVertsAndUVAndNorm(int n)
     {
+        // Loop through each of the vertices in map except for first and last one. (Those are the overlapping vertices with the chunk next to it)
         for (int i = 1; i < n - 1; i++)
         {
             for (int j = 1; j < n - 1; j++)
             {
+                // Add this vertex to the vert list
                 vert.Add(map[i, j]);
+
+                // Determine the uv of the vertex, depending on the biome
                 uv.Add(DetermineUV(biomeMap[i, j]));
+
+                // Add the normal of the vertex. (Takes into account the overlapping vertices)
                 AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
             }
         }
     }
 
+    // Calculate triangles and Generate Grid tiles
     void AddTrisAndGridTiles(int n)
     {
+        // Loop through each of the vertics in the vert list
         for (int i = 0; i < vert.Count - (n - 3 + n - 2); i++)
         {
+            // Determine the row in which vertex of the lower part of the panel is located
             int rowL = Mathf.FloorToInt(i / (n - 3));
+            // Determine the upper part row of the panel
             int rowU = rowL + 1;
+            // Determine the collumn in which the left part of the panel is situated
             int col = i - rowL * (n - 3);
+
+            // Determine the index of the bottom left vertex
             int BL = rowL * (n - 2) + col;
+            // Bottom right
             int BR = BL + 1;
+            // Upper left
             int UL = rowU * (n - 2) + col;
+            // Upper Right
             int UR = UL + 1;
 
+            // Add trianle Bottom left, Upper Right, Upper Left
             tri.Add(BL);
             tri.Add(UR);
             tri.Add(UL);
+
+            // Add triangle Bottom left , Bottom Right, Upper Right
             tri.Add(BL);
             tri.Add(BR);
             tri.Add(UR);
+            // Results in a square panel (Top view)
 
+
+            // Make a list of positions of vertices of which the gridTile consists
             List<Vector3> positions = new List<Vector3>();
-            List<int> vertIndices = new List<int>();
-            positions.Add(new Vector3(vert[BL].x, vert[BL].y, vert[BL].z));
-            int BLcopy = BL;
-            vertIndices.Add(BL);
-            positions.Add(new Vector3(vert[UL].x, vert[UL].y, vert[UL].z));
-            int ULcopy = UL;
-            vertIndices.Add(UL);
-            positions.Add(new Vector3(vert[UR].x, vert[UR].y, vert[UR].z));
-            int URcopy = UR;
-            vertIndices.Add(UR);
-            positions.Add(new Vector3(vert[BR].x, vert[BR].y, vert[BR].z));
-            int BRcopy = BR;
-            vertIndices.Add(BR);
-            GenerateGridTile(positions, vertIndices, biomeMap[rowL, col], rowL, col);
+            positions.Add(vert[BL]);
+            positions.Add(vert[UL]);
+            positions.Add(vert[UR]);
+            positions.Add(vert[BR]);
+
+            // Generate the grid tile
+            GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
         }
     }
 
+    // Determines the normal of a vertex depending on its four neighbours
     void AddNormal(Vector3 curPos, Vector3 left, Vector3 up, Vector3 right, Vector3 down)
     {
+        // Determine difference vectors of the neighbours wrt the curPos
         left = left - curPos;
         up = up - curPos;
         right = right - curPos;
         down = down - curPos;
 
+        // Determine the normal
         Vector3 normLeftUp = Vector3.Cross(left, up).normalized;
         Vector3 normUpRight = Vector3.Cross(up, right).normalized;
         Vector3 normRightDown = Vector3.Cross(right, down).normalized;
         Vector3 normDownLeft = Vector3.Cross(down, left).normalized;
 
+        // Determine the average normal
         Vector3 normal = (normLeftUp + normUpRight + normRightDown + normDownLeft).normalized;
+
+        // Add it to the list
         norm.Add(normal);
     }
 
+    // Generate noise offsets for the landscape and biomes
     void GenerateNoiseOffsets(int nOffset)
     {
         for (int i = 0; i < nOffset; i++)
@@ -244,35 +291,38 @@ public class Chunk : MonoBehaviour {
         }
     }
 
-    void SetMesh(bool easy)
+    // Generate the mesh based on vertices, triangles, uvs, and normals
+    void SetMesh()
     {
         if(mesh == null)
-        {
             mesh = new Mesh();
-        }
+        
+        // Set mesh
         mesh.vertices = vert.ToArray();
         mesh.triangles = tri.ToArray();
         mesh.uv = uv.ToArray();
         mesh.normals = norm.ToArray();
 
-        if (easy)
-        {
-            mesh.normals = GetComponent<MeshFilter>().mesh.normals;
-            Destroy(GetComponent<MeshFilter>().mesh);
-            GetComponent<MeshFilter>().mesh = mesh;
-            return;
-        }
+        // Destroy previous mesh (So it will not fill up the ram)
         Destroy(GetComponent<MeshFilter>().mesh);
+
+        // Set the mesh to the mesh filter and mesh collider
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
+    // Determines the UV based on the biome
     Vector2 DetermineUV(int biome)
     {
         Vector2 uv;
+
+        // Determine the row and collum in which the texture is situated
         int row = (biome / texturesPerLine);
         int col = biome - row * texturesPerLine;
+
+        // Set the middle point of the texture to the vertex
         uv = new Vector2((float)col / texturesPerLine + 1f/(texturesPerLine)/2f, (float)row / texturesPerLine + 1f / (texturesPerLine) / 2f);
+
         return uv;
     }
 

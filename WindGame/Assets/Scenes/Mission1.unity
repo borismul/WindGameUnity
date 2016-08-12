@@ -636,6 +636,18 @@ Prefab:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 197452, guid: 1f8d8502bb3c6114b9d974e727007f4f, type: 2}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].occurance
+      value: 0.669
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].minScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].maxScale
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
   m_IsPrefabParent: 0

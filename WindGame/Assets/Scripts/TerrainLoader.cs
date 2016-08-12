@@ -8,7 +8,7 @@ public class TerrainLoader : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.Load(levelName));
+        TerrainController.thisTerrainController.StartCoroutine(TerrainController.thisTerrainController.Load(levelName, true));
 	}
 	
 }
