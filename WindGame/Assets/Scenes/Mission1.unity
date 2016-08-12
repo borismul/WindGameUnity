@@ -703,6 +703,7 @@ Prefab:
       propertyPath: missionControllerObj
       value: 
       objectReference: {fileID: 879480008}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11415236, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
   m_IsPrefabParent: 0
