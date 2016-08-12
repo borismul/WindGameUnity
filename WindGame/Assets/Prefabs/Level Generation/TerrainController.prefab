@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 408742}
   - 114: {fileID: 11490242}
+  - 114: {fileID: 11404066}
   m_Layer: 0
   m_Name: TerrainController
   m_TagString: Untagged
@@ -29,6 +30,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11404066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 118210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d51fb923acb3ef40979224d2c79f497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelName: Mission1
 --- !u!114 &11490242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -40,37 +53,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c427726aa5889174d8082225163af879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  length: 2000
-  width: 2000
-  maxHeight: 300
+  length: 0
+  width: 0
+  maxHeight: 0
   biomes:
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
       occurance: 0.3
+      minScale: 0.5
+      maxScale: 2
+      minRotation: 0
+      maxRotation: 360
   - biomeObjects: []
   - biomeObjects:
     - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
       emptyPrefab: {fileID: 125940, guid: ec59005bb099fff46bca0ecd771b3126, type: 2}
-      occurance: 0.1
+      occurance: 0.05
+      minScale: 0.5
+      maxScale: 3
+      minRotation: 0
+      maxRotation: 0
+    - prefab: {fileID: 169438, guid: c5568cd6755e4744ab453b5a2961cd2c, type: 2}
+      emptyPrefab: {fileID: 163290, guid: 715434035e3089c4086aefcc9c474c91, type: 2}
+      occurance: 0.05
+      minScale: 0.1
+      maxScale: 1
+      minRotation: 0
+      maxRotation: 360
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
       occurance: 0.01
-  seed: 1
-  terrainOctaves: 5
-  terrainPersistance: 0.5
-  terrainFrequency: 0.0005
-  biomeOctaves: 5
-  biomePersistance: 0.5
-  biomeFrequency: 0.0002
+      minScale: 0.5
+      maxScale: 2
+      minRotation: 0
+      maxRotation: 360
+  seed: 0
+  terrainOctaves: 0
+  terrainPersistance: 0
+  terrainFrequency: 0
+  biomeOctaves: 0
+  biomePersistance: 0
+  biomeFrequency: 0
   chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
-  chunkSize: 200
-  tileSize: 4
-  tileSlope: 2
+  chunkSize: 0
+  tileSize: 0
+  tileSlope: 0
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
+  waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
+  waterChunkSize: 200
+  waterTileSize: 8
+  waterOctaves: 0
+  waterPersistance: 0
+  waterFrequency: 0
+  waterLevel: 100
   levelLoaded: 0
-  debugPrefab: {fileID: 124104, guid: 03b2d70a1d17fd840a62fa7bb1b5ebb8, type: 2}
+  chunks: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -42,8 +42,8 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        terrain.BuildObject(buildings[0].prefab, Quaternion.Euler(-90, 0, 0), Vector3.one * buildings[0].scale, centerTile, startRadius, true, false, true);
-
+        GameObject building = terrain.BuildObject(buildings[0].prefab, Quaternion.Euler(-90, 0, 0), Vector3.one * buildings[0].scale, centerTile, startRadius, true, false, true);
+        building.transform.SetParent(transform);
         int tileSize = terrain.tileSize;
 
         int thisX = Mathf.RoundToInt((centerTile.position.x - 0.5f * tileSize) / tileSize);
@@ -65,7 +65,8 @@ public class CityController : MonoBehaviour {
                 if (Vector3.Distance(checkGridTile.position, centerTile.position) < startRadius && rand.NextDouble() < density && checkGridTile.canBuild)
                 {
                     CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-                    terrain.BuildObject(buildObject.prefab, Quaternion.Euler(-90,0,0), Vector3.one * buildObject.scale, checkGridTile, 30, false, false, true);
+                    building = terrain.BuildObject(buildObject.prefab, Quaternion.Euler(-90,0,0), Vector3.one * buildObject.scale, checkGridTile, 30, false, false, true);
+                    building.transform.SetParent(transform);
                 }
             }
         }
