@@ -214,8 +214,8 @@ public class TerrainController : MonoBehaviour {
     // Method that generates each of the Objects on the terrain
     IEnumerator GenerateBiomeAttributes()
     {
-        // Index to keep track of how much objects have been placed
-        int index = 0;
+        // Index to keep track of how much time it takes
+        float timeSinceUpdate = Time.realtimeSinceStartup;
 
         // Loop through each grid tile in the world
         for (int i = 0; i < world.GetLength(0); i++)
@@ -257,9 +257,6 @@ public class TerrainController : MonoBehaviour {
                         // Generate the object
                         GenerateObject((world[i,k].position), Quaternion.Euler(0, rot, 0), Vector3.one * scale, world[i,k].biome, j, world[i,k]);
 
-                        // add 1 to the index
-                        index++;
-
                         // Break the loop for this grid tile
                         break;
                     }
@@ -270,10 +267,10 @@ public class TerrainController : MonoBehaviour {
 
 
                 // index is bigger than the set value wait for one frame update
-                if (index > 100)
+                if (Time.realtimeSinceStartup - timeSinceUpdate > 1f/10)
                 {
                     yield return null;
-                    index = 0;
+                    timeSinceUpdate = Time.realtimeSinceStartup;
                 }
 
             }
@@ -725,6 +722,7 @@ public class TerrainController : MonoBehaviour {
         Initialize();
 
         // Loop through all chunks and recreate them with their respective parameters
+        float timeSinceUpdate = Time.realtimeSinceStartup;
         int index = 0;
         foreach (TerrainSaveObject obj in chunkList)
         {
@@ -738,8 +736,11 @@ public class TerrainController : MonoBehaviour {
             System.GC.Collect();
 
             // Show an update if a certain ammount of chunks has been built
-            if(index%1 == 0)
+            if (Time.realtimeSinceStartup - timeSinceUpdate > 1f / 10f)
+            {
+                timeSinceUpdate = Time.realtimeSinceStartup;
                 yield return null;
+            }
 
             index++;
         }
