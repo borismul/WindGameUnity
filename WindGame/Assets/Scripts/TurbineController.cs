@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class TurbineController : MonoBehaviour {
-
     [SerializeField]
     GameObject blades;       // Blades + Hub GameObject
 
@@ -54,7 +53,6 @@ public class TurbineController : MonoBehaviour {
     public float parameterAcceptanceWEU1 = 0;
     public float parameterAcceptanceWEU2 = 0;
 
-
 	// Update is called once per frame
 	void Update ()
     {
@@ -76,6 +74,8 @@ public class TurbineController : MonoBehaviour {
         // Give the gameobjects their right rotations
         blades.transform.rotation = Quaternion.Euler(new Vector3(bladesRotX, bladesRotY, bladesRotZ));
         nacelle.transform.rotation = Quaternion.Euler(nacelleRotX, nacelleRotY, nacelleRotZ);
+
+        updatePower();
     }
 
     void repairWEU()
@@ -93,6 +93,8 @@ public class TurbineController : MonoBehaviour {
 
     void updatePower()
     {
+        randTerm = 1;
+        health = 1;
         power = (float)(parameterCapacityFactor * parameterRatedPower * (0.9 + 0.2 * randTerm) * System.Math.Sqrt(health) * (1 - modeOfOperation * (1 - parameterPowerFractionsSafeModeOperation))) * 100;
         powerDelivered = power * (1 - parameterPowerFractionLoss);
     }
@@ -104,11 +106,11 @@ public class TurbineController : MonoBehaviour {
 
     public void Update(float gameDeltaTime)
     {
-        updateHealth(gameDeltaTime);
-        updatePower();
-        updateCostOfMaintenance(gameDeltaTime);
-        totalCosts = costOfMaintenance + repairCosts;
-        repairCosts = 0;
+        // updateHealth(gameDeltaTime);
+        // updatePower();
+        // updateCostOfMaintenance(gameDeltaTime);
+        // totalCosts = costOfMaintenance + repairCosts;
+        // repairCosts = 0;
     }
 
     // Method that determines the rotation speed, based on the Incomming flow speed (Uinfinity), the tip speed ration (TSR) and the Radius of the acuator disk (R)

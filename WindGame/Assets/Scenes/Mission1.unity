@@ -189,12 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionName: Mission 1
-  capital: 0
-  totalPower: 0
-  costOfElectricity: 0
-  interestRate: 0
-  publicAcceptance: 0
-  operationalCosts: 0
   gameSpeed: 0
 --- !u!1 &879480008
 GameObject:
@@ -205,6 +199,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 879480010}
   - 114: {fileID: 879480009}
+  - 114: {fileID: 879480011}
   m_Layer: 0
   m_Name: Mission1Control
   m_TagString: Untagged
@@ -240,6 +235,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &879480011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 879480008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783e035da42b17b4788b4667aea9fb9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1161747432
 Prefab:
   m_ObjectHideFlags: 0
@@ -277,7 +283,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 455218, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
@@ -460,7 +466,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445484, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22445484, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -514,7 +520,8 @@ Prefab:
       propertyPath: missionControllerObj
       value: 
       objectReference: {fileID: 879480008}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11415236, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 43780546a58dd4a4d972f3554cf184d0, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1915522108
@@ -630,7 +637,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 408742, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: mainCamera
