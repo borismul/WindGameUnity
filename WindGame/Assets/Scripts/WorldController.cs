@@ -1,102 +1,55 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
+
+/**
+    The goal of this class is to keep track of all objects in the scene. 
+    It should contain functions for adding and removing new objects as well as
+    maintaining a list of all relevant objects.
+**/
 
 public class WorldController : MonoBehaviour
 {
     public string missionName;
-    public System.DateTime date;
-    public float capital;
-    public float totalPower;
-    public float costOfElectricity;
-    public float interestRate;
-    public float publicAcceptance;
-    public float operationalCosts;
     public float gameSpeed;
-    public static System.Collections.Generic.List<GameObject> turbines = new System.Collections.Generic.List<GameObject>();
+
+    TurbineManager turbManager; // Holder of turbines
 
     // Use this for initialization
     void Start()
     {
-        GameObject[] turbinesObj = GameObject.FindGameObjectsWithTag("turbine");
-        foreach (GameObject turbineObj in turbinesObj)
-        {
-            turbines.Add(turbineObj);
-        }
-        date = new System.DateTime(800, 10, 10);
+        turbManager = TurbineManager.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //If paused don't update
+                // If paused don't update
         if (gameSpeed == 0)
             return;
         
-        //Calculate gameDeltaTime in hours
-        //gameDeltaTime is amount of hours
-        float gameDeltaTime = Time.deltaTime * gameSpeed;
-        date = date.AddHours(gameDeltaTime);
+        // Calculate the time passed in seconds since last frame
+        float dt = Time.deltaTime * gameSpeed;
 
-        GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
-        foreach (GameObject turbineObj in turbines)
-        {
-            TurbineController turbine = turbineObj.GetComponent<TurbineController>();
-            turbine.Update(gameDeltaTime);
-        }
-
-        this.Update(gameDeltaTime);
+        Update(dt);
     }
 
-    void Update(float gameDeltaTime)
+    void Update(float idt)
     {
-        this.updatePower();
-        this.updateOperationalCosts();
-        this.updateCapital(gameDeltaTime);
-        this.updatePublicAcceptance();
+        // Update the turbine manager
+        turbManager.Update(idt);
     }
 
-    void updatePower()
-    {
-        GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
-        float pow = 0;
-        foreach (GameObject turbineObj in turbines)
-        {
-            TurbineController turbine = turbineObj.GetComponent<TurbineController>();
-            pow += turbine.powerDelivered;
-        }
-        totalPower = pow;
-    }
 
-    void updateOperationalCosts()
+    // Builder function, some class wants the world to add an object
+    public static void Add(GameObject something, Vector3 pos)
     {
-        GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
-        float costs = 0;
-        foreach (GameObject turbineObj in turbines)
-        {
-            TurbineController turbine = turbineObj.GetComponent<TurbineController>();
-            costs += turbine.costOfMaintenance;
-        }
-        operationalCosts = costs;
-    }
-
-    void updateCapital(float gameDeltaTime)
-    {
-        capital += totalPower * this.costOfElectricity / 1000000;
-        double hourlyInterestRate = System.Math.Pow((1 + this.interestRate), 1 / 365 * 24);
-        double variation = System.Math.Pow(hourlyInterestRate, gameDeltaTime) - 1;
-        double costOfCapital = System.Math.Min(this.capital * variation, 0);
-        costOfCapital -= operationalCosts;
-        capital += (float)costOfCapital * gameDeltaTime;
-    }
-
-    void updatePublicAcceptance()
-    {
-        GameObject[] turbines = GameObject.FindGameObjectsWithTag("turbine");
-        float negPublic = 0;
-        for (int i = 0; i < turbines.Length; i++)
-        {
-            negPublic += 0.5f;
-        }
-        publicAcceptance = totalPower / 2.1f - negPublic * 1;
+        GameObject t = Instantiate(something);
+        t.transform.position = pos;
+        t.tag = "turbine";
+        
+        TurbineManager turbManager = TurbineManager.GetInstance();
+        turbManager.AddTurbine(t);
     }
 }

@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
     [Header("Start Variables")]
     public float camLerpScrollStart;
 
-Vector3 previousPos;
+    Vector3 previousPos;
 
     Vector3 targetPos;
     Vector3 targetRot;
@@ -55,14 +55,18 @@ Vector3 previousPos;
     TerrainController terrain;
     float camScrollLerpSet;
 
+    RaycastHit rotatePoint;
+
     // Unity Methods //
 
     // Determine initial conditions
+
+
     void Start()
     {
         terrain = TerrainController.thisTerrainController;
-
         CameraStart();
+
     }
 
     // Update inputs and process
@@ -112,12 +116,11 @@ Vector3 previousPos;
     {
         float xPos = terrain.length / 2;
         float zPos = terrain.width / 2;
-        float yPos = terrain.width/2 / Mathf.Tan(Mathf.Deg2Rad * 30);
+        float yPos = 500;
         transform.position = new Vector3(xPos, yPos, zPos);
-        transform.rotation = Quaternion.Euler(89, 0, 0);
+        transform.rotation = Quaternion.Euler(90, 0, 0);
         Camera.main.orthographic = true;
         Camera.main.orthographicSize = terrain.width / 2;
-        Camera.main.backgroundColor = Color.black;
         Camera.main.clearFlags = CameraClearFlags.SolidColor;
 
         targetPos = transform.position;
@@ -157,6 +160,13 @@ Vector3 previousPos;
         scrollInput = -Input.GetAxis("Mouse ScrollWheel");
         middleMouse = Input.GetMouseButton(2);
 
+        if (Input.GetMouseButtonDown(2))
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity);
+            rotatePoint = hit;
+        }
+
         // Only track the mouse movement if the middle mouse button is being clicked
         if (middleMouse)
         {
@@ -168,11 +178,8 @@ Vector3 previousPos;
         else
         {
             xMouse = 0;
-        }
-
-        // If the mousewheel is scrolled set overrule back to false, so automatic tilt will take over again
-        if (scrollInput != 0)
             overRuleCam = false;
+        }
     }
 
     // Method the processes the camera inputs and sets the target position of the camera
@@ -245,7 +252,6 @@ Vector3 previousPos;
 
         // Set the targetHeight of the camera wrt the ground (with diffHeight)
         float targetHeight = targetPos.y - heightDiff + y;
-
         // If this is in between the set ranges set the camera target to the global axis system (without diffHeight)
         if (targetHeight < maxHeight && targetHeight > minHeight)
             targetY = targetPos.y + y;
@@ -253,17 +259,17 @@ Vector3 previousPos;
         else if (targetHeight >= maxHeight)
         {
             // if the camera input is downward accept it
-            if (y < 0)
+            if (y <= 0)
                 targetY = targetPos.y + y;
             // Else set to maximum camera height
             else
                 targetY = maxHeight + heightDiff;
         }
-        // Else f the targetHeight goes below the set minimum boundary
+        // Else if the targetHeight goes below the set minimum boundary
         else if (targetHeight <= minHeight)
         {
             // if the camera input is upward accept it
-            if (y > 0)
+            if (y >= 0)
                 targetY = targetPos.y + y;
             // Else set the minimum camera height
             else
@@ -307,7 +313,8 @@ Vector3 previousPos;
         else
         {
             // determine the camera rotation based the mouse input of the user
-            targetRot = ManualRot(targetRot);
+            ManualRot(rotatePoint);
+            //targetRot = transform.rotation.eulerAngles;
         }
 
         // Set a camera position and move it slowly towards the target position (Lerp function)
@@ -350,18 +357,16 @@ Vector3 previousPos;
     }
 
     // Method determines the rotation of the camera in x and y axis based on user mouse input
-    Vector3 ManualRot(Vector3 currentRot)
+    void ManualRot(RaycastHit hit)
     {
+        float movement = xMouse * camSpeedRot * Time.deltaTime;
+
+        targetRot += new Vector3(0, movement, 0);
+        targetPos = Quaternion.Euler(targetRot) * new Vector3(0, 0, -hit.distance) + hit.point;
+
         // Determine the camera rotation in x and y axis speed based on mouse user input
-        float eulY = xMouse * camSpeedRot * Time.deltaTime;
+        targetPos = targetPos + Camera.main.transform.right * movement;
 
-        // Add the angles to the previous rotation, and obtain the target
-        Vector3 tempRot = currentRot + new Vector3(0, eulY, 0);
-
-        // Clamp the x eulerangle rotation (pitch) to [-90, 90] so the camera can't get opside down
-        Vector3 targetRot = new Vector3(Mathf.Clamp(tempRot.x, -90, 90), tempRot.y, 0);
-
-        return targetRot;
     }
 
     // Method determines the camera height and saves some values for next run
@@ -372,17 +377,20 @@ Vector3 previousPos;
 
         // TEMPORARY if the ground can't be hit set the camera back to the previous location (camera went of terrain) TEMPORARY //
         if (!Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
-            targetPos = previousPos;
+        {
+            //targetPos = previousPos;
+            hitPointDiff = 0;
+            return;
+        }
         // else, save the current position as previous
         else
+        {
             previousPos = transform.position;
+        }
 
         // determine the camera height
         camHeight = hit.distance;
-
-        // If the camera height = 0 (camera outside boundaries or glitch through ground) set the value to minimum height
-        if (camHeight == 0)
-            camHeight = minHeight;
+        
 
         // Determine the difference in ground level wrt last iteration
         hitPointDiff = hit.point.y - prevHitPointY;

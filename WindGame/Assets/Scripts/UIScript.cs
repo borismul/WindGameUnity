@@ -68,22 +68,23 @@ public class UIScript : MonoBehaviour {
         menuScreen.SetActive(false);
 
         SetSpeed1x();
+
     }
 
     // Update is called once per frame
     void Update () {
         Text currtext;
         currtext = capitalText.GetComponent<Text>();
-        currtext.text = System.Math.Round(world.capital).ToString();
+        currtext.text = GameResources.getWealth().ToString();
 
         currtext = publicAcceptanceText.GetComponent<Text>();
-        currtext.text = world.publicAcceptance.ToString();
+        currtext.text = GameResources.getPublicAcceptance().ToString();
 
         currtext = powerText.GetComponent<Text>();
-        currtext.text = world.totalPower.ToString();
+        currtext.text = GameResources.getProduction().ToString();
 
         currtext = dateText.GetComponent<Text>();
-        currtext.text = world.date.Date.ToString();
+        currtext.text = GameResources.getDate().ToString("M-yyyy");
 
         if (menuScreen.activeSelf)
         {
@@ -105,6 +106,7 @@ public class UIScript : MonoBehaviour {
 
     void Pause()
     {
+        print("Pause pressed");
         world.gameSpeed = 0;
     }
 
