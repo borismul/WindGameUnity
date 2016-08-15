@@ -14,13 +14,15 @@ public class TerrainObject : MonoBehaviour {
     public bool hasReloaded;
 
     List<Mesh> nonCombinedMesh = new List<Mesh>();
-    Mesh result = new Mesh();
+    Mesh result;
 
     List<CombineInstance> instances = new List<CombineInstance>();
 
     // Use this for initialization
     void Awake ()
     {
+        result = new Mesh();
+
         for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
         {
             newComponents.Add(new List<Mesh>());

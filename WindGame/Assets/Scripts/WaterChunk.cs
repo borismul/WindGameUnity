@@ -20,7 +20,7 @@ public class WaterChunk : MonoBehaviour {
     float frequency;
     float maxWaveHeight;
 
-    Mesh mesh = new Mesh();
+    Mesh mesh;
 
     Vector3[,] map;
 
@@ -40,6 +40,8 @@ public class WaterChunk : MonoBehaviour {
 
     void Initialize()
     {
+        mesh = new Mesh();
+
         terrain = TerrainController.thisTerrainController;
         terrain.waterChunks.Add(this);
 
@@ -52,7 +54,7 @@ public class WaterChunk : MonoBehaviour {
         frequency = terrain.waterFrequency;
         maxWaveHeight = terrain.maxWaveHeight;
 
-        Random.seed = seed;
+        Random.InitState(seed);
 
         map = new Vector3[size / tileSize + 3, size / tileSize + 3];
     }

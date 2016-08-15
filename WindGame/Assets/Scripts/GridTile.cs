@@ -34,6 +34,11 @@ public class GridTile{
         int x = Mathf.RoundToInt((point.x - 0.5f * tileSize) / tileSize);
         int z = Mathf.RoundToInt((point.z - 0.5f * tileSize) / tileSize);
 
+        if (x >= world.GetLength(0) || x < 0)
+            return null;
+
+        if (z >= world.GetLength(1) || z < 0)
+            return null;
 
         return world[x,z];
     }

@@ -56,7 +56,6 @@ public class Chunk : MonoBehaviour {
         {
             GenerateTerrain();
         }
-        //GenerateGridTiles();
         GenerateTerrainMesh();
     }
 
@@ -84,7 +83,7 @@ public class Chunk : MonoBehaviour {
         tileSize = terrain.tileSize;
 
         // set seed
-        Random.seed = seed;
+        Random.InitState(seed);
 
         // Initialize the terrain map of this chunk
         if (map == null)

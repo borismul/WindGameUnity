@@ -11,9 +11,16 @@ public class EditorMenuController : MonoBehaviour {
 
     public GameObject createMapPanel;
     public GameObject saveMapPanel;
+    public GameObject AreYouSurePanel;
+
+    public bool isDirty = false;
+
+    public static EditorMenuController singleton;
 
     void Start()
     {
+        singleton = this;
+
         createMap.onClick.AddListener(CreateMap);
         mainMenu.onClick.AddListener(MainMenu);
         saveMap.onClick.AddListener(SaveMapPanel);
@@ -21,10 +28,20 @@ public class EditorMenuController : MonoBehaviour {
 
     void CreateMap()
     {
-        if (CreateMapPanelController.createPanelMapController == null)
+        if (!isDirty && CreateMapPanelController.createPanelMapController == null)
         {
-            GameObject mapPanel = (GameObject)Instantiate(createMapPanel);
+            Instantiate(createMapPanel);
         }
+        else if(isDirty && AreYouSureMenuController.singleton == null)
+        {
+            AreYouSureMenuController controller = Instantiate(AreYouSurePanel).GetComponent<AreYouSureMenuController>();
+            controller.yesCall += InstantiateMapPanel;
+        }
+    }
+
+    void InstantiateMapPanel()
+    {
+        Instantiate(createMapPanel);
     }
 
     void MainMenu()

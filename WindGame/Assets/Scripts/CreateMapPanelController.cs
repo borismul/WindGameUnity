@@ -79,6 +79,8 @@ public class CreateMapPanelController : MonoBehaviour {
         terrainController.waterFrequency = float.Parse(waterFrequency.text);
 
         terrainController.BuildButton();
+
+        EditorMenuController.singleton.isDirty = true;
         Destroy(this.gameObject);
     }
 
