@@ -23,8 +23,9 @@ public class GameResources : MonoBehaviour
 	static float production;		// Keep track of the total production
 	static float publicAcceptance; // Keep track of public acceptance
 	static DateTime date;
+    static float gameSpeed;
 
-	float costOfElectricity = 0.002f;
+	static float costOfElectricity = 0.002f;
 
 	void Start () {
 		// Set starting game resources
@@ -32,23 +33,38 @@ public class GameResources : MonoBehaviour
 		production = 0;
 		publicAcceptance = initialAcceptance;
 		date = new DateTime(800, 10, 10);
+        gameSpeed = 0;
 	}
 	
+    void Update()
+    {
+        // If paused don't update
+        if (gameSpeed == 0)
+            return;
+
+        // Calculate the time passed in seconds since last frame
+        float dt = Time.deltaTime * gameSpeed;
+
+        Update(dt);
+    }
+
 	// Update is called once per frame
-	void Update () {
-		updateResources();	
-	}
+	public static void Update (float gameDeltaTime) {
+
+		updateResources(gameDeltaTime);
+        
+    }
 
 	// Resource calculators
-	void updateResources()
+	static void updateResources(float gameDeltaTime)
 	{
 		TurbineManager turbManager = TurbineManager.GetInstance();
 		// **Update production
-		production = turbManager.GetTotalProduction(); // * dt; // IMPLEMENT WHEN DT KNOWN
+		production = turbManager.GetTotalProduction();
 
 		// **Update wealth
-		wealth += production * costOfElectricity; // Add 'sold' electricity to our wealth
-		wealth -= turbManager.GetTotalMaintenanceCosts(); // Deduct the price of turbine maintenance
+		wealth += production * costOfElectricity * gameDeltaTime; // Add 'sold' electricity to our wealth
+		wealth -= turbManager.GetTotalMaintenanceCosts() * gameDeltaTime; // Deduct the price of turbine maintenance
 
 		// **Update public acceptance
 		// The public gets more negative with more turbines built
@@ -59,7 +75,7 @@ public class GameResources : MonoBehaviour
 		publicAcceptance *= 100; // Convert to %
 
 		// Update time
-		date = date.AddDays(1);
+		date = date.AddHours(gameDeltaTime);
 		
 		// wealth += 0.8f * production;
 	}
@@ -97,4 +113,14 @@ public class GameResources : MonoBehaviour
 	{
 		return date;
 	}
+
+    public static float getGameSpeed()
+    {
+        return gameSpeed;
+    }
+
+    public static void setGameSpeed(float speed)
+    {
+        gameSpeed = speed;
+    }
 }

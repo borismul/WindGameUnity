@@ -12,7 +12,6 @@ using System;
 public class WorldController : MonoBehaviour
 {
     public string missionName;
-    public float gameSpeed;
 
     TurbineManager turbManager; // Holder of turbines
 
@@ -22,25 +21,12 @@ public class WorldController : MonoBehaviour
         turbManager = TurbineManager.GetInstance();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-                // If paused don't update
-        if (gameSpeed == 0)
-            return;
-        
-        // Calculate the time passed in seconds since last frame
-        float dt = Time.deltaTime * gameSpeed;
-
-        Update(dt);
+        float dt = Time.deltaTime * GameResources.getGameSpeed();
+        turbManager.Update(dt);
     }
-
-    void Update(float idt)
-    {
-        // Update the turbine manager
-        turbManager.Update(idt);
-    }
-
 
     // Builder function, some class wants the world to add an object
     public static void Add(GameObject something, Vector3 pos)

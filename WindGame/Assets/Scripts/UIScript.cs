@@ -3,10 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class UIScript : MonoBehaviour {
-
-    [SerializeField]
-    GameObject worldObj;
-
     [SerializeField]
     GameObject missionControllerObj;
 
@@ -48,15 +44,13 @@ public class UIScript : MonoBehaviour {
 
     [SerializeField]
     GameObject speedButton10x;
-
-    WorldController world;
+    
     Mission1Controller missionController;
 
     float oldspeed;
 
     // Use this for initialization
     void Start () {
-        world = worldObj.GetComponent<WorldController>();
         missionController = missionControllerObj.GetComponent<Mission1Controller>();
         pauseButton.GetComponent<Button>().onClick.AddListener(Pause);
         speedButton1x.GetComponent<Button>().onClick.AddListener(SetSpeed1x);
@@ -106,19 +100,21 @@ public class UIScript : MonoBehaviour {
 
     void Pause()
     {
-        print("Pause pressed");
-        world.gameSpeed = 0;
+        GameResources.setGameSpeed(0);
+
     }
 
     //Base gamespeed = 200
     void SetSpeed1x()
     {
-        world.gameSpeed = 200;
+        GameResources.setGameSpeed(200);
+
     }
 
     void SetSpeed10x()
     {
-        world.gameSpeed = 2000;
+        GameResources.setGameSpeed(2000);
+
     }
 
     void Menu()
@@ -130,7 +126,7 @@ public class UIScript : MonoBehaviour {
             speedButton1x.SetActive(true);
 
             menuScreen.SetActive(false);
-            world.gameSpeed = oldspeed;
+            GameResources.setGameSpeed(oldspeed);
         }
         else
         {
@@ -138,16 +134,17 @@ public class UIScript : MonoBehaviour {
             speedButton10x.SetActive(false);
             speedButton1x.SetActive(false);
 
-            oldspeed = world.gameSpeed;
+            oldspeed = GameResources.getGameSpeed();
             menuScreen.SetActive(true);
-            world.gameSpeed = 0;
+            GameResources.setGameSpeed(0);
         }
     }
 
     public void GameOver()
     {
         menuText.GetComponent<Text>().text = "Mission Failed";
-        world.gameSpeed = 0;
+        GameResources.setGameSpeed(0);
+
         menuScreen.SetActive(true);
         menuButton.SetActive(false);
         closeMenuButton.SetActive(false);
@@ -159,7 +156,8 @@ public class UIScript : MonoBehaviour {
     public void GameWon()
     {
         menuText.GetComponent<Text>().text = "Mission Finished";
-        world.gameSpeed = 0;
+        GameResources.setGameSpeed(0);
+
         menuScreen.SetActive(true);
         menuButton.SetActive(false);
         closeMenuButton.SetActive(false);
