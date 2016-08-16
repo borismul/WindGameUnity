@@ -55,3 +55,7 @@ MonoBehaviour:
   objectives: []
   worldObj: {fileID: 0}
   UIObj: {fileID: 0}
+  worldManagerPrefab: {fileID: 1000013938618804, guid: 88da2b15eda2ad84a86438a58bef07ea,
+    type: 2}
+  resourceManagerPrefab: {fileID: 1000012720656524, guid: 78748f48816c70948a17ff72c84e9435,
+    type: 2}

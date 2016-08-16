@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000012119930252}
   - 114: {fileID: 114000010790415540}
   m_Layer: 0
-  m_Name: World
+  m_Name: WorldManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,3 +52,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionName: Mission 1
+  weatherManagerPrefab: {fileID: 162066, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
+  terrainManagerPrefab: {fileID: 118210, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+  turbineManagerPrefab: {fileID: 1000012533908156, guid: c3c78971c22fb9745a3b7b835e0ea517,
+    type: 2}
+  buildingsManagerPrefab: {fileID: 1000013730450184, guid: 54aa5c1a6e2e1084f890ef3378f7ade4,
+    type: 2}
+  worldInteractionManagerPrefab: {fileID: 1000010514723762, guid: 81e892464337d974c8b53b6b96f23b75,
+    type: 2}
