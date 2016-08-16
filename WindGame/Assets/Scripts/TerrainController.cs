@@ -748,10 +748,6 @@ public class TerrainController : MonoBehaviour {
         // Create the water
         BuildWater();
 
-        // Create the camera, if desired
-        if(instantiateCamera)
-            Instantiate(mainCamera);
-
         // Create all biome objects
         StartCoroutine(GenerateBiomeAttributes());
     }

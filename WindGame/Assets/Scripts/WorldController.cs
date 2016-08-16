@@ -15,7 +15,7 @@ public class WorldController : MonoBehaviour
 
     TurbineManager turbManager; // Holder of turbines
 
-    private WorldController instance;
+    private static WorldController instance;
 
     [Header("Prefabs")]
     public GameObject weatherManagerPrefab;
@@ -25,11 +25,14 @@ public class WorldController : MonoBehaviour
     public GameObject worldInteractionManagerPrefab;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         CreateSingleton();
         InstantiateStartPrefabs();
+    }
 
+    void Start()
+    {
         turbManager = TurbineManager.GetInstance();
     }
 
@@ -68,7 +71,7 @@ public class WorldController : MonoBehaviour
     }
 
     // Get the singleton instance
-    public WorldController GetInstance()
+    public static WorldController GetInstance()
     {
         return instance;
     }

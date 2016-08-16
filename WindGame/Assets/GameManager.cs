@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 
     private static GameManager instance;
 
-	void Start ()
+	void Awake ()
     {
         CreateSingleton();
         InstantiateStartPrefabs();
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
     }
 
     // Get the singleton instance
-    public GameManager GetInstance()
+    public static GameManager GetInstance()
     {
         return instance;
     }

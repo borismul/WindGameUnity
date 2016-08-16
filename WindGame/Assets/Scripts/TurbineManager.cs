@@ -7,22 +7,41 @@ using System.Collections.Generic;
 	Contains functions for adding and removing turbines as well as
 	functions for other classes to request specific information
 **/
-public sealed class TurbineManager : MonoBehaviour{
+public class TurbineManager : MonoBehaviour{
 	private List<GameObject> turbines = new List<GameObject>();
 
-	private static readonly TurbineManager instance = new TurbineManager();
-	
-	private TurbineManager()
-	{
-		
-	}
+    private static TurbineManager instance;
 
-	public static TurbineManager GetInstance()
-	{
-		return instance;
-	}
+    // Use this for initialization
+    void Awake()
+    {
+        CreateSingleton();
+    }
 
-	public void Update(float idt)
+    // Create the singletone for the TurbineManager. Also checks if there is another present and logs and error.
+    void CreateSingleton()
+    {
+        if (instance != null)
+        {
+            Debug.LogError("TurbineManager already exists while it should be instantiated only once.");
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    // Get the singleton instance
+    public static TurbineManager GetInstance()
+    {
+        return instance;
+    }
+    
+    void Update()
+    {
+
+    }
+
+    public void Update(float idt)
 	{
 		foreach(GameObject turbine in turbines)
 		{

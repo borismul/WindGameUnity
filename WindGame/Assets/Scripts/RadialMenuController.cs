@@ -30,11 +30,9 @@ public class RadialMenuController : MonoBehaviour {
         if (!Input.GetMouseButtonDown(1) || radMenuInst != null || buildMenu != null)
             return;
 
-        Vector3 position = Input.mousePosition;
-
         radMenuInst = (GameObject)Instantiate(radMenu, Vector3.zero, Quaternion.identity);
-        radMenuInst.transform.GetChild(0).position = position;
-        radMenuInst.transform.GetChild(0).localScale = Vector3.one*0.65f;
+        radMenuInst.transform.position = Input.mousePosition;
+        radMenuInst.transform.localScale = Vector3.one*0.65f;
         justOpened = true;
     }
 

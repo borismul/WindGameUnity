@@ -78,24 +78,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9135aec075854428e70c772c8daa88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionControllerObj: {fileID: 0}
-  exitButton: {fileID: 0}
-  menuButton: {fileID: 0}
-  menuText: {fileID: 0}
-  closeMenuButton: {fileID: 0}
-  objectivesValue: {fileID: 0}
-  menuScreen: {fileID: 0}
-  capitalText: {fileID: 0}
-  publicAcceptanceText: {fileID: 0}
-  powerText: {fileID: 0}
-  dateText: {fileID: 0}
-  pauseButton: {fileID: 0}
-  speedButton1x: {fileID: 0}
-  speedButton10x: {fileID: 0}
   eventSystemPrefab: {fileID: 1000011911297958, guid: a97a2ae18f5d08145b62fbd43735221a,
     type: 2}
   buildMenuPrefab: {fileID: 194086, guid: 7ea41180b80a2e141bc944093db77811, type: 2}
-  resourcesMenuPrefab: {fileID: 1000012051374442, guid: 43780546a58dd4a4d972f3554cf184d0,
+  resourcesMenuPrefab: {fileID: 1000013802505068, guid: d22e0b41247a2ef4bbc31c6ae1710826,
     type: 2}
   mainMenuPrefab: {fileID: 155136, guid: bf18ff7bcbf0f4947a385a4d0f6d4328, type: 2}
   radialMenuPrefab: {fileID: 139948, guid: 0814e698324edc04daa12e6c0b720f23, type: 2}
