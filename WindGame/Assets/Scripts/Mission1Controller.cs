@@ -10,11 +10,11 @@ public class Mission1Controller : MonoBehaviour {
     [SerializeField]
     GameObject worldObj;
 
-    [SerializeField]
-    GameObject UIObj;
+    //[SerializeField]
+    //GameObject UIObj;
 
     // WorldController world;
-    UIScript ui;
+    //UIScript ui;
 
 
 	// Use this for initialization
@@ -22,7 +22,7 @@ public class Mission1Controller : MonoBehaviour {
         objectivesCompleted = new bool[] { false, false, true };
         objectives = new string[] { "Generate 1000 power before 830 AD", "Get 20000 capital before 850 AD", "Keep public acceptance above -1" };
         // world = worldObj.GetComponent<WorldController>();
-        ui = UIObj.GetComponent<UIScript>();
+        //ui = UIObj.GetComponent<UIScript>();
 
         obj1Date = new System.DateTime(830, 1, 1);
         obj2Date = new System.DateTime(850, 1, 1);
@@ -64,11 +64,11 @@ public class Mission1Controller : MonoBehaviour {
 
     void gameOver()
     {
-        ui.GameOver();
+        //ui.GameOver();
     }
 
     void gameWon()
     {
-        ui.GameWon();
+        //ui.GameWon();
     }
 }
