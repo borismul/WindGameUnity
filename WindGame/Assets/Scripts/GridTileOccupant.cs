@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GridTileOccupant
 {
-
     public GameObject obj;
     public Quaternion rotation;
     public Vector3 scale;

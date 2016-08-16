@@ -1736,7 +1736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9135aec075854428e70c772c8daa88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldObj: {fileID: 0}
   missionControllerObj: {fileID: 0}
   exitButton: {fileID: 1000011264280072}
   menuButton: {fileID: 1000011314922102}

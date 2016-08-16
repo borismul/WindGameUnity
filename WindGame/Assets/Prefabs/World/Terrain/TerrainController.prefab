@@ -60,9 +60,9 @@ MonoBehaviour:
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
-      occurance: 0.3
-      minScale: 0.5
-      maxScale: 2
+      occurance: 0.669
+      minScale: 1
+      maxScale: 3
       minRotation: 0
       maxRotation: 360
   - biomeObjects: []
@@ -108,8 +108,11 @@ MonoBehaviour:
   waterPersistance: 0
   waterFrequency: 0
   waterLevel: 100
+  maxWaveHeight: 0
+  mainCamera: {fileID: 197452, guid: 1f8d8502bb3c6114b9d974e727007f4f, type: 2}
   levelLoaded: 0
   chunks: []
+  waterChunks: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

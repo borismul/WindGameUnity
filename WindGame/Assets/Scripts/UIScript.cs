@@ -49,19 +49,33 @@ public class UIScript : MonoBehaviour {
 
     float oldspeed;
 
+    private static UIScript instance;
+
+    [Header("Prefabs")]
+    public GameObject eventSystemPrefab;
+    public GameObject buildMenuPrefab;
+    public GameObject resourcesMenuPrefab;
+    public GameObject mainMenuPrefab;
+    public GameObject radialMenuPrefab;
+    public GameObject turorialPrefab;
+
     // Use this for initialization
-    void Start () {
-        missionController = missionControllerObj.GetComponent<Mission1Controller>();
-        pauseButton.GetComponent<Button>().onClick.AddListener(Pause);
-        speedButton1x.GetComponent<Button>().onClick.AddListener(SetSpeed1x);
-        speedButton10x.GetComponent<Button>().onClick.AddListener(SetSpeed10x);
-        menuButton.GetComponent<Button>().onClick.AddListener(Menu);
-        closeMenuButton.GetComponent<Button>().onClick.AddListener(Menu);
-        exitButton.GetComponent<Button>().onClick.AddListener(Exit);
+    void Start ()
+    {
+        CreateSingleton();
+        InstantiateStartPrefabs();
 
-        menuScreen.SetActive(false);
+        //missionController = missionControllerObj.GetComponent<Mission1Controller>();
+        //pauseButton.GetComponent<Button>().onClick.AddListener(Pause);
+        //speedButton1x.GetComponent<Button>().onClick.AddListener(SetSpeed1x);
+        //speedButton10x.GetComponent<Button>().onClick.AddListener(SetSpeed10x);
+        //menuButton.GetComponent<Button>().onClick.AddListener(Menu);
+        //closeMenuButton.GetComponent<Button>().onClick.AddListener(Menu);
+        //exitButton.GetComponent<Button>().onClick.AddListener(Exit);
 
-        SetSpeed1x();
+        //menuScreen.SetActive(false);
+
+        //SetSpeed1x();
 
     }
 
@@ -96,6 +110,33 @@ public class UIScript : MonoBehaviour {
             }
             txt.text = result;
         }
+    }
+
+    // Create the singletone for the UIManager. Also checks if there is another present and logs and error.
+    void CreateSingleton()
+    {
+        if (instance != null)
+        {
+            Debug.LogError("UIManager already exists while it should be instantiated only once.");
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    // Instantiate the starting prefabs as the children of the UIScript
+    void InstantiateStartPrefabs()
+    {
+        GameObject obj = Instantiate(eventSystemPrefab);
+        obj.transform.SetParent(transform);
+        obj = Instantiate(resourcesMenuPrefab);
+        obj.transform.SetParent(transform);
+    }
+
+    // Get the singleton instance
+    public UIScript GetInstance()
+    {
+        return instance;
     }
 
     void Pause()

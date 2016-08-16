@@ -15,9 +15,21 @@ public class WorldController : MonoBehaviour
 
     TurbineManager turbManager; // Holder of turbines
 
+    private WorldController instance;
+
+    [Header("Prefabs")]
+    public GameObject weatherManagerPrefab;
+    public GameObject terrainManagerPrefab;
+    public GameObject turbineManagerPrefab;
+    public GameObject buildingsManagerPrefab;
+    public GameObject worldInteractionManagerPrefab;
+
     // Use this for initialization
     void Start()
     {
+        CreateSingleton();
+        InstantiateStartPrefabs();
+
         turbManager = TurbineManager.GetInstance();
     }
 
@@ -27,6 +39,40 @@ public class WorldController : MonoBehaviour
         float dt = Time.deltaTime * GameResources.getGameSpeed();
         turbManager.Update(dt);
     }
+
+    // Create the singletone for the WorldManager. Also checks if there is another present and logs and error.
+    void CreateSingleton()
+    {
+        if (instance != null)
+        {
+            Debug.LogError("WorldManager already exists while it should be instantiated only once.");
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    // Instantiate the starting prefabs as the children of the WorldManager
+    void InstantiateStartPrefabs()
+    {
+        GameObject obj = Instantiate(terrainManagerPrefab);
+        obj.transform.SetParent(transform);
+        obj = Instantiate(weatherManagerPrefab);
+        obj.transform.SetParent(transform);
+        obj = Instantiate(turbineManagerPrefab);
+        obj.transform.SetParent(transform);
+        obj = Instantiate(buildingsManagerPrefab);
+        obj.transform.SetParent(transform);
+        obj = Instantiate(worldInteractionManagerPrefab);
+        obj.transform.SetParent(transform);
+    }
+
+    // Get the singleton instance
+    public WorldController GetInstance()
+    {
+        return instance;
+    }
+
 
     // Builder function, some class wants the world to add an object
     public static void Add(GameObject something, Vector3 pos)

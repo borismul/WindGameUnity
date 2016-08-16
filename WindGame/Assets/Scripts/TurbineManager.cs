@@ -7,7 +7,7 @@ using System.Collections.Generic;
 	Contains functions for adding and removing turbines as well as
 	functions for other classes to request specific information
 **/
-public sealed class TurbineManager {
+public sealed class TurbineManager : MonoBehaviour{
 	private List<GameObject> turbines = new List<GameObject>();
 
 	private static readonly TurbineManager instance = new TurbineManager();
