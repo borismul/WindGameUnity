@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class UIMainMenuManager : MonoBehaviour {
@@ -7,15 +8,16 @@ public class UIMainMenuManager : MonoBehaviour {
 
     public Button closeMenuButton;
 
+    public Button restartButton;
+
     public Button exitButton;
 
     public Text menuText;
 
-    float oldspeed;
-
     // Use this for initialization
     void Start () {
         closeMenuButton.onClick.AddListener(CloseMenu);
+        restartButton.onClick.AddListener(RestartMission);
         exitButton.onClick.AddListener(Exit);
     }
 	
@@ -39,19 +41,19 @@ public class UIMainMenuManager : MonoBehaviour {
         */
     }
 
-    public void setOldSpeed(float speed)
-    {
-        oldspeed = speed;
-    }
-
     void Exit()
     {
         Application.Quit();
     }
 
+    void RestartMission()
+    {
+        SceneManager.LoadScene("Mission1");
+    }
+
     void CloseMenu()
     {
-        GameResources.setGameSpeed(oldspeed);
+        GameResources.setGameSpeed(200);
         //Destroy the menu
     }
 }

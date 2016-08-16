@@ -59,6 +59,7 @@ public class UIResourcesManager : MonoBehaviour {
     {
         GameResources.setGameSpeed(0);
         //Implement code to trigger instantiation of menu
-        //Should be handled by menu script, this only activates that script
+        //Should be handled by UIManager script, this only activates that script
+        //UIManager.getInstance().menuButtonPress()
     }
 }
