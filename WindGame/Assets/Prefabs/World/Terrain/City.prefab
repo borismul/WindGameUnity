@@ -41,16 +41,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
-  - prefab: {fileID: 128214, guid: 14f24aa05f0348248a0caf72874cc8a1, type: 2}
+  - prefab: {fileID: 1000010700443020, guid: 265779f7c9e5ffd45825de97a982705b, type: 2}
     scale: 1
-  - prefab: {fileID: 197470, guid: 71319ca727c70c14ea3ac4ea195bef82, type: 2}
-    scale: 0.15
   minLocX: 0.3
   maxLocX: 0.7
   minLocZ: 0.3
   maxLocZ: 0.7
   startRadius: 100
-  density: 0.178
+  density: 0.21
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

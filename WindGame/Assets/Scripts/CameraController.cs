@@ -116,7 +116,7 @@ public class CameraController : MonoBehaviour
     {
         float xPos = terrain.length / 2;
         float zPos = terrain.width / 2;
-        float yPos = 500;
+        float yPos = terrain.width / Mathf.Atan(Camera.main.fieldOfView);
         transform.position = new Vector3(xPos, yPos, zPos);
         transform.rotation = Quaternion.Euler(90, 0, 0);
         Camera.main.orthographic = true;
@@ -141,7 +141,7 @@ public class CameraController : MonoBehaviour
     {
         if(terrain.levelLoaded && !hasStarted)
         {
-            transform.LookAt(CityController.city.centerTile.occupant.obj.transform);
+            transform.LookAt(CityController.city.centerTile.position);
             if (Vector3.Distance(transform.position, targetPos) < 5)
             {
                 hasStarted = true;

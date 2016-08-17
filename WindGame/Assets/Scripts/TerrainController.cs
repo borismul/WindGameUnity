@@ -134,6 +134,7 @@ public class TerrainController : MonoBehaviour {
         GameObject light = new GameObject();
         light.transform.SetParent(transform);
         light.AddComponent<Light>().type = LightType.Directional;
+        light.GetComponent<Light>().shadows = LightShadows.Hard;
         light.transform.rotation = Quaternion.Euler(45, 0, 0);
         light.name = "Sun";
     }
@@ -384,7 +385,7 @@ public class TerrainController : MonoBehaviour {
         gridTile.occupant = gridOccupant;
 
         // set the gridtile type to 1 which means there is a terrain object on it
-        gridTile.type = 1;
+        gridTile.type = GridTileOccupant.OccupantType.TerrainGenerated;
 
     }
 
@@ -521,77 +522,11 @@ public class TerrainController : MonoBehaviour {
         return allMeshes;
     }
 
-    // Method that sets the occupant of a tile and check in a certain radius where objects should be removed
-    public IEnumerator SetOccupant(GridTile tile, GridTileOccupant occupant, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
-    {
-        // Remove the current occupant on this tile
-        RemoveOccupant(tile, false);
-
-        // set the new tile occupant
-        tile.occupant = occupant;
-
-        // set the tile type to 2 which means that it is a self build object
-        tile.type = 2;
-        
-        // get the i and k index of the current grid tile in world
-        int thisIndexI = Mathf.RoundToInt((tile.position.x) / tileSize);
-        int thisIndexK = Mathf.RoundToInt((tile.position.z) / tileSize);
-
-        // Determine the start index at which object should be removed
-        int startI = thisIndexI - Mathf.RoundToInt(cutOffRadius / tileSize);
-        int startK = thisIndexK - Mathf.RoundToInt(cutOffRadius / tileSize);
-
-        // Set the maximal values of i and k so the algorithm never tries to go outside the borders of the map
-        int maxI = length / tileSize;
-        int maxK = width / tileSize;
-
-        // loop through all tiles tiles that are in the neighbourhood
-        for (int i = 0; i < cutOffRadius / tileSize * 2; i++)
-        {
-            for (int j = 0; j < cutOffRadius / tileSize * 2; j++)
-            {
-                // if it is outside the borders continue
-                if (startI + i < 0 || startI + i > maxI || startK + j < 0 || startK + j > maxK)
-                    continue;
-
-                // get the current tile that needs to be checked
-                GridTile checkGridTile = world[startI + i, startK + j];
-
-                // if the tile has a distance that is lower than the cutoffraduis and the gridtile has an occupant and it is said that the occupants should be removed
-                if (Vector3.Distance(checkGridTile.position, tile.position) < cutOffRadius && checkGridTile.occupant != null && removeOccupants)
-                {
-                    // remove the occupant
-                    RemoveOccupant(checkGridTile, removeSelfBuild);
-                    yield return null;
-                }
-                // if the gridtile is within the cutoffradius and it should be set as not build set canbuild to false
-                if (Vector3.Distance(checkGridTile.position, tile.position) < cutOffRadius && setNotBuild)
-                    checkGridTile.canBuild = false;
-            }
-        }
-    }
-
     // Method that removes an occupant from a grid tile
-    public void RemoveOccupant(GridTile tile, bool removeSelfBuild)
+    public void RemoveTerrainTileOccupant(GridTile tile)
     {
-        // if tile has no occupant return
-        if (tile.type == 0)
-            return;
-
-        // if type is 2 only remove if removeselfbuild is true
-        if (tile.type == 2)
-        {
-            if (removeSelfBuild)
-            {
-                Destroy(tile.occupant.obj);
-                tile.occupant = null;
-                tile.type = 0;
-            }
-            return;
-        }
-
-        // if type is 1
-        if (tile.type == 1)
+        // if type is Terrain Generated
+        if (tile.type == GridTileOccupant.OccupantType.TerrainGenerated)
         {
             // Get the terrainObject script from the occupant
             TerrainObject terrainObj = tile.occupant.obj.GetComponent<TerrainObject>();
@@ -628,24 +563,6 @@ public class TerrainController : MonoBehaviour {
                 }
             }
         }
-    }
-
-    // Method that builds an object on a tile and checks if area around it should be checked for object that need to be removed
-    public GameObject BuildObject(GameObject obj, Quaternion rotation, Vector3 scale, GridTile tile, float cutOffRadius, bool removeOccupants, bool removeSelfBuild, bool setNotBuild)
-    {
-        // Instantiate the object at tile with a certain rotation
-        GameObject objInst = (GameObject)Instantiate(obj, tile.position, rotation);
-
-        // Set the scale
-        objInst.transform.localScale = scale;
-
-        // Create a grid tile occupant for this gameobject
-        GridTileOccupant tileOccupant = new GridTileOccupant(objInst);
-
-        // Remove objects around it if indicated
-        StartCoroutine(SetOccupant(tile, tileOccupant, cutOffRadius, removeOccupants, removeSelfBuild, setNotBuild));
-
-        return objInst;
     }
 
     // Method that saves the terrain

@@ -42,6 +42,8 @@ public class BuildMenuController : MonoBehaviour
 
     bool canCancel;
 
+    WorldController world;
+
     // The start method gets called first
     void Start()
     {
@@ -56,6 +58,8 @@ public class BuildMenuController : MonoBehaviour
         loadOthersButton.onClick.AddListener(LoadOthers);
 
         canCancel = true;
+
+        world = WorldController.GetInstance();
 
     }
 
@@ -182,6 +186,7 @@ public class BuildMenuController : MonoBehaviour
         GridTile plantGrid = null;  
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast to find where the mouse is pointing at
         RaycastHit hit;
+        bool canBuild = false;
         if (Physics.Raycast(ray, out hit))
         {
             plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
@@ -195,13 +200,14 @@ public class BuildMenuController : MonoBehaviour
             else
                 curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
 
-            if (plantGrid.canBuild) // If we can build here, make the color greenish
+            if (world.CanBuild(plantPos, 50, true)) // If we can build here, make the color greenish
             {
                 foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
                 {
                     ren.material.shader = Shader.Find("Transparent/Diffuse");
                     ren.material.color = new Color(0, 0.8f, 1, 0.5f);
                 }
+                canBuild = true;
             }
             else // We can't build here, make the color reddish
             {
@@ -210,9 +216,10 @@ public class BuildMenuController : MonoBehaviour
                     ren.material.shader = Shader.Find("Transparent/Diffuse");
                     ren.material.color = new Color(1, 0, 0, 0.5f);
                 }
+                canBuild = false;
             }
         }
-        if (Input.GetMouseButtonDown(0) && plantGrid.canBuild) // The user clicks and we can build here
+        if (Input.GetMouseButtonDown(0) && canBuild) // The user clicks and we can build here
         {
             Destroy(curInstantiated); // Destroy the preview turbine
             BuildNow(plantGrid, plantPos); // Run the build function
@@ -226,7 +233,7 @@ public class BuildMenuController : MonoBehaviour
         if (isTurbine) // If we want to build a turbine...
         {   
             if(GameResources.BuyTurbine(5000))
-                WorldController.Add(curSelected, plantPos); // Let the world controller know we want to build this thing
+                world.Add(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, 50f, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
             else print("Not enough cash!");
         }
     }

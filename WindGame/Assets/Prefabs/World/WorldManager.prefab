@@ -51,7 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58e03486d485ef49a2cecebb97dc918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionName: Mission 1
   weatherManagerPrefab: {fileID: 162066, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
   terrainManagerPrefab: {fileID: 118210, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
   turbineManagerPrefab: {fileID: 1000012533908156, guid: c3c78971c22fb9745a3b7b835e0ea517,
