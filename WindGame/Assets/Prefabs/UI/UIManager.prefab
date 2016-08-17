@@ -84,7 +84,8 @@ MonoBehaviour:
   resourcesMenuPrefab: {fileID: 1000013802505068, guid: d22e0b41247a2ef4bbc31c6ae1710826,
     type: 2}
   mainMenuPrefab: {fileID: 155136, guid: bf18ff7bcbf0f4947a385a4d0f6d4328, type: 2}
-  radialMenuPrefab: {fileID: 139948, guid: 0814e698324edc04daa12e6c0b720f23, type: 2}
+  radialMenuPrefab: {fileID: 1000011896378622, guid: 0814e698324edc04daa12e6c0b720f23,
+    type: 2}
   turorialPrefab: {fileID: 1000010507217480, guid: e0232bb285b95cd499e6103da49e4484,
     type: 2}
 --- !u!223 &223000012674080582

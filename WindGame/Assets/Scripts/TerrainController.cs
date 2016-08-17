@@ -130,6 +130,12 @@ public class TerrainController : MonoBehaviour {
 
         // Create biome object meshes
         biomeMeshes = BuildMeshes();
+
+        GameObject light = new GameObject();
+        light.transform.SetParent(transform);
+        light.AddComponent<Light>().type = LightType.Directional;
+        light.transform.rotation = Quaternion.Euler(45, 0, 0);
+        light.name = "Sun";
     }
 
     // Method creates meshes of all objects per biome
@@ -311,6 +317,7 @@ public class TerrainController : MonoBehaviour {
     {
         // instantiate the city
         curCity = Instantiate(city);
+        curCity.transform.SetParent(transform);
 
         // When that is done the level loading is complete
         levelLoaded = true;
@@ -730,7 +737,7 @@ public class TerrainController : MonoBehaviour {
             Chunk chunkScript = curChunk.GetComponent<Chunk>();
             chunkScript.map = obj.GetVec3Map();
             chunkScript.biomeMap = obj.biomeMap;
-
+            curChunk.transform.SetParent(transform);
             // try to save ram by deleting the chunks from the chunklist
             chunkList[index] = null;
             System.GC.Collect();
