@@ -81,7 +81,7 @@ public class Mission1Controller : MonoBehaviour {
     }
 
     // Get the singleton instance
-    public Mission1Controller GetInstance()
+    public static Mission1Controller GetInstance()
     {
         return instance;
     }

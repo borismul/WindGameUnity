@@ -19,8 +19,6 @@ public class UIResourcesManager : MonoBehaviour {
 
     public Button speedButton10x;
 
-    float oldspeed;
-
     // Use this for initialization
     void Start ()
     {
@@ -41,25 +39,26 @@ public class UIResourcesManager : MonoBehaviour {
 
     void Pause()
     {
-        oldspeed = GameResources.getGameSpeed();
-        GameResources.setGameSpeed(0);
+        GameResources.pause();
     }
 
     void SetSpeed1x()
     {
+        GameResources.unPause();
         GameResources.setGameSpeed(200);
     }
 
     void SetSpeed10x()
     {
+        GameResources.unPause();
         GameResources.setGameSpeed(2000);
     }
     
     void Menu()
     {
-        GameResources.setGameSpeed(0);
-        //Implement code to trigger instantiation of menu
-        //Should be handled by UIManager script, this only activates that script
-        //UIManager.getInstance().menuButtonPress()
+        bool hideSpeedButtons = UIScript.GetInstance().menuButtonPress();
+        pauseButton.gameObject.SetActive(hideSpeedButtons);
+        speedButton1x.gameObject.SetActive(hideSpeedButtons);
+        speedButton10x.gameObject.SetActive(hideSpeedButtons);
     }
 }

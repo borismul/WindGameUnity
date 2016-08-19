@@ -24,6 +24,7 @@ public class GameResources : MonoBehaviour
 	static float publicAcceptance; // Keep track of public acceptance
 	static DateTime date;
     static float gameSpeed;
+    static bool paused;
 
 	static float costOfElectricity = 0.002f;
 
@@ -39,7 +40,7 @@ public class GameResources : MonoBehaviour
     void Update()
     {
         // If paused don't update
-        if (gameSpeed == 0)
+        if (paused)
             return;
 
         // Calculate the time passed in seconds since last frame
@@ -122,5 +123,20 @@ public class GameResources : MonoBehaviour
     public static void setGameSpeed(float speed)
     {
         gameSpeed = speed;
+    }
+
+    public static void pause()
+    {
+        paused = true;
+    }
+
+    public static void unPause()
+    {
+        paused = false;
+    }
+
+    public static bool isPaused()
+    {
+        return paused;
     }
 }
