@@ -62,6 +62,4 @@ MonoBehaviour:
   mainMenuPrefab: {fileID: 155136, guid: bf18ff7bcbf0f4947a385a4d0f6d4328, type: 2}
   radialMenuPrefab: {fileID: 1000011896378622, guid: 0814e698324edc04daa12e6c0b720f23,
     type: 2}
-  turorialPrefab: {fileID: 0}
-  backgroundButtonPrefab: {fileID: 1000010688893954, guid: d5fdf76746005554f816831a5a94920c,
-    type: 2}
+  tutorialPrefab: {fileID: 153166, guid: e547aa806672bb14e880f81a673edbb4, type: 2}

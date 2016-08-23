@@ -8,8 +8,6 @@ using System;
 
 public class TutorialScript : MonoBehaviour {
 
-    public GameObject canvasPre;        // prefab of tutorial canvas
-
     GameObject canvas;          // tutorial canvas
     GameObject okButton;        // button to proceed
     GameObject skipButton;      // button to skip all the rest of the tutorial
@@ -139,7 +137,9 @@ public class TutorialScript : MonoBehaviour {
         counter2 = 0;
         counter3 = 0;
 
-        Invoke("OpenTutorial", 2);              // actually starts the tutorial, as for now, 2 seconds after the game is run
+        canvas = gameObject;
+
+        OpenTutorial();
 
 	}
 	
@@ -160,8 +160,6 @@ public class TutorialScript : MonoBehaviour {
     void OpenTutorial()
     {
 
-        canvas = (GameObject)Instantiate(canvasPre);        // instantiate tutorial canvas
-
         textHead = canvas.transform.GetChild(0).transform.GetChild(0).GetComponent<Text>();     // initialize texts and buttons
         textHead.text = head[0];
 
@@ -178,7 +176,7 @@ public class TutorialScript : MonoBehaviour {
                 
     }
 
-    void CloseTutorial()
+    void CloseTutorial()                        // TUTORIAL IS CLOSED BY ITSELF!! SHOULD IT BE CLOSED FROM THE UI MANAGER???
     {
 
         Destroy(canvas.gameObject);

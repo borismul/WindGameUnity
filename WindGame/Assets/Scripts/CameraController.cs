@@ -50,7 +50,7 @@ public class CameraController : MonoBehaviour
     bool overRuleCam;
     bool setStartPos;
     bool hasStarted;
-    public bool haveControl;
+    static public bool haveControl;
 
     TerrainController terrain;
     float camScrollLerpSet;
@@ -398,4 +398,10 @@ public class CameraController : MonoBehaviour
         // save the current hitpoint as the previous
         prevHitPointY = hit.point.y;
     }
+
+    public static bool getControl()
+    {
+        return haveControl;
+    }
+
 }

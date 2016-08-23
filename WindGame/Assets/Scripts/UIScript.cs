@@ -15,9 +15,11 @@ public class UIScript : MonoBehaviour {
     public GameObject pauseMenuPrefab;
     public GameObject mainMenuPrefab;
     public GameObject radialMenuPrefab;
-    public GameObject turorialPrefab;
+    public GameObject tutorialPrefab;
 
     int menuActive;
+
+    bool startGiven;
 
     // Use this for initialization
     void Awake ()
@@ -27,6 +29,17 @@ public class UIScript : MonoBehaviour {
         InstantiateStartPrefabs();
         menuActive = -1;
         
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (CameraController.haveControl & !startGiven)
+        {
+            GameObject obj5 = Instantiate(tutorialPrefab);
+            obj5.transform.SetParent(transform);
+            startGiven = true;
+        }
     }
 
     // Create the singletone for the UIManager. Also checks if there is another present and logs and error.
@@ -60,7 +73,7 @@ public class UIScript : MonoBehaviour {
         obj4.transform.SetParent(transform);
         obj4.SetActive(false);
         menus.Add(obj4);
-        
+
     }
 
     // Get the singleton instance
