@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 444616}
   - 95: {fileID: 9593366}
+  - 114: {fileID: 114000011503726136}
   m_Layer: 0
   m_Name: Persian Turbine
   m_TagString: Untagged
@@ -100,18 +101,21 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: e8a0be75c5c04ac408f35af2f02f8b14, type: 2}
   - {fileID: 2100000, guid: 120e5a07eea5f6a46ace3f211531201f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -127,17 +131,20 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 785e529c19592134f81621bd14f79982, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -186,3 +193,46 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 117156}
   m_IsPrefabParent: 1
+--- !u!114 &114000011503726136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 117156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f13c02c88430e2547853707acab8ab2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blades: {fileID: 190284}
+  nacelle: {fileID: 151316}
+  buildProgress: 0
+  height: 0
+  nrBlades: 0
+  repairCosts: 0
+  modeOfOperation: 0
+  revenue1: 0
+  revenue2: 0
+  randTerm: 0
+  maximumHealth: 0
+  totalCosts: 0
+  health: 0
+  power: 0
+  powerDelivered: 0
+  costOfMaintenance: 0
+  parameterRatedPower: 2.3
+  parameterCapacityFactor: 0.25
+  parameterPowerFractionsSafeModeOperation: 0.8
+  parameterPowerFractionLoss: 0.2
+  parameterCostWEU: 1.8
+  parameterHealth: -0.0000026741789
+  parameterHealthModeOperation: 0.5
+  parameterLosses: 0.95
+  parameterMaintenanceWEU1: 0.25
+  parameterMaintenanceRepairWEU: 0.5
+  parameterValueEnergy1: 0
+  parameterValueEnergy2: 0
+  parameterRevenue2: 0
+  publicAcceptance: -0.1
+  parameterAcceptanceWEU1: 0
+  parameterAcceptanceWEU2: 0

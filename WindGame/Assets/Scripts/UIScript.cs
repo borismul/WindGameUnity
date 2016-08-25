@@ -16,6 +16,8 @@ public class UIScript : MonoBehaviour {
     public GameObject mainMenuPrefab;
     public GameObject radialMenuPrefab;
     public GameObject tutorialPrefab;
+    public GameObject panemoneInformationPrefab;
+    public GameObject tileInformationPrefab;
 
     int menuActive;
 
@@ -74,6 +76,11 @@ public class UIScript : MonoBehaviour {
         obj4.SetActive(false);
         menus.Add(obj4);
 
+        GameObject obj5 = Instantiate(panemoneInformationPrefab);
+        obj4.transform.SetParent(transform);
+        obj4.SetActive(false);
+        menus.Add(obj5);
+
     }
 
     // Get the singleton instance
@@ -95,5 +102,27 @@ public class UIScript : MonoBehaviour {
             GameResources.pause();
             return false;
         }
+    }
+
+    public void OpenTurbineMenu(GameObject target)
+    {
+        menus[3].GetComponent<PanemoneInformationMenu>().setTurbine(target.GetComponent<TurbineController>());
+        menus[3].SetActive(true);
+    }
+
+    public void CloseTurbineMenu()
+    {
+        menus[3].SetActive(false);
+        menus[3].GetComponent<PanemoneInformationMenu>().clearTurbine();
+    }
+
+    public void OpenTileMenu(GridTile target)
+    {
+        
+    }
+
+    public void CloseTileMenu()
+    {
+
     }
 }

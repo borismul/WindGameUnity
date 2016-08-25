@@ -63,3 +63,6 @@ MonoBehaviour:
   radialMenuPrefab: {fileID: 1000011896378622, guid: 0814e698324edc04daa12e6c0b720f23,
     type: 2}
   tutorialPrefab: {fileID: 153166, guid: e547aa806672bb14e880f81a673edbb4, type: 2}
+  panemoneInformationPrefab: {fileID: 1000013637549016, guid: 109c807ac5814b54fa519ca62af72e9e,
+    type: 2}
+  tileInformationPrefab: {fileID: 0}
