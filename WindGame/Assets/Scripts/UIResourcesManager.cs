@@ -31,7 +31,7 @@ public class UIResourcesManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        capitalText.text = GameResources.getWealth().ToString();
+        capitalText.text = GameResources.getWealth().ToString("0");
         publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString();
         powerText.text = GameResources.getProduction().ToString();
         dateText.text = GameResources.getDate().ToString("M-yyyy");

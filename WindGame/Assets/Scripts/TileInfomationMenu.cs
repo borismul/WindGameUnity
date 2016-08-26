@@ -9,6 +9,7 @@ public class TileInfomationMenu : MonoBehaviour {
     public Text position;
 
     GridTile tile;
+    string[] biomes = new string[4] { "Forest", "Sand", "Rock", "Grass" };
 
 	// Use this for initialization
 	void Start () {
@@ -16,20 +17,37 @@ public class TileInfomationMenu : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    void onEnable()
+	void Update ()
     {
-        biome.text = tile.biome.ToString();
-        occupant.text = tile.occupant.ToString();
-        position.text = tile.position.ToString();
+        
     }
 
     public void setTile(GridTile til)
     {
         tile = til;
+
+        biome.text = biomes[tile.biome];
+        if (tile.occupant == null)
+        {
+            occupant.text = "None";
+        }
+        else
+        {
+            if (tile.occupant.obj.name.Equals("RockEmpty(Clone)") || tile.occupant.obj.name.Equals("StoneCubeEmpty(Clone)"))
+            {
+                occupant.text = "A rock";
+            } else if (tile.occupant.obj.name.Equals("House Colored"))
+            {
+                occupant.text = "A house";
+            } else if(tile.occupant.obj.name.Equals("NewTreeEmpty(Clone)"))
+            {
+                occupant.text = "A tree";
+            } else 
+            {
+                occupant.text = "Wind Turbine";
+            }
+        }
+        position.text = tile.position.ToString("F0");
     }
 
     public void clearTile()

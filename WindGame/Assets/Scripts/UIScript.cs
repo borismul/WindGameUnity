@@ -77,9 +77,13 @@ public class UIScript : MonoBehaviour {
         menus.Add(obj4);
 
         GameObject obj5 = Instantiate(panemoneInformationPrefab);
-        obj4.transform.SetParent(transform);
-        obj4.SetActive(false);
+        obj5.transform.SetParent(transform);
+        obj5.SetActive(false);
         menus.Add(obj5);
+
+        GameObject obj6 = Instantiate(tileInformationPrefab);
+        obj6.transform.SetParent(transform);
+        menus.Add(obj6);
 
     }
 
@@ -119,6 +123,11 @@ public class UIScript : MonoBehaviour {
     public void OpenTileMenu(GridTile target)
     {
         
+    }
+
+    public void setActiveTile(GridTile til)
+    {
+        menus[4].GetComponent<TileInfomationMenu>().setTile(til);
     }
 
     public void CloseTileMenu()
