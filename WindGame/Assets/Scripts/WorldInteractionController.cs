@@ -10,12 +10,14 @@ public class WorldInteractionController : MonoBehaviour
     int[] tri;
     Vector2[] uv;
     Vector3[] vert = new Vector3[4];
+
     void Start()
     {
         highlighter = new Mesh();
         tri = new int[6] {0, 2, 1, 0, 3, 2};
         uv = new Vector2[4] { new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(.5f, .5f), new Vector2(.5f, .5f) };
     }
+
     void CheckSelectedTile()
     {
         TerrainController terrain = TerrainController.thisTerrainController;

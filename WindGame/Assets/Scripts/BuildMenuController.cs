@@ -19,6 +19,7 @@ public class BuildMenuController : MonoBehaviour
 {
     // Some required class parameters
     public GameObject[] turbines;
+    public GameObject[] turbinePreviews;
     public GameObject[] others;
     public Text[] turbineText;
     public Text[] othersText;
@@ -33,10 +34,12 @@ public class BuildMenuController : MonoBehaviour
     public Button loadOthersButton;
     public Text infoText;
     public float cutOffRadius;
+    public GameObject buildingFeatures;
     bool isTurbine;
 
     List<Button> menuButtons = new List<Button>();
     GameObject curSelected;
+    GameObject previewSelected;
 
     GameObject curInstantiated;
 
@@ -54,12 +57,14 @@ public class BuildMenuController : MonoBehaviour
         // Subscribe methods buttons
         cancelButton.onClick.AddListener(Cancel);
         buildButton.onClick.AddListener(BuildButton);
-        loadTurbinesButton.onClick.AddListener(LoadTurbines);
-        loadOthersButton.onClick.AddListener(LoadOthers);
+        LoadTurbines();
 
         canCancel = true;
 
         world = WorldController.GetInstance();
+
+        GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+        GetComponent<Canvas>().worldCamera = Camera.main;
 
     }
 
@@ -103,6 +108,7 @@ public class BuildMenuController : MonoBehaviour
 
     void LoadTurbineButton(int index)
     {
+        buildingFeatures.SetActive(true);
         isTurbine = true;   // Okay, some value is now true.
         if (curInstantiated != null)
             Destroy(curInstantiated); // If we have an object on curInstantiated, destroy it
@@ -111,10 +117,11 @@ public class BuildMenuController : MonoBehaviour
         nameText.text = turbines[index].name;
         infoText.text = turbineText[index].text;
         curSelected = turbines[index];
+        previewSelected = turbinePreviews[index];
 
         // Instantiate this turbine (for the preview window?)
-        curInstantiated = (GameObject)Instantiate(curSelected);
-        curInstantiated.transform.position = instantHere.transform.position;
+        curInstantiated = (GameObject)Instantiate(previewSelected);
+        curInstantiated.transform.position = instantHere.transform.position +  curInstantiated.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
         curInstantiated.tag = "Respawn"; // To confirm that this turbine is created for the preview window
 
