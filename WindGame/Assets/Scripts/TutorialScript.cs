@@ -230,6 +230,8 @@ public class TutorialScript : MonoBehaviour {
 
     }
 
+    // Interactive phases managers
+
     void TryCamera()
     {
 
@@ -281,7 +283,6 @@ public class TutorialScript : MonoBehaviour {
         // maybe look for the menu as a child of UI?
         // much better: access to global variables keeping track of the buildings/objects in the world
 
-        print("yolo");
         playerTime = false;         
         counter1++;
         counter3++;
@@ -290,7 +291,6 @@ public class TutorialScript : MonoBehaviour {
 
     void Pole()
     {
-        print("yolo");
         playerTime = false;
         counter1++;
         counter3++;
@@ -299,7 +299,6 @@ public class TutorialScript : MonoBehaviour {
 
     void Rose()
     {
-        print("yolo");
         playerTime = false;
         counter1++;
         counter3++;
@@ -308,7 +307,6 @@ public class TutorialScript : MonoBehaviour {
 
     void Build2()
     {
-        print("yolo");
         playerTime = false;
         counter1++;
         counter3++;
@@ -317,7 +315,6 @@ public class TutorialScript : MonoBehaviour {
 
     void Turbine()
     {
-        print("yolo");
         playerTime = false;
         counter1++;
         counter3++;
@@ -326,7 +323,6 @@ public class TutorialScript : MonoBehaviour {
 
     void Info()
     {
-        print("yolo");
         playerTime = false;
         counter1++;
         counter3++;

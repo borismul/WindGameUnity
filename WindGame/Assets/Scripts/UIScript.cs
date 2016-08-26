@@ -19,6 +19,9 @@ public class UIScript : MonoBehaviour {
     public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
 
+    GameObject managerObj;
+    GameObject cameraObj;
+
     int menuActive;
 
     bool startGiven;
@@ -36,15 +39,15 @@ public class UIScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (CameraController.haveControl & !startGiven)
+        if (AccessSiblingData() & !startGiven)
         {
-            GameObject obj5 = Instantiate(tutorialPrefab);
-            obj5.transform.SetParent(transform);
+            GameObject obj7 = Instantiate(tutorialPrefab);
+            obj7.transform.SetParent(transform);
             startGiven = true;
         }
     }
 
-    // Create the singletone for the UIManager. Also checks if there is another present and logs and error.
+    // Create the singleton for the UIManager. Also checks if there is another present and logs and error.
     void CreateSingleton()
     {
         if (instance != null)
@@ -134,4 +137,15 @@ public class UIScript : MonoBehaviour {
     {
 
     }
+
+    // Get to know if the camera has zoomed on the village
+    bool AccessSiblingData()
+    {
+        managerObj = gameObject.transform.parent.gameObject;
+        cameraObj = managerObj.transform.GetChild(2).gameObject;
+
+        return cameraObj.GetComponent<CameraController>().haveControl;
+
+    }
+
 }
