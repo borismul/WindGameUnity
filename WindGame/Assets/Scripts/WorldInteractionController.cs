@@ -33,6 +33,9 @@ public class WorldInteractionController : MonoBehaviour
             highlighter.vertices = vert;
             highlighter.triangles = tri;
             highlighter.uv = uv;
+
+            //Sets the tile information menu to the tile that the move hoovers on
+            UIScript.GetInstance().setActiveTile(tile);
         }
         highlighter.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = highlighter;

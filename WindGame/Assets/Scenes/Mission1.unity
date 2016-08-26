@@ -129,12 +129,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013643444946, guid: 52800ca77dc1dae459cb2df2d3701247,
-        type: 2}
-      propertyPath: UIManagerPrefab
-      value: 
-      objectReference: {fileID: 1000011636269252, guid: e7d8a6887195eae4db66fb07ead52af2,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 52800ca77dc1dae459cb2df2d3701247, type: 2}
   m_IsPrefabParent: 0

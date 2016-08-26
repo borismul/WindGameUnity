@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca6a4466692d154f853d03a37709221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIManagerPrefab: {fileID: 1000013954109152, guid: e7d8a6887195eae4db66fb07ead52af2,
+  UIManagerPrefab: {fileID: 1000011636269252, guid: e7d8a6887195eae4db66fb07ead52af2,
     type: 2}
   mission1ManagerPrefab: {fileID: 1000012903764162, guid: 2845dd1286256d441ba02c1f0e536fd8,
     type: 2}

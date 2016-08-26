@@ -801,9 +801,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Information
+  m_Text: 'Turbine
 
-    Panemone'
+    Information'
 --- !u!114 &114000013227629268
 MonoBehaviour:
   m_ObjectHideFlags: 1

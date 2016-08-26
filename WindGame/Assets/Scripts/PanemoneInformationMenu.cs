@@ -29,11 +29,11 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     void onEnable ()
     {
-        numberBlades.text = turbine.nrBlades.ToString();
-        powerDelivered.text = turbine.power.ToString();
-        costOfMaintenance.text = turbine.costOfMaintenance.ToString();
-        health.text = turbine.health.ToString();
-        costOfRepair.text = turbine.repairCosts.ToString();
+        numberBlades.text = turbine.nrBlades.ToString("0");
+        powerDelivered.text = turbine.power.ToString("0");
+        costOfMaintenance.text = turbine.costOfMaintenance.ToString("0");
+        health.text = turbine.health.ToString("0");
+        costOfRepair.text = turbine.repairCosts.ToString("0");
     }
 
     public void setTurbine(TurbineController tur)
