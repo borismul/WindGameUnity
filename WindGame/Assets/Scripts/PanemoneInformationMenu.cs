@@ -31,10 +31,10 @@ public class PanemoneInformationMenu : MonoBehaviour {
     {
         if (turbine == null) return;
 
-        numberBlades.text = turbine.nrBlades.ToString("0");
-        costOfMaintenance.text = turbine.costOfMaintenance.ToString("0");
-        health.text = turbine.health.ToString("0");
-        costOfRepair.text = turbine.repairCosts.ToString("0");
+        //numberBlades.text = turbine.nrBlades.ToString("0");
+        //costOfMaintenance.text = turbine.costOfMaintenance.ToString("0");
+        //health.text = turbine.health.ToString("0");
+        //costOfRepair.text = turbine.repairCosts.ToString("0");
     }
 
     void onEnable ()

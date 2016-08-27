@@ -43,10 +43,10 @@ public class TurbineManager : MonoBehaviour{
 
     public void Update(float idt)
 	{
-		foreach(GameObject turbine in turbines)
-		{
-			turbine.GetComponent<TurbineController>().Update(idt);
-		}
+		//foreach(GameObject turbine in turbines)
+		//{
+		//	turbine.GetComponent<TurbineController>().Update(idt);
+		//}
 	}
 
 	public void AddTurbine(GameObject turb)
@@ -72,13 +72,13 @@ public class TurbineManager : MonoBehaviour{
     }
 
     // The UI would like to know the total maintenance cost
-    public float GetTotalMaintenanceCosts()
-    {
-        float sum = 0;
-        foreach(GameObject turbine in turbines)
-        {
-            sum += turbine.GetComponent<TurbineController>().costOfMaintenance;
-        }
-        return sum;
-    }
+    //public float GetTotalMaintenanceCosts()
+    //{
+    //    float sum = 0;
+    //    foreach(GameObject turbine in turbines)
+    //    {
+    //        sum += turbine.GetComponent<TurbineController>().costOfMaintenance;
+    //    }
+    //    return sum;
+    //}
 }

@@ -46,7 +46,7 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        world.Add(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, 50, transform);
+        world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, 50, transform);
         int tileSize = terrain.tileSize;
 
         int thisX = Mathf.RoundToInt((centerTile.position.x - 0.5f * tileSize) / tileSize);
@@ -64,7 +64,7 @@ public class CityController : MonoBehaviour {
             if (rand.NextDouble() < density && world.CanBuild(tile.position, 50, true))
             {
                 CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-                world.Add(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, 50, transform);
+                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, 50, transform);
             }
         }
     }

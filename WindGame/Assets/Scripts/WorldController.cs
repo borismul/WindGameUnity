@@ -76,19 +76,28 @@ public class WorldController : MonoBehaviour
 
 
     // Builder function, some class wants the world to add an object
-    public void Add(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent)
+    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent, float TSR, float bladePitch)
     {
         GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        TurbineController controller = t.GetComponent<TurbineController>();
+        controller.turbineName = something.name;
+        controller.bladePitch = bladePitch;
+        controller.TSR = TSR;
         t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
         AddToGridTiles(something, pos, size/2, type);
 
-        if (type == GridTileOccupant.OccupantType.Turbine)
-        {
-            TurbineManager turbManager = TurbineManager.GetInstance();
-            turbManager.AddTurbine(t); 
-        }
+        TurbineManager turbManager = TurbineManager.GetInstance();
+        turbManager.AddTurbine(t); 
+    }
+
+    public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent)
+    {
+        GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        t.transform.localScale = Vector3.one * scale;
+
+        AddToGridTiles(something, pos, size / 2, type);
     }
 
     // Function that determines if a tile has a object on it and return true if there is no objects on all the tiles in a circle with size as diameter.

@@ -65,7 +65,7 @@ public class GameResources : MonoBehaviour
 
 		// **Update wealth
 		wealth += production * costOfElectricity * gameDeltaTime; // Add 'sold' electricity to our wealth
-		wealth -= turbManager.GetTotalMaintenanceCosts() * gameDeltaTime; // Deduct the price of turbine maintenance
+		//wealth -= turbManager.GetTotalMaintenanceCosts() * gameDeltaTime; // Deduct the price of turbine maintenance
 
 		// **Update public acceptance
 		// The public gets more negative with more turbines built

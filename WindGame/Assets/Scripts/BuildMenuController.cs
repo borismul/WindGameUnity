@@ -36,6 +36,8 @@ public class BuildMenuController : MonoBehaviour
     public float cutOffRadius;
     public GameObject buildingFeatures;
     public LayerMask buildMask;
+    public Slider TSRSlider;
+    public Slider bladePitchSlider;
     bool isTurbine;
 
     List<Button> menuButtons = new List<Button>();
@@ -252,7 +254,7 @@ public class BuildMenuController : MonoBehaviour
         if (isTurbine) // If we want to build a turbine...
         {   
             if(GameResources.BuyTurbine(5000))
-                world.Add(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, 50f, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
+                world.AddTurbine(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, 50f, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
             else print("Not enough cash!");
         }
     }

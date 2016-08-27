@@ -735,10 +735,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 224000013794938212}
   m_HandleRect: {fileID: 224000010544941132}
   m_Direction: 0
-  m_MinValue: -180
-  m_MaxValue: 180
+  m_MinValue: -90
+  m_MaxValue: 90
   m_WholeNumbers: 1
-  m_Value: 0
+  m_Value: 5.4
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -921,6 +921,11 @@ MonoBehaviour:
   infoText: {fileID: 114000011892660432}
   cutOffRadius: 50
   buildingFeatures: {fileID: 1000010940210940}
+  buildMask:
+    serializedVersion: 2
+    m_Bits: 256
+  TSRSlider: {fileID: 114000011002328724}
+  bladePitchSlider: {fileID: 114000010327972818}
 --- !u!114 &114000011892660432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1872,8 +1877,8 @@ RectTransform:
   m_RootOrder: 7
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -59.45005, y: 162.8}
-  m_SizeDelta: {x: 29.7, y: 24}
+  m_AnchoredPosition: {x: -57.4, y: 162.8}
+  m_SizeDelta: {x: 33.8, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000011430980360
 RectTransform:
@@ -2031,7 +2036,7 @@ RectTransform:
   m_RootOrder: 9
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -20.900045, y: 162.8}
+  m_AnchoredPosition: {x: -19.600004, y: 162.8}
   m_SizeDelta: {x: 41.8, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000012277322570
@@ -2140,8 +2145,8 @@ RectTransform:
   m_RootOrder: 8
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -59.45001, y: 226.8}
-  m_SizeDelta: {x: 29.7, y: 24}
+  m_AnchoredPosition: {x: -57.400013, y: 226.8}
+  m_SizeDelta: {x: 33.8, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000012803211724
 RectTransform:
