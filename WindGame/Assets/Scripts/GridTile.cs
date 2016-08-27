@@ -56,6 +56,9 @@ public class GridTile{
             for (float j = startTile; j < endTile; j += terrain.tileSize)
             {
                 GridTile tile = FindClosestGridTile(new Vector3(middleTile.position.x + i, 0, middleTile.position.z + j));
+                if (tile == null)
+                    continue;
+
                 if (Vector3.Distance(new Vector3(tile.position.x, 0, tile.position.z), new Vector3(point.x, 0, point.z)) < circleRadius)
                 {
                     gridTiles.Add(FindClosestGridTile(tile.position));

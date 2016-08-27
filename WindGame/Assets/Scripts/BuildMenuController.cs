@@ -35,6 +35,7 @@ public class BuildMenuController : MonoBehaviour
     public Text infoText;
     public float cutOffRadius;
     public GameObject buildingFeatures;
+    public LayerMask buildMask;
     bool isTurbine;
 
     List<Button> menuButtons = new List<Button>();
@@ -197,7 +198,7 @@ public class BuildMenuController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast to find where the mouse is pointing at
         RaycastHit hit;
         bool canBuild = false;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildMask))
         {
             plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
             plantPos = plantGrid.position; // What is the x,y,z coords?
