@@ -50,13 +50,14 @@ public class BuildMenuController : MonoBehaviour
 
     WorldController world;
 
+    void OnEnable()
+    {
+        GetComponentInChildren<CanvasGroup>().alpha = 1;
+        GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+    }
     // The start method gets called first
     void Start()
     {
-        // BROKEN CODE--->The radial menu should take care of its own destruction
-        if (RadialMenuController.radMenuInst != null)
-            Destroy(RadialMenuController.radMenuInst);
-
         // Subscribe methods buttons
         cancelButton.onClick.AddListener(Cancel);
         buildButton.onClick.AddListener(BuildButton);
@@ -68,6 +69,9 @@ public class BuildMenuController : MonoBehaviour
 
         GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
         GetComponent<Canvas>().worldCamera = Camera.main;
+
+
+
 
     }
 
@@ -86,9 +90,8 @@ public class BuildMenuController : MonoBehaviour
 
     void Cancel()
     {
-        // The user wants to cancel, destroy ourselves
         if (canCancel)
-            Destroy(RadialMenuController.buildMenu); // BROKEN CODE ----> What is the interaction with radial menu?
+            gameObject.transform.parent.gameObject.SetActive(false);
     }
 
     void LoadTurbines()
@@ -246,7 +249,7 @@ public class BuildMenuController : MonoBehaviour
     {
         yield return null;
         WorldInteractionController.GetInstance().SetInBuildMode(false);
-        Destroy(gameObject.transform.parent.gameObject);
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
 
     void BuildNow(GridTile plantGrid, Vector3 plantPos)

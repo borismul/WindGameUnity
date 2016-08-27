@@ -141,12 +141,11 @@ public class UIScript : MonoBehaviour {
         menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
     }
 
-    public void OpenTileMenu(GridTile target)
+    public void OpenTileMenu()
     {
         if (menuActive > -1) return;
 
         menuActive = 4;
-        menus[4].GetComponent<TileInfomationMenu>().setTile(target);
         menus[4].SetActive(true);
 
         WorldInteractionController.GetInstance().SetInInfoMode(true);
@@ -161,7 +160,12 @@ public class UIScript : MonoBehaviour {
     {
         menuActive = -1;
         menus[4].SetActive(false);
-        WorldInteractionController.GetInstance().SetInInfoMode(false);
+
+    }
+
+    public void BuildMenu()
+    {
+        menus[2].SetActive(true);
 
     }
 
@@ -172,7 +176,6 @@ public class UIScript : MonoBehaviour {
         cameraObj = managerObj.transform.GetChild(2).gameObject;
 
         return cameraObj.GetComponent<CameraController>().haveControl;
-
     }
 
 }

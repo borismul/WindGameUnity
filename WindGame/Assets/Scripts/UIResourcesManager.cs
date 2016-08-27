@@ -19,6 +19,10 @@ public class UIResourcesManager : MonoBehaviour {
 
     public Button speedButton10x;
 
+    public Button buildButton;
+
+    public Button infoButton;
+
     // Use this for initialization
     void Start ()
     {
@@ -26,6 +30,8 @@ public class UIResourcesManager : MonoBehaviour {
         speedButton1x.onClick.AddListener(SetSpeed1x);
         speedButton10x.onClick.AddListener(SetSpeed10x);
         menuButton.onClick.AddListener(Menu);
+        buildButton.onClick.AddListener(BuildButton);
+        infoButton.onClick.AddListener(InfoButton);
     }
 	
 	// Update is called once per frame
@@ -53,7 +59,18 @@ public class UIResourcesManager : MonoBehaviour {
         GameResources.unPause();
         GameResources.setGameSpeed(2000);
     }
-    
+
+    void BuildButton()
+    {
+        UIScript.GetInstance().BuildMenu();
+    }
+
+    void InfoButton()
+    {
+        UIScript.GetInstance().OpenTileMenu();
+
+    }
+
     void Menu()
     {
         bool hideSpeedButtons = UIScript.GetInstance().menuButtonPress();

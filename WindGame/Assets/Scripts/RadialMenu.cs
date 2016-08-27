@@ -38,10 +38,7 @@ public class RadialMenu : MonoBehaviour {
 
     void InfoButton()
     {
-        if (activeTile == null) return;
-
-        UIScript.GetInstance().OpenTileMenu(activeTile);
-        
+        UIScript.GetInstance().OpenTileMenu();
     }
 
 }
