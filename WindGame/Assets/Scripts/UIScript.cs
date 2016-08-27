@@ -99,13 +99,16 @@ public class UIScript : MonoBehaviour {
 
     public bool menuButtonPress()
     {
-        if (menus[1].activeSelf)
+        if (menuActive == 1)
         {
+            menuActive = -1;
             menus[1].SetActive(false);
             GameResources.unPause();
             return true;
         } else
         {
+            if (menuActive > -1) return true;
+            menuActive = 1;
             menus[1].SetActive(true);
             GameResources.pause();
             return false;
@@ -114,12 +117,16 @@ public class UIScript : MonoBehaviour {
 
     public void OpenTurbineMenu(GameObject target)
     {
+        if (menuActive > -1) return;
+
+        menuActive = 3;
         menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(target.GetComponent<TurbineController>());
         menus[3].SetActive(true);
     }
 
     public void CloseTurbineMenu()
     {
+        menuActive = -1;
         menus[3].SetActive(false);
         menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
     }
@@ -127,17 +134,18 @@ public class UIScript : MonoBehaviour {
     public void setActiveTurbine(TurbineController tur)
     {
         menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(tur);
-        menus[3].SetActive(true);
     }
 
     public void clearActiveTurbine()
     {
         menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
-        menus[3].SetActive(false);
     }
 
     public void OpenTileMenu(GridTile target)
     {
+        if (menuActive > -1) return;
+
+        menuActive = 4;
         menus[4].GetComponent<TileInfomationMenu>().setTile(target);
         menus[4].SetActive(true);
     }
@@ -149,6 +157,7 @@ public class UIScript : MonoBehaviour {
 
     public void CloseTileMenu()
     {
+        menuActive = -1;
         menus[4].SetActive(false);
     }
 
