@@ -6,14 +6,14 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     TurbineController turbine;
 
-    public Text numberBlades;
-    public Text costOfMaintenance;
+    public Text turbineName;
     public Text health;
-    public Text costOfRepair;
+    public Text avgPowerProduction;
+    public Text curPowerProduction;
     public Text tipSpeedRatio;
     public Text bladePitch;
-    public Text avgPowerProduction;
-    public Text currentPowerProduction;
+    public Text repairCosts;
+    public Text destroyRefund;
     public Button destroyButton;
     public Button repairButton;
     public Button closeButton;
@@ -31,15 +31,14 @@ public class PanemoneInformationMenu : MonoBehaviour {
     {
         if (turbine == null) return;
 
-        //numberBlades.text = turbine.nrBlades.ToString("0");
-        //costOfMaintenance.text = turbine.costOfMaintenance.ToString("0");
-        //health.text = turbine.health.ToString("0");
-        //costOfRepair.text = turbine.repairCosts.ToString("0");
-    }
-
-    void onEnable ()
-    {
-        
+        turbineName.text = turbine.turbineName;
+        health.text = (turbine.health * 100).ToString("0") + "%";
+        avgPowerProduction.text = turbine.avgPower.ToString("0") + " W";
+        curPowerProduction.text = turbine.power.ToString("0") + " W";
+        tipSpeedRatio.text = turbine.TSR.ToString("0");
+        bladePitch.text = turbine.bladePitch.ToString("0") + "°";
+        repairCosts.text = ((1-turbine.health) * 2500).ToString("0");
+        destroyRefund.text = (2500 - (1-turbine.health) * 2500).ToString("0");
     }
 
     public void SetTurbine(TurbineController tur)
@@ -54,12 +53,15 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     void RepairTurbine()
     {
-        
+        turbine.health = 1;
+        GameResources.removeWealth(turbine.health * 2500);
     }
 
     void DestroyTurbine()
     {
-
+        GameResources.removeWealth(-(2500 - (1 - turbine.health) * 2500));
+        TurbineManager.GetInstance().RemoveTurbine(turbine.gameObject);
+        CloseMenu();
     }
 
     void CloseMenu()

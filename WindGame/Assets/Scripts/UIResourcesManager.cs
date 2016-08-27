@@ -32,9 +32,9 @@ public class UIResourcesManager : MonoBehaviour {
 	void Update ()
     {
         capitalText.text = GameResources.getWealth().ToString("0");
-        publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString();
-        powerText.text = GameResources.getProduction().ToString();
-        dateText.text = GameResources.getDate().ToString("M-yyyy");
+        publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
+        powerText.text = GameResources.getProduction().ToString("0");
+        dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
     }
 
     void Pause()

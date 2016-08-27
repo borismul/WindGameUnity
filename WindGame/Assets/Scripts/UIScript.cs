@@ -148,6 +148,8 @@ public class UIScript : MonoBehaviour {
         menuActive = 4;
         menus[4].GetComponent<TileInfomationMenu>().setTile(target);
         menus[4].SetActive(true);
+
+        WorldInteractionController.GetInstance().SetInInfoMode(true);
     }
 
     public void SetActiveTile(GridTile til)
@@ -159,6 +161,8 @@ public class UIScript : MonoBehaviour {
     {
         menuActive = -1;
         menus[4].SetActive(false);
+        WorldInteractionController.GetInstance().SetInInfoMode(false);
+
     }
 
     // Get to know if the camera has zoomed on the village

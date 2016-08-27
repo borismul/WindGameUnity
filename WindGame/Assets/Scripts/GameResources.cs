@@ -94,6 +94,19 @@ public class GameResources : MonoBehaviour
 		}
 	}
 
+    public static bool removeWealth(float ammount)
+    {
+        if (wealth < ammount)
+        {
+            return false;
+        }
+        else
+        {
+            wealth -= ammount;
+            return true;
+        }
+    }
+
 	// Getters for the private functions;
 	public static float getWealth()
 	{

@@ -58,6 +58,8 @@ public class WorldInteractionController : MonoBehaviour
             highlighter.vertices = vert;
             highlighter.triangles = tri;
             highlighter.uv = uv;
+
+            UIScript.GetInstance().SetActiveTile(tile);
         }
         highlighter.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = highlighter;
