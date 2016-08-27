@@ -47,7 +47,7 @@ GameObject:
   - 65: {fileID: 65000012610425588}
   m_Layer: 9
   m_Name: Wind Turbine
-  m_TagString: Untagged
+  m_TagString: turbine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -264,15 +264,15 @@ MonoBehaviour:
   nacelle: {fileID: 119560}
   buildProgress: 0
   height: 0
-  nrBlades: 0
-  repairCosts: 0
+  nrBlades: 3
+  repairCosts: 1000
   modeOfOperation: 0
   revenue1: 0
   revenue2: 0
   randTerm: 0
   maximumHealth: 0
   totalCosts: 0
-  health: 0
+  health: 1
   power: 0
   powerDelivered: 0
   costOfMaintenance: 0

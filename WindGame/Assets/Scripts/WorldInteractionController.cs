@@ -47,7 +47,7 @@ public class WorldInteractionController : MonoBehaviour
         RaycastHit hit;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out hit, float.MaxValue, terrainLayer))
+        if (Physics.Raycast(ray, out hit, float.MaxValue, terrainLayer))
         {
             highlighter.Clear();
             GameObject hitObj = hit.collider.gameObject;
@@ -58,9 +58,6 @@ public class WorldInteractionController : MonoBehaviour
             highlighter.vertices = vert;
             highlighter.triangles = tri;
             highlighter.uv = uv;
-
-            //Sets the tile information menu to the tile that the move hoovers on
-            UIScript.GetInstance().SetActiveTile(tile);
         }
         highlighter.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = highlighter;

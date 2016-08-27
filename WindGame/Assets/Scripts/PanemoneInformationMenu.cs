@@ -13,22 +13,21 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public Text costOfRepair;
     public Button destroyButton;
     public Button repairButton;
+    public Button closeButton;
 
 	// Use this for initialization
 	void Start ()
     {
-        repairButton.onClick.AddListener(repairTurbine);
-        destroyButton.onClick.AddListener(destroyTurbine);
+        repairButton.onClick.AddListener(RepairTurbine);
+        destroyButton.onClick.AddListener(DestroyTurbine);
+        closeButton.onClick.AddListener(CloseMenu);
     }
 
     // Update is called once per frame
     void Update ()
     {
-	
-	}
+        if (turbine == null) return;
 
-    void onEnable ()
-    {
         numberBlades.text = turbine.nrBlades.ToString("0");
         powerDelivered.text = turbine.power.ToString("0");
         costOfMaintenance.text = turbine.costOfMaintenance.ToString("0");
@@ -36,23 +35,33 @@ public class PanemoneInformationMenu : MonoBehaviour {
         costOfRepair.text = turbine.repairCosts.ToString("0");
     }
 
-    public void setTurbine(TurbineController tur)
-    {
-        turbine = tur;
-    }
-
-    public void clearTurbine()
-    {
-        turbine = null;
-    }
-
-    void repairTurbine()
+    void onEnable ()
     {
         
     }
 
-    void destroyTurbine()
+    public void SetTurbine(TurbineController tur)
+    {
+        turbine = tur;
+    }
+
+    public void ClearTurbine()
+    {
+        turbine = null;
+    }
+
+    void RepairTurbine()
+    {
+        
+    }
+
+    void DestroyTurbine()
     {
 
+    }
+
+    void CloseMenu()
+    {
+        UIScript.GetInstance().CloseTurbineMenu();
     }
 }

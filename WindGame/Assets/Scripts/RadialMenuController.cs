@@ -32,10 +32,22 @@ public class RadialMenuController : MonoBehaviour {
 
         Vector3 position = Input.mousePosition;
 
+        TerrainController terrain = TerrainController.thisTerrainController;
+        RaycastHit hit;
+        int terrainLayer = 1 << 8;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         radMenuInst = (GameObject)Instantiate(radMenu, Vector3.zero, Quaternion.identity);
         radMenuInst.transform.position = position;
         radMenuInst.transform.localScale = Vector3.one*0.65f;
         justOpened = true;
+
+        if (Physics.Raycast(ray, out hit, float.MaxValue, terrainLayer))
+        {
+            GridTile tile = GridTile.FindClosestGridTile(hit.point);
+            radMenuInst.GetComponentInChildren<RadialMenu>().setTarget(tile);
+        }
     }
 
     void OnCloseClick()
