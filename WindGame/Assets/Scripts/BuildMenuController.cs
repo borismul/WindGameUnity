@@ -233,10 +233,17 @@ public class BuildMenuController : MonoBehaviour
         {
             Destroy(curInstantiated); // Destroy the preview turbine
             BuildNow(plantGrid, plantPos); // Run the build function
-            Destroy(gameObject.transform.parent.gameObject);
+            StartCoroutine(SetBuildModeBack());
             CancelInvoke("UpdateSelectedPosition"); // Stop running this function
-            WorldInteractionController.GetInstance().SetInBuildMode(false);
+
         }
+    }
+
+    IEnumerator SetBuildModeBack()
+    {
+        yield return null;
+        WorldInteractionController.GetInstance().SetInBuildMode(false);
+        Destroy(gameObject.transform.parent.gameObject);
     }
 
     void BuildNow(GridTile plantGrid, Vector3 plantPos)

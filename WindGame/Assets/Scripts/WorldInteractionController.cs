@@ -88,8 +88,10 @@ public class WorldInteractionController : MonoBehaviour
         if (inInfoMode)
             CheckSelectedTile();
 
-        if(!inBuildMode)
+        if (!inBuildMode)
+        {
             CheckLeftClick();
+        }
     }
 
     public void SetInInfoMode(bool mode)
