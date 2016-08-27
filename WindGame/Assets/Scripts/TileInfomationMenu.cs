@@ -7,19 +7,21 @@ public class TileInfomationMenu : MonoBehaviour {
     public Text biome;
     public Text occupant;
     public Text position;
+    public Button closeMenu;
 
     GridTile tile;
     string[] biomes = new string[4] { "Forest", "Sand", "Rock", "Grass" };
 
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start ()
+    { 
+
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        
+        closeMenu.onClick.AddListener(CloseMenu);
     }
 
     public void setTile(GridTile til)
@@ -53,5 +55,10 @@ public class TileInfomationMenu : MonoBehaviour {
     public void clearTile()
     {
         tile = null;
+    }
+
+    void CloseMenu()
+    {
+        UIScript.GetInstance().CloseTileMenu();
     }
 }

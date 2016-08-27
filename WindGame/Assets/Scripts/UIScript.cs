@@ -86,6 +86,7 @@ public class UIScript : MonoBehaviour {
 
         GameObject obj6 = Instantiate(tileInformationPrefab);
         obj6.transform.SetParent(transform);
+        obj6.SetActive(false);
         menus.Add(obj6);
 
     }
@@ -113,19 +114,32 @@ public class UIScript : MonoBehaviour {
 
     public void OpenTurbineMenu(GameObject target)
     {
-        menus[3].GetComponent<PanemoneInformationMenu>().setTurbine(target.GetComponent<TurbineController>());
+        menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(target.GetComponent<TurbineController>());
         menus[3].SetActive(true);
     }
 
     public void CloseTurbineMenu()
     {
         menus[3].SetActive(false);
-        menus[3].GetComponent<PanemoneInformationMenu>().clearTurbine();
+        menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
+    }
+
+    public void setActiveTurbine(TurbineController tur)
+    {
+        menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(tur);
+        menus[3].SetActive(true);
+    }
+
+    public void clearActiveTurbine()
+    {
+        menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
+        menus[3].SetActive(false);
     }
 
     public void OpenTileMenu(GridTile target)
     {
-        
+        menus[4].GetComponent<TileInfomationMenu>().setTile(target);
+        menus[4].SetActive(true);
     }
 
     public void setActiveTile(GridTile til)
@@ -135,7 +149,7 @@ public class UIScript : MonoBehaviour {
 
     public void CloseTileMenu()
     {
-
+        menus[4].SetActive(false);
     }
 
     // Get to know if the camera has zoomed on the village
