@@ -125,7 +125,7 @@ public class UIScript : MonoBehaviour {
         
     }
 
-    public void setActiveTile(GridTile til)
+    public void SetActiveTile(GridTile til)
     {
         menus[4].GetComponent<TileInfomationMenu>().setTile(til);
     }

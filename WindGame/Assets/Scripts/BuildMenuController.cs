@@ -183,7 +183,10 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
+        WorldInteractionController.GetInstance().SetInBuildMode(true);
         InvokeRepeating("UpdateSelectedPosition", 0, 1 / 60f);
+
+
     }
 
     // Updates the turbine to the mouse cursor until placement is confirmed
@@ -232,6 +235,7 @@ public class BuildMenuController : MonoBehaviour
             BuildNow(plantGrid, plantPos); // Run the build function
             Destroy(gameObject.transform.parent.gameObject);
             CancelInvoke("UpdateSelectedPosition"); // Stop running this function
+            WorldInteractionController.GetInstance().SetInBuildMode(false);
         }
     }
 
