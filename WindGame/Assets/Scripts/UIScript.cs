@@ -40,12 +40,12 @@ public class UIScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (AccessSiblingData() & !startGiven)
-        {
-            GameObject obj7 = Instantiate(tutorialPrefab);
-            obj7.transform.SetParent(transform);
-            startGiven = true;
-        }
+        //if (AccessSiblingData() & !startGiven)
+        //{
+        //    GameObject obj7 = Instantiate(tutorialPrefab);
+        //    obj7.transform.SetParent(transform);
+        //    startGiven = true;
+        //}
     }
 
     // Create the singleton for the UIManager. Also checks if there is another present and logs and error.
@@ -173,7 +173,7 @@ public class UIScript : MonoBehaviour {
 
     }
 
-    // Get to know if the camera has zoomed on the village
+    //Get to know if the camera has zoomed on the village
     bool AccessSiblingData()
     {
         managerObj = gameObject.transform.parent.gameObject;

@@ -95,7 +95,11 @@ public class BuildMenuController : MonoBehaviour
     void Cancel()
     {
         if (canCancel)
+        {
             gameObject.transform.parent.gameObject.SetActive(false);
+            Destroy(curInstantiated);
+            infoCamera.enabled = false;
+        }
     }
 
     void LoadTurbines()
