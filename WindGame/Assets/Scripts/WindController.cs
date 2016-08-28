@@ -5,19 +5,22 @@ public class WindController : MonoBehaviour {
 
     public static float direction;          // Direction in which the wind is moving    (Uniform)
     public static float magnitude;          // Magnitude of the wind                    (Uniform)
+    public static float time = 0;
 
     // Update is called once per frame
     void Update()
     {
-        direction = WindDirection();
+        if (GameResources.isPaused()) return;
+        direction = WindDirection(GameResources.getGameSpeed());
         magnitude = WindMagnitude();
     }
 
     // Method that determines the wind direction
     // SHOULD BE UPDATED!
-    float WindDirection()
+    float WindDirection(float gameSpeed)
     {
-        direction = 180 * Mathf.Sin(0.01f * Mathf.PI * Time.timeSinceLevelLoad) + 180 * Mathf.Cos(0.012f * Mathf.PI * Time.timeSinceLevelLoad);
+        time += Time.deltaTime * gameSpeed/200;
+        direction = 180 * Mathf.Sin(0.01f * Mathf.PI * time) + 180 * Mathf.Cos(0.012f * Mathf.PI * time);
         return direction;
     }
 

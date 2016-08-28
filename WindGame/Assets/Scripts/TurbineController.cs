@@ -15,7 +15,7 @@ public class TurbineController : MonoBehaviour {
     public string turbineName;
     public float TSR = 8;          // Tip speed ratio of the turbine
     public float power;
-    public float health = 1;
+    public double health = 1;
     public float avgPower;
     public float bladePitch = 5;
 
@@ -26,7 +26,14 @@ public class TurbineController : MonoBehaviour {
 	void Update ()
     {
         RotateTurbine();
-        UpdatePower();
+        
+    }
+
+    public void Update(float gameDeltaTime)
+    {
+        if (GameResources.isPaused()) return;
+        UpdatePower(gameDeltaTime);
+        UpdateHealth(gameDeltaTime);
     }
 
     void RotateTurbine()
@@ -51,13 +58,22 @@ public class TurbineController : MonoBehaviour {
         nacelle.transform.rotation = Quaternion.Euler(nacelleRotX, nacelleRotY, nacelleRotZ);
     }
 
-    void UpdatePower()
+    void UpdatePower(float gameDeltaTime)
     {
         float TSRInducedPower = OptimumCalculator(8, 3f, TSR);
         float pitchInducePower = OptimumCalculator(5, 15f, bladePitch);
-        power = health * TSRInducedPower * pitchInducePower * rotationSpeed;
+        power = (float)health * TSRInducedPower * pitchInducePower * rotationSpeed;
         avgPower = (avgPower * weight + power) / (weight + 1);
         weight = weight + 1;
+    }
+
+    void UpdateHealth(float gameDeltaTime)
+    {
+        //This assumes a turbine lifespan of 5 years
+        //43800 being the amount of hours in 5 years
+        double decay = ((double)1 / (double)43800) * (double)gameDeltaTime;
+        if (health - decay < 0) return;
+        health -= decay;
     }
 
     float OptimumCalculator(float optimum, float spread, float at)

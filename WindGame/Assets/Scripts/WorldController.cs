@@ -37,8 +37,7 @@ public class WorldController : MonoBehaviour
 
     void Update()
     {
-        float dt = Time.deltaTime * GameResources.getGameSpeed();
-        turbManager.Update(dt);
+     
     }
 
     // Create the singletone for the WorldManager. Also checks if there is another present and logs and error.

@@ -54,12 +54,12 @@ public class PanemoneInformationMenu : MonoBehaviour {
     void RepairTurbine()
     {
         turbine.health = 1;
-        GameResources.removeWealth(turbine.health * 2500);
+        GameResources.removeWealth((float)turbine.health * 2500);
     }
 
     void DestroyTurbine()
     {
-        GameResources.removeWealth(-(2500 - (1 - turbine.health) * 2500));
+        GameResources.removeWealth(-(2500 - (1 - (float)turbine.health) * 2500));
         TurbineManager.GetInstance().RemoveTurbine(turbine.gameObject);
         CloseMenu();
     }

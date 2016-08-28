@@ -34,7 +34,8 @@ public class GameResources : MonoBehaviour
 		production = 0;
 		publicAcceptance = initialAcceptance;
 		date = new DateTime(800, 10, 10);
-        gameSpeed = 0;
+        gameSpeed = 200;
+        paused = false;
 	}
 	
     void Update()
@@ -50,7 +51,7 @@ public class GameResources : MonoBehaviour
     }
 
 	// Update is called once per frame
-	public static void Update (float gameDeltaTime) {
+	void Update (float gameDeltaTime) {
 
 		updateResources(gameDeltaTime);
         
@@ -60,6 +61,7 @@ public class GameResources : MonoBehaviour
 	static void updateResources(float gameDeltaTime)
 	{
 		TurbineManager turbManager = TurbineManager.GetInstance();
+        turbManager.Update(gameDeltaTime);
 		// **Update production
 		production = turbManager.GetTotalProduction();
 
