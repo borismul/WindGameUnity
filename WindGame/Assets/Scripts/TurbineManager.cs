@@ -43,10 +43,10 @@ public class TurbineManager : MonoBehaviour{
 
     public void Update(float idt)
 	{
-		//foreach(GameObject turbine in turbines)
-		//{
-		//	turbine.GetComponent<TurbineController>().Update(idt);
-		//}
+		foreach(GameObject turbine in turbines)
+		{
+			turbine.GetComponent<TurbineController>().Update(idt);
+		}
 	}
 
 	public void AddTurbine(GameObject turb)
