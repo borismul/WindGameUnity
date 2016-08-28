@@ -324,6 +324,8 @@ public class TerrainController : MonoBehaviour {
 
         // When that is done the level loading is complete
         levelLoaded = true;
+
+        UIScript.GetInstance().DisableLoadingScreen();
     }
 
     // Method that generates an object on the terrain based on the inputs
