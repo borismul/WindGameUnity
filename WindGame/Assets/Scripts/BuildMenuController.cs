@@ -38,6 +38,9 @@ public class BuildMenuController : MonoBehaviour
     public LayerMask buildMask;
     public Slider TSRSlider;
     public Slider bladePitchSlider;
+    public FadableText errorText;
+    public Text buildPrice;
+
     bool isTurbine;
 
     List<Button> menuButtons = new List<Button>();
@@ -54,6 +57,9 @@ public class BuildMenuController : MonoBehaviour
     {
         GetComponentInChildren<CanvasGroup>().alpha = 1;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+        canCancel = true;
+        infoCamera.enabled = true;
+        buildingFeatures.SetActive(false);
     }
     // The start method gets called first
     void Start()
@@ -69,16 +75,14 @@ public class BuildMenuController : MonoBehaviour
 
         GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
         GetComponent<Canvas>().worldCamera = Camera.main;
-
-
-
-
     }
 
     void Update()
     {
         // Check if the user is clicking outside the build menu
         ClickOutside();
+
+        BuildPriceColorUpdate();
     }
     void ClickOutside()
     {
@@ -130,6 +134,7 @@ public class BuildMenuController : MonoBehaviour
         curInstantiated.transform.position = instantHere.transform.position +  curInstantiated.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
         curInstantiated.tag = "Respawn"; // To confirm that this turbine is created for the preview window
+        buildPrice.text = curSelected.GetComponent<TurbineController>().price.ToString();
 
     }
 
@@ -182,6 +187,21 @@ public class BuildMenuController : MonoBehaviour
         if (curSelected == null)
             return;
 
+        if (!GameResources.CanIBuy(curSelected.GetComponent<TurbineController>().price))
+        {
+            if (errorText.enabled)
+            {
+                errorText.gameObject.SetActive(true);
+                errorText.GetComponent<Text>().text = "Insufficient funds to buy a turbine.";
+            }
+            else
+            {
+                errorText.ReEnable();
+            }
+
+            return;
+        }
+
         Destroy(curInstantiated);
         curInstantiated = null;
 
@@ -193,6 +213,17 @@ public class BuildMenuController : MonoBehaviour
         InvokeRepeating("UpdateSelectedPosition", 0, 1 / 60f);
 
 
+    }
+
+    void BuildPriceColorUpdate()
+    {
+        if (curSelected == null)
+            return;
+
+        if (GameResources.CanIBuy(curSelected.GetComponent<TurbineController>().price))
+            buildPrice.color = Color.green;
+        else
+            buildPrice.color = Color.red;
     }
 
     // Updates the turbine to the mouse cursor until placement is confirmed
@@ -255,10 +286,9 @@ public class BuildMenuController : MonoBehaviour
     void BuildNow(GridTile plantGrid, Vector3 plantPos)
     {
         if (isTurbine) // If we want to build a turbine...
-        {   
-            if(GameResources.BuyTurbine(5000))
-                world.AddTurbine(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, 50f, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
-            else print("Not enough cash!");
+        {
+            GameResources.BuyTurbine(curInstantiated.GetComponent<TurbineController>().price);
+            world.AddTurbine(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
         }
     }
 }

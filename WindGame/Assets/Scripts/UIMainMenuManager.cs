@@ -14,7 +14,6 @@ public class UIMainMenuManager : MonoBehaviour {
     
     void Start () {
         restartButton.onClick.AddListener(RestartMission);
-        exitButton.onClick.AddListener(Exit);
     }
 	
 	void Update () {
@@ -42,6 +41,13 @@ public class UIMainMenuManager : MonoBehaviour {
 
     void RestartMission()
     {
+        TerrainController.thisTerrainController.DestroyAll();
         SceneManager.LoadScene("Mission1");
+    }
+    
+    void MainMenu()
+    {
+        TerrainController.thisTerrainController.DestroyAll();
+        SceneManager.LoadScene("Main Menu");
     }
 }

@@ -76,7 +76,7 @@ public class WorldController : MonoBehaviour
 
 
     // Builder function, some class wants the world to add an object
-    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent, float TSR, float bladePitch)
+    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent, float TSR, float bladePitch)
     {
         GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
         TurbineController controller = t.GetComponent<TurbineController>();
@@ -86,10 +86,16 @@ public class WorldController : MonoBehaviour
         t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
-        AddToGridTiles(something, pos, size/2, type);
+        AddToGridTiles(something, pos, controller.diameter/2, type);
 
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 
+    }
+
+    public void RemoveTurbine(TurbineController turbineController)
+    {
+        RemoveFromGridTiles(turbineController.gameObject.transform.position, turbineController.diameter / 2);
+        Destroy(turbineController.gameObject);
     }
 
     public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent)
@@ -127,6 +133,17 @@ public class WorldController : MonoBehaviour
 
             tile.occupant = new GridTileOccupant(something);
             tile.type = type;
+        }
+    }
+
+    void RemoveFromGridTiles(Vector3 point, float circleRadius)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
+
+        foreach (GridTile tile in gridtiles)
+        {
+            tile.occupant = null;
+            tile.type = GridTileOccupant.OccupantType.Empty;
         }
     }
 }

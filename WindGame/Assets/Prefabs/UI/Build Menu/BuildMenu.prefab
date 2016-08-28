@@ -110,6 +110,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000010559681120
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000014259389200}
+  - 222: {fileID: 222000014143642340}
+  - 114: {fileID: 114000012978298524}
+  m_Layer: 5
+  m_Name: Build Price
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000010920329012
 GameObject:
   m_ObjectHideFlags: 1
@@ -154,13 +171,14 @@ GameObject:
   - 224: {fileID: 224000011474468380}
   - 222: {fileID: 222000013332611988}
   - 114: {fileID: 114000012763101312}
+  - 114: {fileID: 114000011682830542}
   m_Layer: 5
-  m_Name: Title Text
+  m_Name: ErrorText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000011317042056
 GameObject:
   m_ObjectHideFlags: 1
@@ -223,6 +241,40 @@ GameObject:
   - 114: {fileID: 114000013064402884}
   m_Layer: 5
   m_Name: BladePitchNumber (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000012222063278
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000010675218884}
+  - 222: {fileID: 222000013171407162}
+  - 114: {fileID: 114000011968157166}
+  m_Layer: 5
+  m_Name: Title Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000012270619968
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000014264210010}
+  - 222: {fileID: 222000013778465722}
+  - 114: {fileID: 114000014084740466}
+  m_Layer: 5
+  m_Name: Info text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +461,7 @@ GameObject:
   - 222: {fileID: 222000010020036296}
   - 114: {fileID: 114000011892660432}
   m_Layer: 5
-  m_Name: Info text
+  m_Name: Build Price Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -735,8 +787,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 224000013794938212}
   m_HandleRect: {fileID: 224000010544941132}
   m_Direction: 0
-  m_MinValue: -90
-  m_MaxValue: 90
+  m_MinValue: -30
+  m_MaxValue: 30
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
@@ -918,7 +970,7 @@ MonoBehaviour:
   nameText: {fileID: 114000010221620866}
   loadTurbinesButton: {fileID: 0}
   loadOthersButton: {fileID: 0}
-  infoText: {fileID: 114000011892660432}
+  infoText: {fileID: 114000014084740466}
   cutOffRadius: 50
   buildingFeatures: {fileID: 1000010940210940}
   buildMask:
@@ -926,6 +978,22 @@ MonoBehaviour:
     m_Bits: 256
   TSRSlider: {fileID: 114000011002328724}
   bladePitchSlider: {fileID: 114000010327972818}
+  errorText: {fileID: 114000011682830542}
+  buildPrice: {fileID: 114000011892660432}
+--- !u!114 &114000011682830542
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011262969708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b2961f968323645a51540197b3536e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeStartTime: 3
+  fadeDuration: 2
+  repeatRate: 0.033333335
 --- !u!114 &114000011892660432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -938,7 +1006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -949,20 +1017,16 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 25
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 30
-    m_Alignment: 0
+    m_BestFit: 1
+    m_MinSize: 15
+    m_MaxSize: 25
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The persian windmill was invented around 500 - 900 AD. The design is the
-    panemone, with vertical lightweight wooden sails attached by horizontal struts
-    to a central vertical shaft. It was first built to pump water, and subsequently
-    modified to grind grain. This turbine is used to grind grains in order to produce
-    bread.
+  m_Text: 5000
 --- !u!114 &114000011947187298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -990,6 +1054,39 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 44
     m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Build
+--- !u!114 &114000011968157166
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012222063278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 87fa3587dcae2b047b8be5a850a3a266, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 300
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1187,7 +1284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1207,7 +1304,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Build
+  m_Text: Insufficient funds to buy a turbine
 --- !u!114 &114000012800557786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1262,6 +1359,39 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114000012978298524
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010559681120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 25
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 15
+    m_MaxSize: 25
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Build Price:'
 --- !u!114 &114000013042996304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1525,6 +1655,43 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114000014084740466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012270619968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 25
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 15
+    m_MaxSize: 25
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: The persian windmill was invented around 500 - 900 AD. The design is the
+    panemone, with vertical lightweight wooden sails attached by horizontal struts
+    to a central vertical shaft. It was first built to pump water, and subsequently
+    modified to grind grain. This turbine is used to grind grains in order to produce
+    bread.
 --- !u!114 &114000014135593848
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1656,6 +1823,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012774752078}
+--- !u!222 &222000013171407162
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012222063278}
 --- !u!222 &222000013256927066
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1674,6 +1847,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013833756712}
+--- !u!222 &222000013778465722
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012270619968}
 --- !u!222 &222000013797505010
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1692,6 +1871,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012300332156}
+--- !u!222 &222000014143642340
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010559681120}
 --- !u!223 &223000013604989648
 Canvas:
   m_ObjectHideFlags: 1
@@ -1735,17 +1920,17 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013049047234}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 224000011952095416}
-  m_RootOrder: 1
+  m_RootOrder: 11
   m_AnchorMin: {x: 0.5, y: 0.4046361}
   m_AnchorMax: {x: 0.5, y: 0.4046361}
-  m_AnchoredPosition: {x: -0.0000068843, y: 162}
-  m_SizeDelta: {x: 504, y: 198}
+  m_AnchoredPosition: {x: -53.8, y: -196.33002}
+  m_SizeDelta: {x: 97.5, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000010641375642
 RectTransform:
@@ -1758,6 +1943,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 224000010675218884}
   - {fileID: 224000011474468380}
   - {fileID: 224000012277322570}
   - {fileID: 224000012447456918}
@@ -1768,6 +1954,24 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1057, y: 793}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224000010675218884
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012222063278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 224000010641375642}
+  m_RootOrder: 0
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.5000042, y: -54}
+  m_SizeDelta: {x: 1, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000010701622310
 RectTransform:
@@ -1904,17 +2108,17 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011262969708}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 224000010641375642}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.49998784, y: -60.900055}
-  m_SizeDelta: {x: 1, y: 99}
+  m_AnchoredPosition: {x: -0.25006866, y: -117}
+  m_SizeDelta: {x: -90.5, y: 41}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000011499150300
 RectTransform:
@@ -1968,7 +2172,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000011953828040}
-  - {fileID: 224000010624202636}
+  - {fileID: 224000014264210010}
   - {fileID: 224000011199393704}
   - {fileID: 224000013872978236}
   - {fileID: 224000011071362574}
@@ -1977,8 +2181,10 @@ RectTransform:
   - {fileID: 224000011303394704}
   - {fileID: 224000012731381956}
   - {fileID: 224000012011488220}
+  - {fileID: 224000014259389200}
+  - {fileID: 224000010624202636}
   m_Father: {fileID: 224000010641375642}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 210, y: -52}
@@ -2052,7 +2258,7 @@ RectTransform:
   m_Children:
   - {fileID: 224000012609130404}
   m_Father: {fileID: 224000010641375642}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -38.9, y: 756.6}
@@ -2088,7 +2294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 224000010641375642}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -291, y: -52.000008}
@@ -2126,7 +2332,7 @@ RectTransform:
   m_Father: {fileID: 224000011499150300}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2201,8 +2407,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224000010840922044}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0.3, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2241,6 +2447,42 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -176.3, y: 184.8}
   m_SizeDelta: {x: 108, y: 22}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224000014259389200
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010559681120}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 224000011952095416}
+  m_RootOrder: 10
+  m_AnchorMin: {x: 0.5, y: 0.4046361}
+  m_AnchorMax: {x: 0.5, y: 0.4046361}
+  m_AnchoredPosition: {x: -177.19998, y: -196.33002}
+  m_SizeDelta: {x: 149.6, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224000014264210010
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012270619968}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 224000011952095416}
+  m_RootOrder: 1
+  m_AnchorMin: {x: 0.5, y: 0.4046361}
+  m_AnchorMax: {x: 0.5, y: 0.4046361}
+  m_AnchoredPosition: {x: -0.0000068843, y: 162}
+  m_SizeDelta: {x: 504, y: 198}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &225000013507514502
 CanvasGroup:

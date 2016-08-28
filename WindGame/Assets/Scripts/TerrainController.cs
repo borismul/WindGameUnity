@@ -9,37 +9,37 @@ using UnityEngine.SceneManagement;
 public class TerrainController : MonoBehaviour {
 
     [Header("Terrain Details")]
-    [HideInInspector]
+    //[HideInInspector]
     public int length;
-    [HideInInspector]
+    //[HideInInspector]
     public int width;
-    [HideInInspector]
+    //[HideInInspector]
     public int maxHeight;
     public Biome[] biomes;
-    [HideInInspector]
+    //[HideInInspector]
     public int seed;
 
     [Header("Perline Noise Attributes")]
-    [HideInInspector]
+    //[HideInInspector]
     public int terrainOctaves;
-    [HideInInspector]
+    //[HideInInspector]
     public float terrainPersistance;
-    [HideInInspector]
+    //[HideInInspector]
     public float terrainFrequency;
-    [HideInInspector]
+    //[HideInInspector]
     public int biomeOctaves;
-    [HideInInspector]
+    //[HideInInspector]
     public float biomePersistance;
-    [HideInInspector]
+    //[HideInInspector]
     public float biomeFrequency;
 
     [Header("Chunk Details")]
     public GameObject chunkPrefab;
-    [HideInInspector]
+    //[HideInInspector]
     public int chunkSize;
-    [HideInInspector]
+    //[HideInInspector]
     public int tileSize;
-    [HideInInspector]
+    //[HideInInspector]
     public int tileSlope;
 
     [Header("City Details")]
@@ -47,19 +47,19 @@ public class TerrainController : MonoBehaviour {
 
     [Header("Water Details")]
     public GameObject waterChunkPrefab;
-    [HideInInspector]
+    //[HideInInspector]
     public int waterChunkSize;
-    [HideInInspector]
+    //[HideInInspector]
     public int waterTileSize;
-    [HideInInspector]
+    //[HideInInspector]
     public int waterOctaves;
-    [HideInInspector]
+    //[HideInInspector]
     public float waterPersistance;
-    [HideInInspector]
+    //[HideInInspector]
     public float waterFrequency;
-    [HideInInspector]
+    //[HideInInspector]
     public float waterLevel;
-    [HideInInspector]
+    //[HideInInspector]
     public float maxWaveHeight;
 
     [Header("Camera")]
@@ -102,9 +102,9 @@ public class TerrainController : MonoBehaviour {
     void Start()
     {
         // In the main menu load the scene of mission 1
-        if (SceneManager.GetActiveScene().name == "Main Menu")
+        if (SceneManager.GetActiveScene().name != "Main Menu")
         {
-            StartCoroutine(Load("Mission1", false));
+            BuildButton();
         }
     }
 
@@ -191,10 +191,11 @@ public class TerrainController : MonoBehaviour {
                 // Instantiate one at the right position
                 GameObject chunk = (GameObject)Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
                 chunk.transform.parent = this.transform;
+                yield return null;
             }
-
-            yield return null;
         }
+
+        yield return null;
 
         // Build the water chunks
         BuildWater();
@@ -223,13 +224,14 @@ public class TerrainController : MonoBehaviour {
     {
         // Index to keep track of how much time it takes
         float timeSinceUpdate = Time.realtimeSinceStartup;
-
         // Loop through each grid tile in the world
         for (int i = 0; i < world.GetLength(0); i++)
         {
             for (int k = 0; k < world.GetLength(1); k++)
             {
                 // If the grid tile is under the water level, don't do anything.
+                if (world[i, k] == null)
+                    continue;
                 if (world[i, k].position.y < waterLevel)
                     continue;
 
@@ -606,14 +608,17 @@ public class TerrainController : MonoBehaviour {
         BinaryFormatter binaryFormatter = new BinaryFormatter();
 
         // load the map at path as a textasset
-        TextAsset loaded = Resources.Load(path) as TextAsset;
+        ResourceRequest request = Resources.LoadAsync(path);
 
+        yield return request;
+
+        TextAsset loaded = (TextAsset)request.asset;
         // create a memory stream of the bytes in the loaded textasset
         MemoryStream stream = new MemoryStream(loaded.bytes);
-
+        float timeS = Time.realtimeSinceStartup;
         // Deserialize to a world terrainsaver objects
         TerrainSaver world = (TerrainSaver)binaryFormatter.Deserialize(stream);
-
+        Debug.Log(Time.realtimeSinceStartup - timeS);
         // get all terrain parameters
         length = world.length;
         width = world.width;
@@ -677,7 +682,7 @@ public class TerrainController : MonoBehaviour {
     }
 
     // Method that destroys the whole terrain
-    void DestroyAll()
+    public void DestroyAll()
     {
         // Destroy chunks
         foreach (Chunk chunk in chunks)

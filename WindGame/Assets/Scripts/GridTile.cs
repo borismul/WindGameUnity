@@ -26,6 +26,7 @@ public class GridTile{
 
     public static GridTile FindClosestGridTile(Vector3 point)
     {
+        
         GridTile[,] world = TerrainController.thisTerrainController.world;
         int tileSize = TerrainController.thisTerrainController.tileSize;
 

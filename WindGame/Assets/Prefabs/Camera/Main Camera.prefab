@@ -109,6 +109,10 @@ MonoBehaviour:
   maxTiltHeight: 200
   tiltFormulaPow: 0.6
   camLerpScrollStart: 150
+  minX: 1400
+  maxX: 2600
+  minZ: 1400
+  maxZ: 2600
   haveControl: 0
 --- !u!124 &12424946
 Behaviour:

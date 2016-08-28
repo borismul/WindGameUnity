@@ -60,5 +60,6 @@ public class TileInfomationMenu : MonoBehaviour {
     void CloseMenu()
     {
         UIScript.GetInstance().CloseTileMenu();
+        WorldInteractionController.GetInstance().SetInInfoMode(false);
     }
 }

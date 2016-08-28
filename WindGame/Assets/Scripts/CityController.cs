@@ -36,7 +36,6 @@ public class CityController : MonoBehaviour {
 
         float xPos = minLocX * terrain.length + (float)rand.NextDouble() * (maxLocX - minLocX) * terrain.length;
         float zPos = minLocZ * terrain.width + (float)rand.NextDouble() * (maxLocZ - minLocZ) * terrain.width;
-
         Vector3 centerPos = new Vector3(xPos, 0, zPos);
         centerTile = GridTile.FindClosestGridTile(centerPos);
 

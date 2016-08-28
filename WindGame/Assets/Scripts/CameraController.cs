@@ -33,6 +33,12 @@ public class CameraController : MonoBehaviour
     [Header("Start Variables")]
     public float camLerpScrollStart;
 
+    [Header("Camera Boundaries")]
+    public float minX = 1400;
+    public float maxX = 2600;
+    public float minZ = 1400;
+    public float maxZ = 2600;
+
     Vector3 previousPos;
 
     Vector3 targetPos;
@@ -204,8 +210,26 @@ public class CameraController : MonoBehaviour
         Vector3 Horizon = targetPos + forward * dZ + right * dX;
         Horizon.y = 0;
 
+        Vector3 targetPosTry = Horizon + new Vector3(0, targetY, 0);
+
+        if (targetPosTry.x < minX)
+        {
+            targetPosTry.x = minX;
+        } 
+        if(targetPosTry.x > maxX)
+        {
+            targetPosTry.x = maxX;
+        }
+        if(targetPosTry.z < minZ)
+        {
+            targetPosTry.z = minZ;
+        }
+        if(targetPosTry.z > maxZ)
+        {
+            targetPosTry.z = maxZ;
+        }
         // Add the horizontal movement and vertical movement to get the updated target position for the camera
-        targetPos = Horizon + new Vector3(0, targetY, 0);
+        targetPos = targetPosTry;
     }
 
     // Method determines the strength of the input in horizontal plane. Bigger camHeight = faster movement, lower camHeight = lower movement

@@ -19,6 +19,9 @@ public class TurbineController : MonoBehaviour {
     public float avgPower;
     public float bladePitch = 5;
 
+    public float diameter = 50;
+    public float price = 5000;
+
 	// Update is called once per frame
 	void Update ()
     {

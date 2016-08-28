@@ -81,6 +81,18 @@ public class GameResources : MonoBehaviour
 		// wealth += 0.8f * production;
 	}
 
+    public static bool CanIBuy(float cost)
+    {
+        if (wealth < cost)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 	public static bool BuyTurbine(float cost)
 	{
 		if(wealth < cost)
