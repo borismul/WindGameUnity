@@ -6,24 +6,18 @@ using System.Collections;
 public class UIMainMenuManager : MonoBehaviour {
     public Text objectivesValue;
 
-    public Button closeMenuButton;
-
     public Button restartButton;
 
     public Button exitButton;
 
     public Text menuText;
-
-    // Use this for initialization
+    
     void Start () {
-        closeMenuButton.onClick.AddListener(CloseMenu);
         restartButton.onClick.AddListener(RestartMission);
-        exitButton.onClick.AddListener(Exit);
     }
 	
-	// Update is called once per frame
 	void Update () {
-        /*
+        Mission1Controller missionController = Mission1Controller.GetInstance();
         string result = "";
         for (int i = 0; i < missionController.objectives.Length; i++)
         {
@@ -38,7 +32,6 @@ public class UIMainMenuManager : MonoBehaviour {
             result += missionController.objectives[i] + "</color> \n";
         }
         objectivesValue.text = result;
-        */
     }
 
     void Exit()
@@ -48,12 +41,13 @@ public class UIMainMenuManager : MonoBehaviour {
 
     void RestartMission()
     {
+        TerrainController.thisTerrainController.DestroyAll();
         SceneManager.LoadScene("Mission1");
     }
-
-    void CloseMenu()
+    
+    void MainMenu()
     {
-        GameResources.setGameSpeed(200);
-        //Destroy the menu
+        TerrainController.thisTerrainController.DestroyAll();
+        SceneManager.LoadScene("Main Menu");
     }
 }

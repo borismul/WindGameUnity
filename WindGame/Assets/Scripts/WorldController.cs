@@ -11,8 +11,6 @@ using System;
 
 public class WorldController : MonoBehaviour
 {
-    public string missionName;
-
     TurbineManager turbManager; // Holder of turbines
 
     private static WorldController instance;
@@ -78,13 +76,74 @@ public class WorldController : MonoBehaviour
 
 
     // Builder function, some class wants the world to add an object
-    public static void Add(GameObject something, Vector3 pos)
+    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent, float TSR, float bladePitch)
     {
-        GameObject t = Instantiate(something);
-        t.transform.position = pos;
+        GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        TurbineController controller = t.GetComponent<TurbineController>();
+        controller.turbineName = something.name;
+        controller.bladePitch = bladePitch;
+        controller.TSR = TSR;
+        t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
-        
+
+        AddToGridTiles(something, pos, controller.diameter/2, type);
+
         TurbineManager turbManager = TurbineManager.GetInstance();
-        turbManager.AddTurbine(t);
+        turbManager.AddTurbine(t); 
+    }
+
+    public void RemoveTurbine(TurbineController turbineController)
+    {
+        RemoveFromGridTiles(turbineController.gameObject.transform.position, turbineController.diameter / 2);
+        Destroy(turbineController.gameObject);
+    }
+
+    public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent)
+    {
+        GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        t.transform.localScale = Vector3.one * scale;
+
+        AddToGridTiles(something, pos, size / 2, type);
+    }
+
+    // Function that determines if a tile has a object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
+    public bool CanBuild(Vector3 pos, float size, bool neglectTerrainObjects)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size/2);
+
+        foreach (GridTile tile in gridtiles)
+        {
+            if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
+                return false;
+            else if (!neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City || tile.type == GridTileOccupant.OccupantType.TerrainGenerated))
+                return false;
+        }
+        return true;
+    }
+
+    // Function that adds on object to all gridtiles in a certian circle radius around a tile with position point.
+    void AddToGridTiles(GameObject something, Vector3 point, float circleRadius, GridTileOccupant.OccupantType type)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
+
+        foreach (GridTile tile in gridtiles)
+        {
+            if (tile.type == GridTileOccupant.OccupantType.TerrainGenerated)
+                TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
+
+            tile.occupant = new GridTileOccupant(something);
+            tile.type = type;
+        }
+    }
+
+    void RemoveFromGridTiles(Vector3 point, float circleRadius)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
+
+        foreach (GridTile tile in gridtiles)
+        {
+            tile.occupant = null;
+            tile.type = GridTileOccupant.OccupantType.Empty;
+        }
     }
 }

@@ -7,15 +7,6 @@ public class Mission1Controller : MonoBehaviour {
     public System.DateTime obj1Date;
     public System.DateTime obj2Date;
 
-    [SerializeField]
-    GameObject worldObj;
-
-    //[SerializeField]
-    //GameObject UIObj;
-
-    // WorldController world;
-    //UIScript ui;
-
     private static Mission1Controller instance;
 
     [Header("Prefabs")]
@@ -30,8 +21,6 @@ public class Mission1Controller : MonoBehaviour {
 
         objectivesCompleted = new bool[] { false, false, true };
         objectives = new string[] { "Generate 1000 power before 830 AD", "Get 20000 capital before 850 AD", "Keep public acceptance above -1" };
-        // world = worldObj.GetComponent<WorldController>();
-        //ui = UIObj.GetComponent<UIScript>();
 
         obj1Date = new System.DateTime(830, 1, 1);
         obj2Date = new System.DateTime(850, 1, 1);
@@ -92,7 +81,7 @@ public class Mission1Controller : MonoBehaviour {
     }
 
     // Get the singleton instance
-    public Mission1Controller GetInstance()
+    public static Mission1Controller GetInstance()
     {
         return instance;
     }

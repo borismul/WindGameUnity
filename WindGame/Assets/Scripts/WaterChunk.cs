@@ -103,6 +103,7 @@ public class WaterChunk : MonoBehaviour {
     {
         for (int i = 0; i < vert.Count - (n - 3 + n - 2); i++)
         {
+
             int rowL = Mathf.FloorToInt(i / (n - 3));
             int rowU = rowL + 1;
             int col = i - rowL * (n - 3);
@@ -110,6 +111,9 @@ public class WaterChunk : MonoBehaviour {
             int BR = BL + 1;
             int UL = rowU * (n - 2) + col;
             int UR = UL + 1;
+
+            //if (!AboveGround(vert[BL]) && !AboveGround(vert[BR]) && !AboveGround(vert[UL]) && !AboveGround(vert[UR]))
+            //    continue;
 
             tri.Add(BL);
             tri.Add(UR);
@@ -149,6 +153,7 @@ public class WaterChunk : MonoBehaviour {
     void UpdateWater()
     {
         vert.Clear();
+        tri.Clear();
         for (int i = 1; i<map.GetLength(0) - 1; i++)
         {
             for (int j = 1; j < map.GetLength(1) - 1; j++)
@@ -160,5 +165,15 @@ public class WaterChunk : MonoBehaviour {
                 vert.Add(map[i, j]);
             }
         }
+
+        AddTris(map.GetLength(0));
+    }
+
+    bool AboveGround(Vector3 vertex)
+    {
+        if (GridTile.FindClosestGridTile(vertex + transform.position) != null)
+            return (vertex.y > GridTile.FindClosestGridTile(vertex + transform.position).position.y);
+        else
+            return false;
     }
 }

@@ -19,7 +19,9 @@ public class UIResourcesManager : MonoBehaviour {
 
     public Button speedButton10x;
 
-    float oldspeed;
+    public Button buildButton;
+
+    public Button infoButton;
 
     // Use this for initialization
     void Start ()
@@ -28,38 +30,52 @@ public class UIResourcesManager : MonoBehaviour {
         speedButton1x.onClick.AddListener(SetSpeed1x);
         speedButton10x.onClick.AddListener(SetSpeed10x);
         menuButton.onClick.AddListener(Menu);
+        buildButton.onClick.AddListener(BuildButton);
+        infoButton.onClick.AddListener(InfoButton);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        capitalText.text = GameResources.getWealth().ToString();
-        publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString();
-        powerText.text = GameResources.getProduction().ToString();
-        dateText.text = GameResources.getDate().ToString("M-yyyy");
+        capitalText.text = GameResources.getWealth().ToString("0");
+        publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
+        powerText.text = GameResources.getProduction().ToString("0");
+        dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
     }
 
     void Pause()
     {
-        oldspeed = GameResources.getGameSpeed();
-        GameResources.setGameSpeed(0);
+        GameResources.pause();
     }
 
     void SetSpeed1x()
     {
+        GameResources.unPause();
         GameResources.setGameSpeed(200);
     }
 
     void SetSpeed10x()
     {
+        GameResources.unPause();
         GameResources.setGameSpeed(2000);
     }
-    
+
+    void BuildButton()
+    {
+        UIScript.GetInstance().BuildMenu();
+    }
+
+    void InfoButton()
+    {
+        UIScript.GetInstance().OpenTileMenu();
+
+    }
+
     void Menu()
     {
-        GameResources.setGameSpeed(0);
-        //Implement code to trigger instantiation of menu
-        //Should be handled by UIManager script, this only activates that script
-        //UIManager.getInstance().menuButtonPress()
+        bool hideSpeedButtons = UIScript.GetInstance().menuButtonPress();
+        pauseButton.gameObject.SetActive(hideSpeedButtons);
+        speedButton1x.gameObject.SetActive(hideSpeedButtons);
+        speedButton10x.gameObject.SetActive(hideSpeedButtons);
     }
 }

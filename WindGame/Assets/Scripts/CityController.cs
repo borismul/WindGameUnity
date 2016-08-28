@@ -19,6 +19,7 @@ public class CityController : MonoBehaviour {
     public float density;
 
     TerrainController terrain;
+    WorldController world;
     Rand rand = new Rand();
 
     public GridTile centerTile;
@@ -29,10 +30,12 @@ public class CityController : MonoBehaviour {
     void Start ()
     {
         city = this;
+
         terrain = TerrainController.thisTerrainController;
+        world = WorldController.GetInstance();
+
         float xPos = minLocX * terrain.length + (float)rand.NextDouble() * (maxLocX - minLocX) * terrain.length;
         float zPos = minLocZ * terrain.width + (float)rand.NextDouble() * (maxLocZ - minLocZ) * terrain.width;
-
         Vector3 centerPos = new Vector3(xPos, 0, zPos);
         centerTile = GridTile.FindClosestGridTile(centerPos);
 
@@ -42,8 +45,7 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        GameObject building = terrain.BuildObject(buildings[0].prefab, Quaternion.Euler(-90, 0, 0), Vector3.one * buildings[0].scale, centerTile, startRadius, true, false, true);
-        building.transform.SetParent(transform);
+        world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, 50, transform);
         int tileSize = terrain.tileSize;
 
         int thisX = Mathf.RoundToInt((centerTile.position.x - 0.5f * tileSize) / tileSize);
@@ -55,19 +57,13 @@ public class CityController : MonoBehaviour {
         int maxX = terrain.length / tileSize;
         int maxZ = terrain.width / tileSize;
 
-        for (int i = 0; i < startRadius / tileSize * 2; i++)
+        GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, startRadius, 1);
+        foreach (GridTile tile in gridTiles)
         {
-            for (int j = 0; j < startRadius / tileSize * 2; j++)
+            if (rand.NextDouble() < density && world.CanBuild(tile.position, 50, true))
             {
-                if (startX + i < 0 || startX + i > maxX || startZ + j < 0 || startZ + j > maxZ)
-                    continue;
-                GridTile checkGridTile = terrain.world[startX + i, startZ + j];
-                if (Vector3.Distance(checkGridTile.position, centerTile.position) < startRadius && rand.NextDouble() < density && checkGridTile.canBuild)
-                {
-                    CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-                    building = terrain.BuildObject(buildObject.prefab, Quaternion.Euler(-90,0,0), Vector3.one * buildObject.scale, checkGridTile, 30, false, false, true);
-                    building.transform.SetParent(transform);
-                }
+                CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
+                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, 50, transform);
             }
         }
     }

@@ -24,6 +24,7 @@ public class GameResources : MonoBehaviour
 	static float publicAcceptance; // Keep track of public acceptance
 	static DateTime date;
     static float gameSpeed;
+    static bool paused;
 
 	static float costOfElectricity = 0.002f;
 
@@ -39,7 +40,7 @@ public class GameResources : MonoBehaviour
     void Update()
     {
         // If paused don't update
-        if (gameSpeed == 0)
+        if (paused)
             return;
 
         // Calculate the time passed in seconds since last frame
@@ -64,7 +65,7 @@ public class GameResources : MonoBehaviour
 
 		// **Update wealth
 		wealth += production * costOfElectricity * gameDeltaTime; // Add 'sold' electricity to our wealth
-		wealth -= turbManager.GetTotalMaintenanceCosts() * gameDeltaTime; // Deduct the price of turbine maintenance
+		//wealth -= turbManager.GetTotalMaintenanceCosts() * gameDeltaTime; // Deduct the price of turbine maintenance
 
 		// **Update public acceptance
 		// The public gets more negative with more turbines built
@@ -80,6 +81,18 @@ public class GameResources : MonoBehaviour
 		// wealth += 0.8f * production;
 	}
 
+    public static bool CanIBuy(float cost)
+    {
+        if (wealth < cost)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 	public static bool BuyTurbine(float cost)
 	{
 		if(wealth < cost)
@@ -92,6 +105,19 @@ public class GameResources : MonoBehaviour
 			return true;
 		}
 	}
+
+    public static bool removeWealth(float ammount)
+    {
+        if (wealth < ammount)
+        {
+            return false;
+        }
+        else
+        {
+            wealth -= ammount;
+            return true;
+        }
+    }
 
 	// Getters for the private functions;
 	public static float getWealth()
@@ -122,5 +148,20 @@ public class GameResources : MonoBehaviour
     public static void setGameSpeed(float speed)
     {
         gameSpeed = speed;
+    }
+
+    public static void pause()
+    {
+        paused = true;
+    }
+
+    public static void unPause()
+    {
+        paused = false;
+    }
+
+    public static bool isPaused()
+    {
+        return paused;
     }
 }

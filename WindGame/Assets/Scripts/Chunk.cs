@@ -165,7 +165,7 @@ public class Chunk : MonoBehaviour {
 
        
         Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
-        terrain.world[startI+ iPos, startK + jPos] = new GridTile(position + transform.position, worldPositions, biome, 0, true, null);
+        terrain.world[startI+ iPos, startK + jPos] = new GridTile(position + transform.position, worldPositions, biome, 0, null);
     }
 
     // Generate the mesh of this chunk

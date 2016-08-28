@@ -20,4 +20,8 @@ public class GridTileOccupant
         rotation = Quaternion.identity;
         scale = Vector3.one;
     }
+
+    public enum OccupantType { Empty, TerrainGenerated, Turbine, City };
+
 }
+

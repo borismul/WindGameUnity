@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 408742}
   - 114: {fileID: 11490242}
-  - 114: {fileID: 11404066}
   m_Layer: 0
   m_Name: TerrainController
   m_TagString: Untagged
@@ -30,18 +29,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11404066
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 118210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d51fb923acb3ef40979224d2c79f497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelName: Mission1
 --- !u!114 &11490242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -53,9 +40,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c427726aa5889174d8082225163af879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  length: 0
-  width: 0
-  maxHeight: 0
+  length: 4000
+  width: 4000
+  maxHeight: 200
   biomes:
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
@@ -89,26 +76,26 @@ MonoBehaviour:
       maxScale: 2
       minRotation: 0
       maxRotation: 360
-  seed: 0
-  terrainOctaves: 0
-  terrainPersistance: 0
-  terrainFrequency: 0
-  biomeOctaves: 0
-  biomePersistance: 0
-  biomeFrequency: 0
+  seed: 1885953640
+  terrainOctaves: 5
+  terrainPersistance: 0.5
+  terrainFrequency: 0.0005
+  biomeOctaves: 5
+  biomePersistance: 0.5
+  biomeFrequency: 0.0003
   chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
-  chunkSize: 0
-  tileSize: 0
-  tileSlope: 0
+  chunkSize: 1000
+  tileSize: 20
+  tileSlope: 2
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
-  waterChunkSize: 200
-  waterTileSize: 8
-  waterOctaves: 0
-  waterPersistance: 0
-  waterFrequency: 0
-  waterLevel: 100
-  maxWaveHeight: 0
+  waterChunkSize: 1000
+  waterTileSize: 200
+  waterOctaves: 2
+  waterPersistance: 0.5
+  waterFrequency: 0.001
+  waterLevel: 50
+  maxWaveHeight: 2
   mainCamera: {fileID: 197452, guid: 1f8d8502bb3c6114b9d974e727007f4f, type: 2}
   levelLoaded: 0
   chunks: []

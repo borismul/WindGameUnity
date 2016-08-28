@@ -33,6 +33,12 @@ public class CameraController : MonoBehaviour
     [Header("Start Variables")]
     public float camLerpScrollStart;
 
+    [Header("Camera Boundaries")]
+    public float minX = 1400;
+    public float maxX = 2600;
+    public float minZ = 1400;
+    public float maxZ = 2600;
+
     Vector3 previousPos;
 
     Vector3 targetPos;
@@ -116,7 +122,7 @@ public class CameraController : MonoBehaviour
     {
         float xPos = terrain.length / 2;
         float zPos = terrain.width / 2;
-        float yPos = 500;
+        float yPos = terrain.width / Mathf.Atan(Camera.main.fieldOfView);
         transform.position = new Vector3(xPos, yPos, zPos);
         transform.rotation = Quaternion.Euler(90, 0, 0);
         Camera.main.orthographic = true;
@@ -141,7 +147,7 @@ public class CameraController : MonoBehaviour
     {
         if(terrain.levelLoaded && !hasStarted)
         {
-            transform.LookAt(CityController.city.centerTile.occupant.obj.transform);
+            transform.LookAt(CityController.city.centerTile.position);
             if (Vector3.Distance(transform.position, targetPos) < 5)
             {
                 hasStarted = true;
@@ -204,8 +210,26 @@ public class CameraController : MonoBehaviour
         Vector3 Horizon = targetPos + forward * dZ + right * dX;
         Horizon.y = 0;
 
+        Vector3 targetPosTry = Horizon + new Vector3(0, targetY, 0);
+
+        if (targetPosTry.x < minX)
+        {
+            targetPosTry.x = minX;
+        } 
+        if(targetPosTry.x > maxX)
+        {
+            targetPosTry.x = maxX;
+        }
+        if(targetPosTry.z < minZ)
+        {
+            targetPosTry.z = minZ;
+        }
+        if(targetPosTry.z > maxZ)
+        {
+            targetPosTry.z = maxZ;
+        }
         // Add the horizontal movement and vertical movement to get the updated target position for the camera
-        targetPos = Horizon + new Vector3(0, targetY, 0);
+        targetPos = targetPosTry;
     }
 
     // Method determines the strength of the input in horizontal plane. Bigger camHeight = faster movement, lower camHeight = lower movement
@@ -398,4 +422,5 @@ public class CameraController : MonoBehaviour
         // save the current hitpoint as the previous
         prevHitPointY = hit.point.y;
     }
+
 }

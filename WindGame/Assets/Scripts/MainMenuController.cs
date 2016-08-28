@@ -21,6 +21,7 @@ public class MainMenuController : MonoBehaviour
     // Method loads the mission1 scene
     void Mission1Button()
     {
+        TerrainController.thisTerrainController.DestroyAll();
         SceneManager.LoadScene("Mission1");
     }
 

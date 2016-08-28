@@ -1,10 +1,18 @@
 fileFormatVersion: 2
 guid: 3f9135aec075854428e70c772c8daa88
-timeCreated: 1469534519
+timeCreated: 1471431015
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - eventSystemPrefab: {instanceID: 0}
+  - buildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
+      type: 2}
+  - resourcesMenuPrefab: {instanceID: 0}
+  - mainMenuPrefab: {instanceID: 0}
+  - radialMenuPrefab: {instanceID: 0}
+  - turorialPrefab: {instanceID: 0}
+  - backgroundButton: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
