@@ -54,7 +54,8 @@ public class WaterChunk : MonoBehaviour {
         frequency = terrain.waterFrequency;
         maxWaveHeight = terrain.maxWaveHeight;
 
-        Random.InitState(seed);
+        // Random.InitState(seed);
+        Random.seed = seed;
 
         map = new Vector3[size / tileSize + 3, size / tileSize + 3];
     }
