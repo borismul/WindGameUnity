@@ -67,3 +67,5 @@ MonoBehaviour:
     type: 2}
   tileInformationPrefab: {fileID: 1000011009651682, guid: 57c9c82ef7d0d3647a4915db1f537ea0,
     type: 2}
+  loadingMenuPrefab: {fileID: 1000010360985060, guid: 90a7cf7ac90cf7043ab060a38fe62910,
+    type: 2}

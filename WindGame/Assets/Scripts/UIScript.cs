@@ -18,6 +18,7 @@ public class UIScript : MonoBehaviour {
     public GameObject tutorialPrefab;
     public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
+    public GameObject loadingMenuPrefab;
 
     GameObject managerObj;
     GameObject cameraObj;
@@ -89,6 +90,9 @@ public class UIScript : MonoBehaviour {
         obj6.SetActive(false);
         menus.Add(obj6);
 
+        GameObject obj7 = Instantiate(loadingMenuPrefab);
+        obj7.transform.SetParent(transform);
+        menus.Add(obj7);
     }
 
     // Get the singleton instance
@@ -176,6 +180,11 @@ public class UIScript : MonoBehaviour {
         cameraObj = managerObj.transform.GetChild(2).gameObject;
 
         return cameraObj.GetComponent<CameraController>().haveControl;
+    }
+
+    public void DisableLoadingScreen()
+    {
+        menus[5].SetActive(false);
     }
 
 }
