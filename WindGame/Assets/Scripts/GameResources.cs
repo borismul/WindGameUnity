@@ -35,7 +35,7 @@ public class GameResources : MonoBehaviour
 		publicAcceptance = initialAcceptance;
 		date = new DateTime(800, 10, 10);
         gameSpeed = 200;
-        paused = false;
+        paused = true;
 	}
 	
     void Update()
