@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 
 public class UIResourcesManager : MonoBehaviour {    
+
     public Button menuButton;
 
     public Text capitalText;
@@ -10,6 +12,8 @@ public class UIResourcesManager : MonoBehaviour {
     public Text publicAcceptanceText;
 
     public Text powerText;
+
+    public Text scoreText;
 
     public Text dateText;
 
@@ -22,6 +26,14 @@ public class UIResourcesManager : MonoBehaviour {
     public Button buildButton;
 
     public Button infoButton;
+
+    float coeffWealth = 1;              // coefficient for total wealth
+    float coeffProduction = 100;          // coefficient for total production (power)
+    float coeffValue = 0.3f;               // coefficient for total value of the deployed turbines
+    float coeffTime = -0.1f;                // coefficient for spent time (or time left)
+    // float coeffSize = 1;             // coefficient for city size                    CITY GROWTH STILL TO BE IMPLEMENTED!!!!
+
+    DateTime initialDate = new DateTime(800, 10, 10);               // initial game date
 
     // Use this for initialization
     void Start ()
@@ -41,6 +53,7 @@ public class UIResourcesManager : MonoBehaviour {
         publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
         powerText.text = GameResources.getProduction().ToString("0");
         dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
+        scoreText.text = CalculateScore().ToString("F0");
     }
 
     void Pause()
@@ -77,5 +90,21 @@ public class UIResourcesManager : MonoBehaviour {
         pauseButton.gameObject.SetActive(hideSpeedButtons);
         speedButton1x.gameObject.SetActive(hideSpeedButtons);
         speedButton10x.gameObject.SetActive(hideSpeedButtons);
+    }
+
+    float CalculateScore()
+    {
+
+        float value = 0;
+        
+        for (int i = 0; i < TurbineManager.GetInstance().GetTurbineCount(); i++)
+        {
+            value += TurbineManager.GetInstance().transform.GetChild(i).GetComponent<TurbineController>().price;
+        }
+        
+        double days = (GameResources.getDate() - initialDate).TotalDays;
+
+        return coeffWealth * GameResources.getWealth() + coeffProduction * GameResources.getProduction() + coeffValue * value + coeffTime * Convert.ToSingle(days);
+
     }
 }
