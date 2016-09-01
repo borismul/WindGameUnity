@@ -40,6 +40,7 @@ public class BuildMenuController : MonoBehaviour
     public Slider bladePitchSlider;
     public FadableText errorText;
     public Text buildPrice;
+    public float rotateSpeed = 10;
 
     bool isTurbine;
 
@@ -52,6 +53,8 @@ public class BuildMenuController : MonoBehaviour
     bool canCancel;
 
     WorldController world;
+
+    float mouseX;
 
     void OnEnable()
     {
@@ -83,6 +86,12 @@ public class BuildMenuController : MonoBehaviour
         ClickOutside();
 
         BuildPriceColorUpdate();
+        if (UIScript.GetInstance().GetInBuildMode())
+        {
+            UpdateSelectedPosition();
+        }
+
+
     }
     void ClickOutside()
     {
@@ -213,10 +222,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
-        WorldInteractionController.GetInstance().SetInBuildMode(true);
-        InvokeRepeating("UpdateSelectedPosition", 0, 1 / 60f);
-
-
+        UIScript.GetInstance().SetInBuildMode(true);
     }
 
     void BuildPriceColorUpdate()
@@ -249,42 +255,61 @@ public class BuildMenuController : MonoBehaviour
                 curInstantiated.transform.position = plantPos;
             }
             else
-                curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
+            {
+                if(!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
+                    curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
 
-            if (world.CanBuild(plantPos, 50, true)) // If we can build here, make the color greenish
-            {
-                foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+                if (mouseX * rotateSpeed >= 1 || mouseX * rotateSpeed <= -1)
                 {
-                    ren.material.shader = Shader.Find("Transparent/Diffuse");
-                    ren.material.color = new Color(0, 0.8f, 1, 0.5f);
+                    curInstantiated.transform.rotation = Quaternion.Euler(curInstantiated.transform.rotation.eulerAngles.x, Mathf.RoundToInt(curInstantiated.transform.rotation.eulerAngles.y + mouseX * rotateSpeed), curInstantiated.transform.rotation.eulerAngles.z);
+                    mouseX = 0;
                 }
-                canBuild = true;
             }
-            else // We can't build here, make the color reddish
+
+            if (!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
             {
-                foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+                if (world.CanBuild(plantPos, 50, true)) // If we can build here, make the color greenish
                 {
-                    ren.material.shader = Shader.Find("Transparent/Diffuse");
-                    ren.material.color = new Color(1, 0, 0, 0.5f);
+                    foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+                    {
+                        foreach (Material mat in ren.materials)
+                        {
+                            mat.shader = Shader.Find("Transparent/Diffuse");
+                            mat.color = new Color(0, 0.8f, 1, 0.5f);
+                        }
+                    }
+                    canBuild = true;
                 }
-                canBuild = false;
+                else // We can't build here, make the color reddish
+                {
+                    foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+                    {
+                        foreach (Material mat in ren.materials)
+                        {
+                            mat.shader = Shader.Find("Transparent/Diffuse");
+                            mat.color = new Color(1, 0, 0, 0.5f);
+                        }
+                    }
+                    canBuild = false;
+                }
             }
+        }
+
+        if (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && Input.GetMouseButton(1))
+        {
+            mouseX += Input.GetAxis("Mouse X") * Time.deltaTime;
+        }
+        else if(curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && Input.GetMouseButtonUp(1))
+        {
+            mouseX = 0;
         }
         if (Input.GetMouseButtonDown(0) && canBuild) // The user clicks and we can build here
         {
             Destroy(curInstantiated); // Destroy the preview turbine
             BuildNow(plantGrid, plantPos); // Run the build function
-            StartCoroutine(SetBuildModeBack());
-            CancelInvoke("UpdateSelectedPosition"); // Stop running this function
-
+            gameObject.transform.parent.gameObject.SetActive(false);
+            UIScript.GetInstance().SetInBuildMode(false);
         }
-    }
-
-    IEnumerator SetBuildModeBack()
-    {
-        yield return null;
-        WorldInteractionController.GetInstance().SetInBuildMode(false);
-        gameObject.transform.parent.gameObject.SetActive(false);
     }
 
     void BuildNow(GridTile plantGrid, Vector3 plantPos)
@@ -292,7 +317,7 @@ public class BuildMenuController : MonoBehaviour
         if (isTurbine) // If we want to build a turbine...
         {
             GameResources.BuyTurbine(curInstantiated.GetComponent<TurbineController>().price);
-            world.AddTurbine(curSelected, plantPos, Quaternion.identity, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
+            world.AddTurbine(curSelected, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
         }
     }
 }

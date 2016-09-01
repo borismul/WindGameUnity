@@ -44,7 +44,12 @@ public class TileInfomationMenu : MonoBehaviour {
             } else if(tile.occupant.obj.name.Equals("NewTreeEmpty(Clone)"))
             {
                 occupant.text = "A tree";
-            } else 
+            
+            } else if (tile.occupant.obj.name.Equals("CactusEmpty(Clone)"))
+            {
+                occupant.text = "A cactus";
+            }
+            else
             {
                 occupant.text = "Wind Turbine";
             }

@@ -227,3 +227,4 @@ MonoBehaviour:
   bladePitch: 5
   diameter: 50
   price: 4500
+  canRotateAtBuild: 1

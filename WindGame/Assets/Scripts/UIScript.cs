@@ -27,6 +27,8 @@ public class UIScript : MonoBehaviour {
 
     bool startGiven;
 
+    bool inBuildMode;
+
     // Use this for initialization
     void Awake ()
     {
@@ -40,12 +42,14 @@ public class UIScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        //if (AccessSiblingData() & !startGiven)
-        //{
-        //    GameObject obj7 = Instantiate(tutorialPrefab);
-        //    obj7.transform.SetParent(transform);
-        //    startGiven = true;
-        //}
+        if (AccessSiblingData() & !startGiven)
+        {
+            //GameObject obj7 = Instantiate(tutorialPrefab);
+            //obj7.transform.SetParent(transform);
+            GameResources.unPause();
+            GameResources.setGameSpeed(200);
+            startGiven = true;
+        }
     }
 
     // Create the singleton for the UIManager. Also checks if there is another present and logs and error.
@@ -185,6 +189,16 @@ public class UIScript : MonoBehaviour {
     public void DisableLoadingScreen()
     {
         menus[5].SetActive(false);
+    }
+
+    public void SetInBuildMode(bool mode)
+    {
+        inBuildMode = mode;
+    }
+
+    public bool GetInBuildMode()
+    {
+        return inBuildMode;
     }
 
 }

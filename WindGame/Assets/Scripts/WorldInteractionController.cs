@@ -11,7 +11,6 @@ public class WorldInteractionController : MonoBehaviour
     Vector3[] vert = new Vector3[4];
 
     bool inInfoMode = false;
-    bool inBuildMode = false;
 
     static WorldInteractionController instance;
 
@@ -90,20 +89,23 @@ public class WorldInteractionController : MonoBehaviour
         if (inInfoMode)
             CheckSelectedTile();
 
-        if (!inBuildMode)
+        if (!UIScript.GetInstance().GetInBuildMode())
         {
             CheckLeftClick();
+            GetComponent<MeshFilter>().mesh = highlighter;
         }
     }
 
     public void SetInInfoMode(bool mode)
     {
+        if (inInfoMode && !mode)
+        {
+            highlighter.Clear();
+
+        }
         inInfoMode = mode;
     }
 
-    public void SetInBuildMode(bool mode)
-    {
-        inBuildMode = mode;
-    }
+
 
 }

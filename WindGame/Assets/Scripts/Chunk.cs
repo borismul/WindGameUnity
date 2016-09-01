@@ -83,8 +83,7 @@ public class Chunk : MonoBehaviour {
         tileSize = terrain.tileSize;
 
         // set seed
-        // Random.InitState(seed);
-        Random.seed = seed;
+        Random.InitState(seed);
 
         // Initialize the terrain map of this chunk
         if (map == null)

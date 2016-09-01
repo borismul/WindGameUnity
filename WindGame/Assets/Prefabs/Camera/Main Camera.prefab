@@ -108,7 +108,7 @@ MonoBehaviour:
   minTilt: 40
   maxTiltHeight: 200
   tiltFormulaPow: 0.6
-  camLerpScrollStart: 150
+  camLerpScrollStart: 800
   minX: 1400
   maxX: 2600
   minZ: 1400

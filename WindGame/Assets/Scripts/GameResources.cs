@@ -14,7 +14,7 @@ using System;
 
 public class GameResources : MonoBehaviour
 {
-	const float startingWealth = 10000.0f;
+	const float startingWealth = 500000;
 	const float initialAcceptance = 50;
 	const float nuisanceModifier = 0.5f;
 

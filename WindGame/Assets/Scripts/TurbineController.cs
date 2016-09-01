@@ -12,15 +12,24 @@ public class TurbineController : MonoBehaviour {
     float direction;        // Direction in which the turbine is pointed
     float weight = 1;
 
+    [HideInInspector]
     public string turbineName;
+    [HideInInspector]
     public float TSR = 8;          // Tip speed ratio of the turbine
+    [HideInInspector]
     public float power;
+    [HideInInspector]
     public double health = 1;
+    [HideInInspector]
     public float avgPower;
+    [HideInInspector]
     public float bladePitch = 5;
 
-    public float diameter = 50;
-    public float price = 5000;
+
+    public float diameter;
+    public float price;
+
+    public bool canRotateAtBuild;
 
 	// Update is called once per frame
 	void Update ()
@@ -51,7 +60,7 @@ public class TurbineController : MonoBehaviour {
 
         blades.transform.rotation = Quaternion.Euler(new Vector3(bladesRotX, bladesRotY, bladesRotZ));
 
-        if (name.Equals("Wind Turbine"))
+        if (!canRotateAtBuild)
         {
             // Set the nacelle rotations in the three components depending on the wind direction (only the y rotation changes)
             float nacelleRotX = nacelle.transform.rotation.eulerAngles.x;
