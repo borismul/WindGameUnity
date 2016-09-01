@@ -53,7 +53,8 @@ public class UIResourcesManager : MonoBehaviour {
         publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
         powerText.text = GameResources.getProduction().ToString("0");
         dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
-        scoreText.text = CalculateScore().ToString("F0");
+        if (scoreText != null)
+            scoreText.text = CalculateScore().ToString("F0");
     }
 
     void Pause()

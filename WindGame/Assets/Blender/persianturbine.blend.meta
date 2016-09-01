@@ -8,15 +8,25 @@ ModelImporter:
     100000: //RootNode
     100002: Turbine
     100004: TurbineHolder
+    100006: axis
+    100008: blade
     400000: //RootNode
     400002: Turbine
     400004: TurbineHolder
+    400006: axis
+    400008: blade
     2300000: Turbine
     2300002: TurbineHolder
+    2300004: axis
+    2300006: blade
     3300000: Turbine
     3300002: TurbineHolder
+    3300004: axis
+    3300006: blade
     4300000: Turbine
     4300002: TurbineHolder
+    4300004: axis
+    4300006: blade
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -26,7 +36,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
