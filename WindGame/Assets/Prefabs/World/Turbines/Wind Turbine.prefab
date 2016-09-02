@@ -268,6 +268,9 @@ MonoBehaviour:
   health: 1
   avgPower: 0
   bladePitch: 5
+  diameter: 50
+  price: 5000
+  canRotateAtBuild: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

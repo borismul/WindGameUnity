@@ -19,6 +19,15 @@ public class TerrainController : MonoBehaviour {
     //[HideInInspector]
     public int seed;
 
+    [Header("Island details")]
+    public bool isIsland;
+    public float radius;
+    public float baseHeight;
+
+    [HideInInspector]
+    public float islandSteepness;
+
+
     [Header("Perline Noise Attributes")]
     //[HideInInspector]
     public int terrainOctaves;
@@ -47,6 +56,7 @@ public class TerrainController : MonoBehaviour {
 
     [Header("Water Details")]
     public GameObject waterChunkPrefab;
+    public GameObject waterUnderLayerPrefab;
     //[HideInInspector]
     public int waterChunkSize;
     //[HideInInspector]
@@ -93,6 +103,9 @@ public class TerrainController : MonoBehaviour {
     // Another random number generator
     Rand rand;
 
+    public Vector3 middlePoint;
+
+
     void Awake()
     {
         // Set this to the terraincontroller
@@ -127,6 +140,9 @@ public class TerrainController : MonoBehaviour {
 
         // Creating new rand instance
         rand = new Rand();
+
+        middlePoint = new Vector3(length / 2, 0, width / 2);
+        islandSteepness = baseHeight / (radius * radius);
 
         // Create biome object meshes
         biomeMeshes = BuildMeshes();
@@ -207,10 +223,12 @@ public class TerrainController : MonoBehaviour {
     // Create the water chunks by instantiating them at the desired positions
     void BuildWater()
     {
+        GameObject waterUnderlayer = (GameObject)Instantiate(waterUnderLayerPrefab, new Vector3(length / 2, -60f, width / 2), Quaternion.identity, transform);
+        waterUnderLayerPrefab.transform.localScale = new Vector3(3 * length / 10, 0, 3 * width / 10);
         // Loop though all water chunks that need to be instantiated
-        for (int i = 0; i < length / waterChunkSize; i++)
+        for (int i = -length / waterChunkSize; i < length * 2 / waterChunkSize; i++)
         {
-            for (int j = 0; j < width / waterChunkSize; j++)
+            for (int j = -width / waterChunkSize; j < width * 2 / waterChunkSize; j++)
             {
                 // Instantiate them at the right positions
                 GameObject chunk = (GameObject)Instantiate(waterChunkPrefab, new Vector3(i * waterChunkSize, 0, j * waterChunkSize), Quaternion.identity);

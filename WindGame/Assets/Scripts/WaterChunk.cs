@@ -34,6 +34,9 @@ public class WaterChunk : MonoBehaviour {
 
     void Update()
     {
+        if (Vector3.Magnitude(transform.position - terrain.middlePoint) > terrain.length)
+            return;
+
         UpdateWater();
         CreateMesh();
     }
@@ -158,7 +161,10 @@ public class WaterChunk : MonoBehaviour {
             for (int j = 1; j < map.GetLength(1) - 1; j++)
             {
                 Vector3 vertex = map[i, j];
-                float diff = Noise.PerlinNoise(new Vector2(vertex.x, vertex.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * Time.timeSinceLevelLoad * 100, octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
+                float diff;
+
+                diff = Noise.PerlinNoise(new Vector2(vertex.x, vertex.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * ((Time.timeSinceLevelLoad * 100)+10000000), octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
+
                 map[i, j] = (new Vector3(vertex.x, level + diff, vertex.z));
 
                 vert.Add(map[i, j]);

@@ -42,7 +42,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   length: 4000
   width: 4000
-  maxHeight: 200
+  maxHeight: 400
   biomes:
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
@@ -85,9 +85,13 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   seed: 1885953640
+  isIsland: 1
+  radius: 750
+  baseHeight: 50
+  islandSteepness: 0
   terrainOctaves: 5
   terrainPersistance: 0.5
-  terrainFrequency: 0.0005
+  terrainFrequency: 0.001
   biomeOctaves: 5
   biomePersistance: 0.5
   biomeFrequency: 0.0003
@@ -108,6 +112,7 @@ MonoBehaviour:
   levelLoaded: 0
   chunks: []
   waterChunks: []
+  middlePoint: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

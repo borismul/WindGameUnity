@@ -115,9 +115,14 @@ public class Chunk : MonoBehaviour {
             {
                 // Set the position vector to the the position of the current vertex
                 pos.Set((i-1) * tileSize, 0, (k-1) * tileSize);
+                float r = Vector3.Magnitude(pos + transform.position - terrain.middlePoint);
 
                 // Generate the height and biome of the vertex, depending on its horizontal position.
                 map[i,k] = GenerateTerrainMap(i, k, pos);
+                
+                if(terrain.isIsland)
+                    map[i, k] += new Vector3(0, -terrain.islandSteepness * r * r + terrain.baseHeight + terrain.waterLevel, 0);
+
                 biomeMap[i,k] = GenerateBiomes(i, k, pos);
             }
         }
