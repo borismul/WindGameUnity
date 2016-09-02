@@ -55,7 +55,7 @@ MonoBehaviour:
     type: 2}
   buildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
     type: 2}
-  resourcesMenuPrefab: {fileID: 1000013802505068, guid: 51a78a06547c8ab42a811cdfa863288d,
+  resourcesMenuPrefab: {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d,
     type: 2}
   pauseMenuPrefab: {fileID: 1000010926663146, guid: b95d6d745f99cc84f958b5e6ec711e7e,
     type: 2}
