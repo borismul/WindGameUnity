@@ -42,7 +42,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   length: 4000
   width: 4000
-  maxHeight: 400
+  maxHeight: 200
   biomes:
   - biomeObjects:
     - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
@@ -91,7 +91,7 @@ MonoBehaviour:
   islandSteepness: 0
   terrainOctaves: 5
   terrainPersistance: 0.5
-  terrainFrequency: 0.001
+  terrainFrequency: 0.0005
   biomeOctaves: 5
   biomePersistance: 0.5
   biomeFrequency: 0.0003
@@ -101,6 +101,8 @@ MonoBehaviour:
   tileSlope: 2
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
+  waterUnderLayerPrefab: {fileID: 1000014261973276, guid: a0fcf61617646354cbc76d9822c772ce,
+    type: 2}
   waterChunkSize: 1000
   waterTileSize: 200
   waterOctaves: 2
