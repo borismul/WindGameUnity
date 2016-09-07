@@ -14,14 +14,14 @@ public class TileInfomationMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()
-    { 
-
+    {
+        closeMenu.onClick.AddListener(CloseMenu);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        closeMenu.onClick.AddListener(CloseMenu);
+        
     }
 
     public void setTile(GridTile til)
@@ -55,6 +55,7 @@ public class TileInfomationMenu : MonoBehaviour {
             }
         }
         position.text = tile.position.ToString("F0");
+        WindController.GetWindAtTile(tile);
     }
 
     public void clearTile()

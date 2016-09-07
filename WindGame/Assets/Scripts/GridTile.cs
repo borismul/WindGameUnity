@@ -8,6 +8,7 @@ public class GridTile{
     public Vector3 position;
     public int biome;
     public GridTileOccupant occupant;
+    public bool underwater;
     public List<Vector3> vert;
 
     // 0 is empty tile
