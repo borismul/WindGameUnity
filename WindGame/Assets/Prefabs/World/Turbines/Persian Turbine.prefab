@@ -219,12 +219,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blades: {fileID: 190284}
   nacelle: {fileID: 151316}
+  turbineProperties:
+    floatProperty:
+    - propertyName: Frontal Area
+      property: 5
+      minValue: 1
+      maxValue: 400
+    - propertyName: Height
+      property: 0
+      minValue: 0
+      maxValue: 0
+    intProperty:
+    - propertyName: Number Of Blades
+      property: 0
+      minValue: 0
+      maxValue: 15
+    boolProperty:
+    - propertyName: Wall
+      property: 0
   turbineName: 
-  TSR: 8
   power: 0
   health: 1
   avgPower: 0
-  bladePitch: 5
   diameter: 50
   price: 4500
   canRotateAtBuild: 1

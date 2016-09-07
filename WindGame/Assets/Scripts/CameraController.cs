@@ -39,8 +39,6 @@ public class CameraController : MonoBehaviour
     public float minZ = 1400;
     public float maxZ = 2600;
 
-    Vector3 previousPos;
-
     Vector3 targetPos;
     Vector3 targetRot;
     float prevHitPointY;
@@ -56,7 +54,8 @@ public class CameraController : MonoBehaviour
     bool overRuleCam;
     bool setStartPos;
     bool hasStarted;
-    public bool haveControl;
+    //[HideInInspector]
+    bool haveControl;
 
     TerrainController terrain;
     float camScrollLerpSet;
@@ -85,7 +84,9 @@ public class CameraController : MonoBehaviour
         {
             StartGame();
         }
-        CheckStart();
+
+        if(!hasStarted)
+            CheckStart();
 
         if (!haveControl)
             return;
@@ -115,6 +116,7 @@ public class CameraController : MonoBehaviour
             return;
 
         transform.rotation = UpdateRotation();
+        
     }
 
     // Own Methods //
@@ -130,7 +132,6 @@ public class CameraController : MonoBehaviour
         Camera.main.clearFlags = CameraClearFlags.SolidColor;
 
         targetPos = transform.position;
-        previousPos = transform.position;
     }
 
     void StartGame()
@@ -406,11 +407,6 @@ public class CameraController : MonoBehaviour
             hitPointDiff = 0;
             return;
         }
-        // else, save the current position as previous
-        else
-        {
-            previousPos = transform.position;
-        }
 
         // determine the camera height
         camHeight = hit.distance;
@@ -421,6 +417,16 @@ public class CameraController : MonoBehaviour
 
         // save the current hitpoint as the previous
         prevHitPointY = hit.point.y;
+    }
+
+    public void SetHaveControl(bool haveControl)
+    {
+        this.haveControl = haveControl;
+    }
+
+    public bool GetHaveControl()
+    {
+        return haveControl;
     }
 
 }

@@ -31,14 +31,14 @@ public class PanemoneInformationMenu : MonoBehaviour {
     {
         if (turbine == null) return;
 
-        turbineName.text = turbine.turbineName;
-        health.text = (turbine.health * 100).ToString("0") + "%";
-        avgPowerProduction.text = turbine.avgPower.ToString("0") + " W";
-        curPowerProduction.text = turbine.power.ToString("0") + " W";
-        tipSpeedRatio.text = turbine.TSR.ToString("0");
-        bladePitch.text = turbine.bladePitch.ToString("0") + "°";
-        repairCosts.text = ((1-turbine.health) * 2500).ToString("0");
-        destroyRefund.text = (2500 - (1-turbine.health) * 2500).ToString("0");
+        //turbineName.text = turbine.turbineName;
+        //health.text = (turbine.health * 100).ToString("0") + "%";
+        //avgPowerProduction.text = turbine.avgPower.ToString("0") + " W";
+        //curPowerProduction.text = turbine.power.ToString("0") + " W";
+        //tipSpeedRatio.text = turbine.TSR.ToString("0");
+        //bladePitch.text = turbine.bladePitch.ToString("0") + "°";
+        //repairCosts.text = ((1-turbine.health) * 2500).ToString("0");
+        //destroyRefund.text = (2500 - (1-turbine.health) * 2500).ToString("0");
     }
 
     public void SetTurbine(TurbineController tur)

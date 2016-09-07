@@ -46,16 +46,6 @@ public class CityController : MonoBehaviour {
     void BuildStartCity()
     {
         world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, 50, transform);
-        int tileSize = terrain.tileSize;
-
-        int thisX = Mathf.RoundToInt((centerTile.position.x - 0.5f * tileSize) / tileSize);
-        int thisZ = Mathf.RoundToInt((centerTile.position.z - 0.5f * tileSize) / tileSize);
-
-        int startX = thisX - Mathf.RoundToInt(startRadius / tileSize);
-        int startZ = thisZ - Mathf.RoundToInt(startRadius / tileSize);
-
-        int maxX = terrain.length / tileSize;
-        int maxZ = terrain.width / tileSize;
 
         GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, startRadius, 1);
         foreach (GridTile tile in gridTiles)

@@ -19,6 +19,7 @@ public class UIScript : MonoBehaviour {
     public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
     public GameObject loadingMenuPrefab;
+    CameraController cameraController;
 
     GameObject managerObj;
     GameObject cameraObj;
@@ -37,6 +38,11 @@ public class UIScript : MonoBehaviour {
         InstantiateStartPrefabs();
         menuActive = -1;
         
+    }
+
+    void Start()
+    {
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
@@ -174,7 +180,7 @@ public class UIScript : MonoBehaviour {
     public void BuildMenu()
     {
         menus[2].SetActive(true);
-
+        cameraController.SetHaveControl(false);
     }
 
     //Get to know if the camera has zoomed on the village
@@ -183,7 +189,7 @@ public class UIScript : MonoBehaviour {
         managerObj = gameObject.transform.parent.gameObject;
         cameraObj = managerObj.transform.GetChild(2).gameObject;
 
-        return cameraObj.GetComponent<CameraController>().haveControl;
+        return cameraObj.GetComponent<CameraController>().GetHaveControl();
     }
 
     public void DisableLoadingScreen()

@@ -42,14 +42,12 @@ public class WorldInteractionController : MonoBehaviour
 
     void CheckSelectedTile()
     {
-        TerrainController terrain = TerrainController.thisTerrainController;
         RaycastHit hit;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, float.MaxValue, terrainLayer))
         {
             highlighter.Clear();
-            GameObject hitObj = hit.collider.gameObject;
             GridTile tile = GridTile.FindClosestGridTile(hit.point);
             for (int i = 0; i < 4; i++)
                 vert[i] = tile.vert[i] + new Vector3(0, 0.3f, 0);

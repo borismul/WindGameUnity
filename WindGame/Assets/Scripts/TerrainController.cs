@@ -224,7 +224,7 @@ public class TerrainController : MonoBehaviour {
     void BuildWater()
     {
         GameObject waterUnderlayer = (GameObject)Instantiate(waterUnderLayerPrefab, new Vector3(length / 2, -60f, width / 2), Quaternion.identity, transform);
-        waterUnderLayerPrefab.transform.localScale = new Vector3(3 * length / 10, 0, 3 * width / 10);
+        waterUnderlayer.transform.localScale = new Vector3(3 * length / 10, 0, 3 * width / 10);
         // Loop though all water chunks that need to be instantiated
         for (int i = -length / waterChunkSize; i < length * 2 / waterChunkSize; i++)
         {

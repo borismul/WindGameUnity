@@ -64,8 +64,6 @@ public class WaterChunk : MonoBehaviour {
 
     void CreateWater()
     {
-        List<Vector3> panelCorners = new List<Vector3>();
-
         for (int i = 0; i< size / tileSize + 3; i++)
         {
             for (int j = 0; j < size / tileSize + 3; j++)

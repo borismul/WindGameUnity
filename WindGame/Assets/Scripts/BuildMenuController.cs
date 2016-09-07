@@ -17,31 +17,52 @@ using System.Collections.Generic;
 
 public class BuildMenuController : MonoBehaviour
 {
-    // Some required class parameters
+    // Turbine prefabs, turbine preview prefabs and their texts
     public GameObject[] turbines;
     public GameObject[] turbinePreviews;
-    public GameObject[] others;
     public Text[] turbineText;
-    public Text[] othersText;
-    public Button turbineButton;
+
+    // Buttons on the build Menu
+    public Button turbineButton;        // Loads a turbine preview on the right side of the menu
+    public Button cancelButton;         // cancels the build menu
+    public Button buildButton;          // builds the current selected turbine
+
+    // Text fields on the build menu
+    public Text nameText;               // Name textfield of the current selected turbine
+    public Text infoText;               // Info textfield of the current selected turbine
+    public Text buildPrice;             // Buildprice of the turbine in the current settings
+
     public GameObject overviewPanel;
-    public Button cancelButton;
-    public Button buildButton;
+
+    // preview camera and the location where the preview should be spawned
     public GameObject instantHere;
     public Camera infoCamera;
-    public Text nameText;
-    public Button loadTurbinesButton;
-    public Button loadOthersButton;
-    public Text infoText;
-    public float cutOffRadius;
+
+    // Features panel of the current selected turbine
     public GameObject buildingFeatures;
+
+    // Raycast mask that only sees the terrain. Used to instantiate the preview of the turbine in blue or red.
     public LayerMask buildMask;
-    public Slider TSRSlider;
-    public Slider bladePitchSlider;
+
+    // Error textfield that can be faded. Used to say that the player does not have enough money.
     public FadableText errorText;
-    public Text buildPrice;
+
+    // Rotation speed of the preview turbine.
     public float rotateSpeed = 10;
 
+    // Turbine properties menu
+    public GameObject turbineProperties;
+    public GameObject floatSliderPrefab;
+    public GameObject intSliderPrefab;
+    public GameObject boolPropertyPrefab;
+
+    public ScrollRect propertiesScroller;
+
+    List<FloatPropertyController> floatProperties = new List<FloatPropertyController>();
+    List<IntPropertyController> intProperties = new List<IntPropertyController>();
+    List<boolPropertyController> boolProperties = new List<boolPropertyController>();
+
+    // Used to check wheter a turbine is selected.
     bool isTurbine;
 
     List<Button> menuButtons = new List<Button>();
@@ -93,9 +114,10 @@ public class BuildMenuController : MonoBehaviour
 
 
     }
+
     void ClickOutside()
     {
-        if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && !EventSystem.current.IsPointerOverGameObject())
+        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !EventSystem.current.IsPointerOverGameObject())
         {
             Cancel();
         }
@@ -108,6 +130,8 @@ public class BuildMenuController : MonoBehaviour
             gameObject.transform.parent.gameObject.SetActive(false);
             Destroy(curInstantiated);
             infoCamera.enabled = false;
+            curSelected = null;
+            Camera.main.GetComponent<CameraController>().SetHaveControl(true);
         }
     }
 
@@ -131,6 +155,9 @@ public class BuildMenuController : MonoBehaviour
 
     void LoadTurbineButton(int index)
     {
+        if (curSelected != null && curSelected.GetInstanceID() == turbines[index].GetInstanceID())
+            return;
+
         buildingFeatures.SetActive(true);
         isTurbine = true;   // Okay, some value is now true.
         if (curInstantiated != null)
@@ -146,27 +173,61 @@ public class BuildMenuController : MonoBehaviour
         curInstantiated = (GameObject)Instantiate(previewSelected);
         curInstantiated.transform.position = instantHere.transform.position +  curInstantiated.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
-        curInstantiated.tag = "Respawn"; // To confirm that this turbine is created for the preview window
         buildPrice.text = curSelected.GetComponent<TurbineController>().price.ToString();
+        PersianTurbineSpecificsController.previewTurbine = curInstantiated;
+        DestroyProperties();
+        CreateProperties();
+        Canvas.ForceUpdateCanvases();
+        propertiesScroller.verticalScrollbar.value = 0;
+        propertiesScroller.verticalNormalizedPosition = 0;
+        Canvas.ForceUpdateCanvases();
 
     }
 
-    // Does the same thing as LoadTurbines(), but for other buildings
-    void LoadOthers()
+    void DestroyProperties()
     {
-        DeleteMenuButtons();
-        for (int i = 0; i < others.Length; i++)
+        foreach (FloatPropertyController controller in floatProperties)
+            Destroy(controller.gameObject);
+
+        foreach (IntPropertyController controller in intProperties)
+            Destroy(controller.gameObject);
+
+        foreach (boolPropertyController controller in boolProperties)
+            Destroy(controller.gameObject);
+
+        floatProperties.Clear();
+        intProperties.Clear();
+        boolProperties.Clear();
+    }
+
+    void CreateProperties()
+    {
+        foreach (FloatProperty floatProperty in curSelected.GetComponent<TurbineController>().turbineProperties.floatProperty)
         {
-            int index = i;
-            Button turbBut = Instantiate(turbineButton);
-            turbBut.transform.SetParent(overviewPanel.transform);
-            turbBut.gameObject.GetComponentInChildren<Text>().text = others[i].name;
-            turbBut.transform.localScale = Vector3.one;
-            turbBut.onClick.AddListener(delegate { LoadOthersButton(index); });
-            menuButtons.Add(turbBut);
+            GameObject floatSlider = (GameObject)Instantiate(floatSliderPrefab);
+            floatSlider.transform.SetParent(turbineProperties.transform, false);
+            floatSlider.GetComponent<FloatPropertyController>().floatProperty = floatProperty;
+            floatProperties.Add(floatSlider.GetComponent<FloatPropertyController>());
+        }
+
+        foreach (IntProperty intProperty in curSelected.GetComponent<TurbineController>().turbineProperties.intProperty)
+        {
+            GameObject intSlider = (GameObject)Instantiate(intSliderPrefab);
+            intSlider.transform.SetParent(turbineProperties.transform, false);
+            intSlider.GetComponent<IntPropertyController>().intProperty = intProperty;
+            intProperties.Add(intSlider.GetComponent<IntPropertyController>());
+
+        }
+
+        foreach (BoolProperty boolProperty in curSelected.GetComponent<TurbineController>().turbineProperties.boolProperty)
+        {
+            GameObject boolSlider = (GameObject)Instantiate(boolPropertyPrefab);
+            boolSlider.transform.SetParent(turbineProperties.transform, false);
+            boolSlider.GetComponent<boolPropertyController>().boolProperty = boolProperty;
+            boolProperties.Add(boolSlider.GetComponent<boolPropertyController>());
+
         }
     }
-
     void DeleteMenuButtons()
     {
         // I suppose this function deletes all the selectable objects when a user switches back and forth between Turbines and Others
@@ -175,23 +236,6 @@ public class BuildMenuController : MonoBehaviour
             Destroy(menBut.gameObject);
         }
         menuButtons = new List<Button>();
-    }
-
-    // Same as LoadTurbinesButton() but for other buildings
-    void LoadOthersButton(int index)
-    {
-        isTurbine = false;
-        if (curInstantiated != null)
-            Destroy(curInstantiated);
-
-        nameText.text = others[index].name;
-        infoText.text = othersText[index].text;
-        curSelected = others[index];
-
-        curInstantiated = (GameObject)Instantiate(curSelected, instantHere.transform.position, Quaternion.identity);
-        curInstantiated.transform.SetParent(instantHere.transform);
-        curInstantiated.transform.localScale = Vector3.one * 10;
-
     }
 
     // This function is called when the user clicks on the 'Build' button
@@ -317,7 +361,7 @@ public class BuildMenuController : MonoBehaviour
         if (isTurbine) // If we want to build a turbine...
         {
             GameResources.BuyTurbine(curInstantiated.GetComponent<TurbineController>().price);
-            world.AddTurbine(curSelected, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform, TSRSlider.value, bladePitchSlider.value); // Let the world controller know we want to build this thing
+            world.AddTurbine(curSelected, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
         }
     }
 }

@@ -12,10 +12,14 @@ public class TurbineManager : MonoBehaviour{
 
     private static TurbineManager instance;
 
+    public GameObject[] turbinePrefabs;
+
     // Use this for initialization
     void Awake()
     {
         CreateSingleton();
+        SetTurbines();
+
     }
 
     // Create the singletone for the TurbineManager. Also checks if there is another present and logs and error.
@@ -28,6 +32,14 @@ public class TurbineManager : MonoBehaviour{
             return;
         }
         instance = this;
+    }
+
+    void SetTurbines()
+    {
+        foreach (GameObject turbine in turbinePrefabs)
+        {
+            turbine.GetComponent<PersianTurbineSpecificsController>().Create();
+        }
     }
 
     // Get the singleton instance

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 
 /**
     The goal of this class is to keep track of all objects in the scene. 
@@ -11,8 +12,6 @@ using System;
 
 public class WorldController : MonoBehaviour
 {
-    TurbineManager turbManager; // Holder of turbines
-
     private static WorldController instance;
 
     [Header("Prefabs")]
@@ -31,7 +30,7 @@ public class WorldController : MonoBehaviour
 
     void Start()
     {
-        turbManager = TurbineManager.GetInstance();
+
     }
 
 
@@ -75,13 +74,11 @@ public class WorldController : MonoBehaviour
 
 
     // Builder function, some class wants the world to add an object
-    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent, float TSR, float bladePitch)
+    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
         GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
         TurbineController controller = t.GetComponent<TurbineController>();
         controller.turbineName = something.name;
-        controller.bladePitch = bladePitch;
-        controller.TSR = TSR;
         t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
