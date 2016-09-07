@@ -116,7 +116,7 @@ public class TurbineController : MonoBehaviour {
     // Method that determines the rotation speed, based on the Incomming flow speed (Uinfinity), the tip speed ration (TSR) and the Radius of the acuator disk (R)
     float RotationSpeed(float Uinfinity, float R)
     {
-        float omega = Uinfinity * 8 / R;
+        float omega = Uinfinity * 80 / R;
         return omega;
 
     }
