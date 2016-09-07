@@ -36,7 +36,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000013610047486}
-  - 95: {fileID: 95000013798244232}
+  - 114: {fileID: 114000013405592896}
   m_Layer: 0
   m_Name: persianturbine
   m_TagString: Untagged
@@ -107,20 +107,16 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011141024250}
   m_Mesh: {fileID: 4300004, guid: e62ad045231b3a04c88ca19a5655488c, type: 3}
---- !u!95 &95000013798244232
-Animator:
-  serializedVersion: 3
+--- !u!114 &114000013405592896
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012941747332}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: e62ad045231b3a04c88ca19a5655488c, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ddfb411cb483c49a5ef6837ea39247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blades: []
+  wall: {fileID: 0}

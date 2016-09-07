@@ -263,11 +263,9 @@ MonoBehaviour:
   blades: {fileID: 128338}
   nacelle: {fileID: 119560}
   turbineName: 
-  TSR: 8
   power: 0
   health: 1
   avgPower: 0
-  bladePitch: 5
   diameter: 50
   price: 5000
   canRotateAtBuild: 0
