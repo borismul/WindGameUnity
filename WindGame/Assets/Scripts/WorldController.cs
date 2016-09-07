@@ -83,7 +83,7 @@ public class WorldController : MonoBehaviour
         t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
-        AddToGridTiles(t, pos, controller.diameter/2, type);
+        AddToGridTiles(t, pos, (controller.diameter * scale)/2, type);
 
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 

@@ -7,11 +7,13 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public GameObject persianBlade;
     public GameObject wall;
     public GameObject axis;
+    public GameObject turbineBasePrefab;
 
     public int costPerBlade = 20;
     public float heightCostMultiplier = 3;
     public float areaCostMultiplier = 5;
     public int wallCost = 1000;
+    public float unitScaleArea = 9;
 
     TurbineController controller;
 
@@ -48,7 +50,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         maxValue = 50;
         optimalValue = 50;
         spread = 35;
-        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, null , GetType().GetMethod("AreaCost"), null, this));
+        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this));
 
         propertyName = "Turbine Height";
         unit = "m";
@@ -76,6 +78,11 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
     }
 
+    public int BladesCost(int blades)
+    {
+        return blades * costPerBlade;
+    }
+
     public void CreateWall(bool isOn)
     {
         if (isOn)
@@ -89,21 +96,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         }
     }
 
-    public int BladesCost(int blades)
-    {
-        return blades * costPerBlade;
-    }
-
-    public int HeightCost(float height)
-    {
-        return Mathf.RoundToInt(heightCostMultiplier * height * height);
-    }
-
-    public int AreaCost(float area)
-    {
-        return Mathf.RoundToInt(areaCostMultiplier * area * area);
-    }
-
     public int WallCost(bool isOn)
     {
         if (isOn)
@@ -111,4 +103,29 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         else
             return 0;
     }
+
+    public void SetUpHeight(float height)
+    {
+        GameObject turbineBase = (GameObject)Instantiate(turbineBasePrefab, previewTurbine.transform.position, previewTurbine.transform.rotation, previewTurbine.transform);
+        turbineBase.transform.localScale = Vector3.one * 10;
+    }
+
+    public int HeightCost(float height)
+    {
+        return Mathf.RoundToInt(heightCostMultiplier * height * height);
+    }
+
+
+    public int AreaCost(float area)
+    {
+        return Mathf.RoundToInt(areaCostMultiplier * area * area);
+    }
+
+    public void ScaleByArea(float area)
+    {
+        previewTurbine.GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
+    }
+
+
+
 }

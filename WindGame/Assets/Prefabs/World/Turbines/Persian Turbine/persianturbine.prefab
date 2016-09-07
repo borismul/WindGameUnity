@@ -28,6 +28,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000012505210070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000011041136072}
+  m_Layer: 0
+  m_Name: Turbine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000013478390948
 GameObject:
   m_ObjectHideFlags: 0
@@ -48,7 +63,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1000013803109158
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -72,7 +87,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 4000012891766288}
+  - {fileID: 4000011041136072}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &4000010619614898
@@ -88,19 +103,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012891766288}
   m_RootOrder: 0
+--- !u!4 &4000011041136072
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012505210070}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 4000012891766288}
+  m_Father: {fileID: 4000010085128274}
+  m_RootOrder: 0
 --- !u!4 &4000012891766288
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013803109158}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000010619614898}
-  m_Father: {fileID: 4000010085128274}
+  m_Father: {fileID: 4000011041136072}
   m_RootOrder: 0
 --- !u!23 &23000011524521460
 MeshRenderer:
@@ -153,10 +182,12 @@ MonoBehaviour:
     type: 2}
   wall: {fileID: 1000011848254048, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
   axis: {fileID: 1000013803109158}
+  turbineBasePrefab: {fileID: 0}
   costPerBlade: 20
   heightCostMultiplier: 3
   areaCostMultiplier: 5
   wallCost: 1000
+  unitScaleArea: 7.5
 --- !u!114 &114000012733748248
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -187,6 +218,8 @@ MonoBehaviour:
   power: 0
   health: 0.0000023548706404986452
   avgPower: 0
-  diameter: 50
+  desiredScale: 0
+  desiredHeight: 0
+  diameter: 15
   price: 4500
   canRotateAtBuild: 1

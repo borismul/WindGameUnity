@@ -235,6 +235,7 @@ public class BuildMenuController : MonoBehaviour
 
         }
     }
+
     void DeleteMenuButtons()
     {
         // I suppose this function deletes all the selectable objects when a user switches back and forth between Turbines and Others
@@ -308,6 +309,7 @@ public class BuildMenuController : MonoBehaviour
         RaycastHit hit;
         bool canBuild = false;
         Camera.main.GetComponent<CameraController>().SetHaveControl(true);
+        curInstantiated.transform.localScale = Vector3.one * curInstantiated.GetComponent<TurbineController>().desiredScale;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildMask))
         {
             plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
@@ -390,7 +392,8 @@ public class BuildMenuController : MonoBehaviour
 
                 }
             }
-            world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
+
+            world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.transform.localScale.x, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
             curInstantiated = null;
         }
     }

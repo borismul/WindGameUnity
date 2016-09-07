@@ -27,7 +27,7 @@ public class FloatPropertyController : MonoBehaviour
         inputField.text = slider.value.ToString();
         inputField.onValueChanged.AddListener(delegate { InputFieldChange(inputField.text); });
         slider.onValueChanged.AddListener(delegate { SliderChange(slider.value); });
-
+        InputFieldChange(inputField.text);
     }
 
     void InputFieldChange(string value)

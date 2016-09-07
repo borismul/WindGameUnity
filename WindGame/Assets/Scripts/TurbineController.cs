@@ -24,6 +24,10 @@ public class TurbineController : MonoBehaviour {
     public double health = 1;
     [HideInInspector]
     public float avgPower;
+    [HideInInspector]
+    public float desiredScale;
+    [HideInInspector]
+    public float desiredHeight;
 
     public float diameter;
     public float price;
@@ -34,7 +38,6 @@ public class TurbineController : MonoBehaviour {
 	void Update ()
     {
         RotateTurbine();
-        
     }
 
     public void Update(float gameDeltaTime)
