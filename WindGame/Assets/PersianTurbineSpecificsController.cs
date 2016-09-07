@@ -6,11 +6,23 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public GameObject persianBlade;
     public GameObject wall;
+    public GameObject axis;
+
+    public int costPerBlade = 20;
+    public float heightCostMultiplier = 3;
+    public float areaCostMultiplier = 5;
+    public int wallCost = 1000;
 
     TurbineController controller;
 
     public static GameObject previewTurbine;
     // Use this for initialization
+
+
+    void Awake()
+    {
+        Create();
+    }
 
     public void Create () {
         controller = GetComponent<TurbineController>();
@@ -25,27 +37,32 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         float property = 3;
         float minValue = 0;
         float maxValue = 20;
-        controller.turbineProperties.intProperty.Add(new IntProperty(propertyName, unit, Mathf.RoundToInt(property), Mathf.RoundToInt(minValue), Mathf.RoundToInt(maxValue), GetType().GetMethod("CreateBlades"), this));
+        float optimalValue = 7;
+        float spread = 4;
+        controller.turbineProperties.intProperty.Add(new IntProperty(propertyName, unit, Mathf.RoundToInt(property), Mathf.RoundToInt(minValue), Mathf.RoundToInt(maxValue), Mathf.RoundToInt(optimalValue), Mathf.RoundToInt(spread), GetType().GetMethod("CreateBlades"), GetType().GetMethod("BladesCost"), null, this));
 
         propertyName = "Frontal Area";
         unit = "m^2";
         property = 10;
         minValue = 1;
         maxValue = 50;
-        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue));
+        optimalValue = 50;
+        spread = 35;
+        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, null , GetType().GetMethod("AreaCost"), null, this));
 
         propertyName = "Turbine Height";
         unit = "m";
         property = 0;
         minValue = 0;
         maxValue = 10;
-        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue));
+        optimalValue = 10;
+        spread = 20;
+        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, null, GetType().GetMethod("HeightCost"), null, this));
 
         propertyName = "Has Wall";
-        unit = "m";
         bool isOn = false;
-
-        controller.turbineProperties.boolProperty.Add(new BoolProperty(propertyName, isOn, GetType().GetMethod("CreateWall"), this));
+        float multiplier = 1.2f;
+        controller.turbineProperties.boolProperty.Add(new BoolProperty(propertyName, isOn, multiplier, GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this));
     }
 
     public void CreateBlades(int blades)
@@ -56,7 +73,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         previewTurbine.GetComponent<TurbinePreviewController>().blades.Clear();
 
         for (int i = 0; i< blades; i++)
-            previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position, Quaternion.Euler(-90, i * (360 / blades), 0), previewTurbine.transform));
+            previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
     }
 
     public void CreateWall(bool isOn)
@@ -70,5 +87,28 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             if(previewTurbine.GetComponent<TurbinePreviewController>().wall != null)
                 Destroy(previewTurbine.GetComponent<TurbinePreviewController>().wall);
         }
+    }
+
+    public int BladesCost(int blades)
+    {
+        return blades * costPerBlade;
+    }
+
+    public int HeightCost(float height)
+    {
+        return Mathf.RoundToInt(heightCostMultiplier * height * height);
+    }
+
+    public int AreaCost(float area)
+    {
+        return Mathf.RoundToInt(areaCostMultiplier * area * area);
+    }
+
+    public int WallCost(bool isOn)
+    {
+        if (isOn)
+            return wallCost;
+        else
+            return 0;
     }
 }

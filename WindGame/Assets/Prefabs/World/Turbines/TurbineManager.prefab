@@ -52,4 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turbinePrefabs:
-  - {fileID: 117156, guid: bc058ff7a1402dc40a47940d3af3220a, type: 2}
+  - {fileID: 1000013478390948, guid: 00770e0e263a87043baedcefb6d03226, type: 2}
+  turbineText:
+  - {fileID: 11481988, guid: 32abc12b1a2eb94469bc9f24a458b84d, type: 2}

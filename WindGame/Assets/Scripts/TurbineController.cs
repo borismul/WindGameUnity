@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using System.Reflection;
 
 public class TurbineController : MonoBehaviour {
     [SerializeField]
@@ -17,14 +18,6 @@ public class TurbineController : MonoBehaviour {
 
     [HideInInspector]
     public string turbineName;
-    //[HideInInspector]
-    //public int numberOfBlades;
-    //[HideInInspector]
-    //public float FrontalArea;
-    //[HideInInspector]
-    //public float heightAboveGround;
-    //[HideInInspector]
-    //public bool hasWall;
     [HideInInspector]
     public float power;
     [HideInInspector]
@@ -47,7 +40,7 @@ public class TurbineController : MonoBehaviour {
     public void Update(float gameDeltaTime)
     {
         if (GameResources.isPaused()) return;
-        //UpdatePower(gameDeltaTime);
+        UpdatePower(gameDeltaTime);
         UpdateHealth(gameDeltaTime);
     }
 
@@ -62,8 +55,8 @@ public class TurbineController : MonoBehaviour {
 
         // Set the blades rotations in the three components depending on the rotation speed (only the z rotation changes)
         float bladesRotX = blades.transform.rotation.eulerAngles.x;
-        float bladesRotY = blades.transform.rotation.eulerAngles.y;
-        float bladesRotZ = blades.transform.rotation.eulerAngles.z + rotationSpeed * Time.deltaTime;
+        float bladesRotY = blades.transform.rotation.eulerAngles.y + rotationSpeed * Time.deltaTime;
+        float bladesRotZ = blades.transform.rotation.eulerAngles.z;
 
         blades.transform.rotation = Quaternion.Euler(new Vector3(bladesRotX, bladesRotY, bladesRotZ));
 
@@ -80,14 +73,26 @@ public class TurbineController : MonoBehaviour {
         }
     }
 
-    //void UpdatePower(float gameDeltaTime)
-    //{
-    //    float TSRInducedPower = OptimumCalculator(8, 3f, TSR);
-    //    float pitchInducePower = OptimumCalculator(5, 15f, bladePitch);
-    //    power = (float)health * TSRInducedPower * pitchInducePower * rotationSpeed;
-    //    avgPower = (avgPower * weight + power) / (weight + 1);
-    //    weight = weight + 1;
-    //}
+    void UpdatePower(float gameDeltaTime)
+    {
+        power = 1;
+        foreach (FloatProperty floatProperty in turbineProperties.floatProperty)
+        {
+            power *= OptimumCalculator(floatProperty.optimalValue, floatProperty.spread, floatProperty.property);
+        }
+
+        foreach (IntProperty intProperty in turbineProperties.intProperty)
+        {
+            power *= OptimumCalculator(intProperty.optimalValue, intProperty.spread, intProperty.property);
+        }
+
+        foreach (BoolProperty boolProperty in turbineProperties.boolProperty)
+        {
+            power *= boolProperty.isOnMultiplier;
+        }
+
+        power *= WindController.magnitude * WindController.magnitude * WindController.magnitude;
+    }
 
     void UpdateHealth(float gameDeltaTime)
     {
@@ -113,6 +118,35 @@ public class TurbineController : MonoBehaviour {
 
     }
 
+    public float CalculateCost()
+    {
+        float cost = 0;
+
+        foreach (FloatProperty prop in turbineProperties.floatProperty)
+        {
+            if (prop.costFunction != null)
+            {
+                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
+            }
+        }
+        foreach (IntProperty prop in turbineProperties.intProperty)
+        {
+            if (prop.costFunction != null)
+            {
+                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
+            }
+        }
+        foreach (BoolProperty prop in turbineProperties.boolProperty)
+        {
+            if (prop.costFunction != null)
+            {
+                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
+            }
+        }
+
+        return cost;
+    }
+
 
 }
 
@@ -128,7 +162,6 @@ public class TurbineProperties
         intProperty = new List<IntProperty>();
         boolProperty = new List<BoolProperty>();
     }
-
 }
 
 public class FloatProperty
@@ -138,27 +171,28 @@ public class FloatProperty
     public float property;
     public float minValue;
     public float maxValue;
-    public System.Reflection.MethodInfo graphicsFunction;
+    public float optimalValue;
+    public float spread;
+    public MethodInfo graphicsFunction;
+    public MethodInfo costFunction;
+    public MethodInfo degenFunction;
+
     public object callObject;
 
-    public FloatProperty(string propertyName, string unit, float property, float minValue, float maxValue, System.Reflection.MethodInfo graphicsFunction, object callObject)
+    public FloatProperty(string propertyName, string unit, float property, float minValue, float maxValue, float optimalValue, float spread, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.unit = unit;
         this.property = property;
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.optimalValue = optimalValue;
+        this.spread = spread;
         this.graphicsFunction = graphicsFunction;
+        this.costFunction = costFunction;
+        this.degenFunction = degenFunction;
         this.callObject = callObject;
 
-    }
-    public FloatProperty(string propertyName, string unit, float property, float minValue, float maxValue)
-    {
-        this.propertyName = propertyName;
-        this.unit = unit;
-        this.property = property;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
     }
 }
 
@@ -169,26 +203,26 @@ public class IntProperty
     public int property;
     public int minValue;
     public int maxValue;
+    public int optimalValue;
+    public int spread;
     public System.Reflection.MethodInfo graphicsFunction;
+    public System.Reflection.MethodInfo costFunction;
+    public System.Reflection.MethodInfo degenFunction;
     public object callObject;
 
-    public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, System.Reflection.MethodInfo graphicsFunction, object callObject)
+    public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, int optimalValue, int spread, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.unit = unit;
         this.property = property;
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.optimalValue = optimalValue;
+        this.spread = spread;
         this.graphicsFunction = graphicsFunction;
+        this.costFunction = costFunction;
+        this.degenFunction = degenFunction;
         this.callObject = callObject;
-    }
-    public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue)
-    {
-        this.propertyName = propertyName;
-        this.unit = unit;
-        this.property = property;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
     }
 }
 
@@ -196,21 +230,21 @@ public class BoolProperty
 {
     public string propertyName;
     public bool property;
-    public System.Reflection.MethodInfo graphicsFunction;
+    public MethodInfo graphicsFunction;
+    public MethodInfo costFunction;
+    public MethodInfo degenFunction;
     public object callObject;
+    public float isOnMultiplier;
 
-    public BoolProperty(string propertyName, bool property, System.Reflection.MethodInfo graphicsFunction, object callObject)
+    public BoolProperty(string propertyName, bool property, float isOnMultiplier, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.property = property;
         this.graphicsFunction = graphicsFunction;
+        this.costFunction = costFunction;
+        this.degenFunction = degenFunction;
         this.callObject = callObject;
-    }
-
-    public BoolProperty(string propertyName, bool property)
-    {
-        this.propertyName = propertyName;
-        this.property = property;
+        this.isOnMultiplier = isOnMultiplier;
     }
 
 }

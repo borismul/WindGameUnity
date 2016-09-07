@@ -22,6 +22,8 @@ public class boolPropertyController : MonoBehaviour {
     {
         if (boolProperty.graphicsFunction != null)
             boolProperty.graphicsFunction.Invoke(boolProperty.callObject, new object[] { toggle.isOn });
+
+        boolProperty.property = isOn;
     }
 
 

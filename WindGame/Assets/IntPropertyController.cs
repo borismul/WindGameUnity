@@ -32,6 +32,7 @@ public class IntPropertyController : MonoBehaviour {
         if (value != string.Empty)
         {
             slider.value = int.Parse(value);
+            intProperty.property = int.Parse(value);
             if(intProperty.graphicsFunction != null)
                 intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
         }
@@ -40,6 +41,7 @@ public class IntPropertyController : MonoBehaviour {
     void SliderChange(int value)
     {
         inputField.text = value.ToString();
+        intProperty.property = value;
         if (intProperty.graphicsFunction != null)
             intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
     }

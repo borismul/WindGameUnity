@@ -841,15 +841,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ace2f8c549f860419812021927c05a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turbines:
-  - {fileID: 131986, guid: 53cbd128219819746b832dfbbd7e70b3, type: 2}
-  - {fileID: 117156, guid: bc058ff7a1402dc40a47940d3af3220a, type: 2}
-  turbinePreviews:
-  - {fileID: 131986, guid: a9c748fc5ad25e848b91e68e2fb83f38, type: 2}
-  - {fileID: 1000012941747332, guid: ee6a85df8196e1b44892e36859331db6, type: 2}
-  turbineText:
-  - {fileID: 11481988, guid: 2bb8030149222e54b9c78b5cea5fc04c, type: 2}
-  - {fileID: 11481988, guid: 32abc12b1a2eb94469bc9f24a458b84d, type: 2}
   turbineButton: {fileID: 11460628, guid: 15d856f3b00c63d4db57e4020d226238, type: 2}
   cancelButton: {fileID: 114000014026907942}
   buildButton: {fileID: 114000011032568456}
@@ -873,6 +864,8 @@ MonoBehaviour:
   boolPropertyPrefab: {fileID: 1000010622151938, guid: dd68828b20865b243a338ce46f54f3bd,
     type: 2}
   propertiesScroller: {fileID: 114000013902186584}
+  blueBuildMaterial: {fileID: 2100000, guid: faff3d2fed54b9a4e9619a02594adccc, type: 2}
+  redBuildMaterial: {fileID: 2100000, guid: 7c77d08fbebe75144b44723afca8e52b, type: 2}
 --- !u!114 &114000011682830542
 MonoBehaviour:
   m_ObjectHideFlags: 1

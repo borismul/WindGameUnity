@@ -100,7 +100,7 @@ public class UIResourcesManager : MonoBehaviour {
         
         for (int i = 0; i < TurbineManager.GetInstance().GetTurbineCount(); i++)
         {
-            value += TurbineManager.GetInstance().transform.GetChild(i).GetComponent<TurbineController>().price;
+            //value += TurbineManager.GetInstance().transform.GetChild(i).GetComponent<TurbineController>().price;
         }
         
         double days = (GameResources.getDate() - initialDate).TotalDays;

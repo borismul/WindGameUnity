@@ -74,15 +74,16 @@ public class WorldController : MonoBehaviour
 
 
     // Builder function, some class wants the world to add an object
-    public void AddTurbine(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
+    public void AddTurbine(GameObject t, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
-        GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        t.transform.position = pos;
+        t.transform.rotation = rotation;
+        t.transform.SetParent(parent);
         TurbineController controller = t.GetComponent<TurbineController>();
-        controller.turbineName = something.name;
         t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
-        AddToGridTiles(something, pos, controller.diameter/2, type);
+        AddToGridTiles(t, pos, controller.diameter/2, type);
 
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 

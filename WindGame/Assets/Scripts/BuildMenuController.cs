@@ -18,9 +18,8 @@ using System.Collections.Generic;
 public class BuildMenuController : MonoBehaviour
 {
     // Turbine prefabs, turbine preview prefabs and their texts
-    public GameObject[] turbines;
-    public GameObject[] turbinePreviews;
-    public Text[] turbineText;
+    GameObject[] turbines;
+    Text[] turbineText;
 
     // Buttons on the build Menu
     public Button turbineButton;        // Loads a turbine preview on the right side of the menu
@@ -58,6 +57,11 @@ public class BuildMenuController : MonoBehaviour
 
     public ScrollRect propertiesScroller;
 
+    public Material blueBuildMaterial;
+    public Material redBuildMaterial;
+
+    List<Color> originalMaterial = new List<Color>();
+
     List<FloatPropertyController> floatProperties = new List<FloatPropertyController>();
     List<IntPropertyController> intProperties = new List<IntPropertyController>();
     List<boolPropertyController> boolProperties = new List<boolPropertyController>();
@@ -67,7 +71,6 @@ public class BuildMenuController : MonoBehaviour
 
     List<Button> menuButtons = new List<Button>();
     GameObject curSelected;
-    GameObject previewSelected;
 
     GameObject curInstantiated;
 
@@ -91,6 +94,9 @@ public class BuildMenuController : MonoBehaviour
         // Subscribe methods buttons
         cancelButton.onClick.AddListener(Cancel);
         buildButton.onClick.AddListener(BuildButton);
+
+        turbines = TurbineManager.GetInstance().turbinePrefabs;
+        turbineText = TurbineManager.GetInstance().turbineText;
         LoadTurbines();
 
         canCancel = true;
@@ -127,11 +133,13 @@ public class BuildMenuController : MonoBehaviour
     {
         if (canCancel)
         {
-            gameObject.transform.parent.gameObject.SetActive(false);
             Destroy(curInstantiated);
             infoCamera.enabled = false;
             curSelected = null;
+            UIScript.GetInstance().SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
+            gameObject.transform.parent.gameObject.SetActive(false);
+
         }
     }
 
@@ -139,13 +147,13 @@ public class BuildMenuController : MonoBehaviour
     {
         DeleteMenuButtons(); // What am I doing here?
 
-        for (int i = 0; i < turbines.Length; i++) // turbines array is filled through the prefab, wouldn't it be better if built through a config file?
+        for (int i = 0; i < TurbineManager.GetInstance().turbinePrefabs.Length; i++) // turbines array is filled through the prefab, wouldn't it be better if built through a config file?
         {
             //For each turbine, load a button for the user to select one.
             int index = i;
             Button turbBut = Instantiate(turbineButton); // Creates the button
             turbBut.transform.SetParent(overviewPanel.transform);
-            turbBut.gameObject.GetComponentInChildren<Text>().text = turbines[i].name;
+            turbBut.gameObject.GetComponentInChildren<Text>().text = TurbineManager.GetInstance().turbinePrefabs[i].name;
             turbBut.transform.localScale = Vector3.one;
             turbBut.onClick.AddListener(delegate { LoadTurbineButton(index); }); // Subscribes a method to the button for when a turbine is selected
             menuButtons.Add(turbBut); 
@@ -167,11 +175,10 @@ public class BuildMenuController : MonoBehaviour
         nameText.text = turbines[index].name;
         infoText.text = turbineText[index].text;
         curSelected = turbines[index];
-        previewSelected = turbinePreviews[index];
 
-        // Instantiate this turbine (for the preview window?)
-        curInstantiated = (GameObject)Instantiate(previewSelected);
-        curInstantiated.transform.position = instantHere.transform.position +  curInstantiated.transform.position;
+        // Instantiate this turbine in preview window
+        curInstantiated = (GameObject)Instantiate(curSelected);
+        curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
         buildPrice.text = curSelected.GetComponent<TurbineController>().price.ToString();
         PersianTurbineSpecificsController.previewTurbine = curInstantiated;
@@ -202,7 +209,7 @@ public class BuildMenuController : MonoBehaviour
 
     void CreateProperties()
     {
-        foreach (FloatProperty floatProperty in curSelected.GetComponent<TurbineController>().turbineProperties.floatProperty)
+        foreach (FloatProperty floatProperty in curInstantiated.GetComponent<TurbineController>().turbineProperties.floatProperty)
         {
             GameObject floatSlider = (GameObject)Instantiate(floatSliderPrefab);
             floatSlider.transform.SetParent(turbineProperties.transform, false);
@@ -210,7 +217,7 @@ public class BuildMenuController : MonoBehaviour
             floatProperties.Add(floatSlider.GetComponent<FloatPropertyController>());
         }
 
-        foreach (IntProperty intProperty in curSelected.GetComponent<TurbineController>().turbineProperties.intProperty)
+        foreach (IntProperty intProperty in curInstantiated.GetComponent<TurbineController>().turbineProperties.intProperty)
         {
             GameObject intSlider = (GameObject)Instantiate(intSliderPrefab);
             intSlider.transform.SetParent(turbineProperties.transform, false);
@@ -219,7 +226,7 @@ public class BuildMenuController : MonoBehaviour
 
         }
 
-        foreach (BoolProperty boolProperty in curSelected.GetComponent<TurbineController>().turbineProperties.boolProperty)
+        foreach (BoolProperty boolProperty in curInstantiated.GetComponent<TurbineController>().turbineProperties.boolProperty)
         {
             GameObject boolSlider = (GameObject)Instantiate(boolPropertyPrefab);
             boolSlider.transform.SetParent(turbineProperties.transform, false);
@@ -258,15 +265,24 @@ public class BuildMenuController : MonoBehaviour
 
             return;
         }
-
-        Destroy(curInstantiated);
-        curInstantiated = null;
-
         canCancel = false;
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
         UIScript.GetInstance().SetInBuildMode(true);
+
+        originalMaterial.Clear();
+        foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+        {
+            foreach (Material mat in ren.materials)
+            {
+                Color col = mat.color;
+                originalMaterial.Add(col);
+            }
+        }
+
+        curInstantiated.GetComponent<TurbinePreviewController>().enabled = false;
+
     }
 
     void BuildPriceColorUpdate()
@@ -274,7 +290,10 @@ public class BuildMenuController : MonoBehaviour
         if (curSelected == null)
             return;
 
-        if (GameResources.CanIBuy(curSelected.GetComponent<TurbineController>().price))
+        curInstantiated.GetComponent<TurbineController>().price = curInstantiated.GetComponent<TurbineController>().CalculateCost();
+        buildPrice.text = curInstantiated.GetComponent<TurbineController>().price.ToString();
+
+        if (GameResources.CanIBuy(curInstantiated.GetComponent<TurbineController>().price))
             buildPrice.color = Color.green;
         else
             buildPrice.color = Color.red;
@@ -288,27 +307,22 @@ public class BuildMenuController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast to find where the mouse is pointing at
         RaycastHit hit;
         bool canBuild = false;
+        Camera.main.GetComponent<CameraController>().SetHaveControl(true);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildMask))
         {
             plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
             plantPos = plantGrid.position; // What is the x,y,z coords?
-            if (curInstantiated == null) // If we haven't already created a preview turbine
-            {
-                //Create a turbine and place it on the ground where the mouse cursor points to
-                curInstantiated = (GameObject)Instantiate(curSelected);
-                curInstantiated.transform.position = plantPos;
-            }
-            else
-            {
-                if(!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
-                    curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
 
-                if (mouseX * rotateSpeed >= 1 || mouseX * rotateSpeed <= -1)
-                {
-                    curInstantiated.transform.rotation = Quaternion.Euler(curInstantiated.transform.rotation.eulerAngles.x, Mathf.RoundToInt(curInstantiated.transform.rotation.eulerAngles.y + mouseX * rotateSpeed), curInstantiated.transform.rotation.eulerAngles.z);
-                    mouseX = 0;
-                }
+
+            if(!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
+                curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
+
+            if (mouseX * rotateSpeed >= 1 || mouseX * rotateSpeed <= -1)
+            {
+                curInstantiated.transform.rotation = Quaternion.Euler(curInstantiated.transform.rotation.eulerAngles.x, Mathf.RoundToInt(curInstantiated.transform.rotation.eulerAngles.y + mouseX * rotateSpeed), curInstantiated.transform.rotation.eulerAngles.z);
+                mouseX = 0;
             }
+            
 
             if (!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
             {
@@ -318,8 +332,8 @@ public class BuildMenuController : MonoBehaviour
                     {
                         foreach (Material mat in ren.materials)
                         {
-                            mat.shader = Shader.Find("Transparent/Diffuse");
-                            mat.color = new Color(0, 0.8f, 1, 0.5f);
+                            mat.shader = blueBuildMaterial.shader;
+                            mat.color = blueBuildMaterial.color;
                         }
                     }
                     canBuild = true;
@@ -330,8 +344,8 @@ public class BuildMenuController : MonoBehaviour
                     {
                         foreach (Material mat in ren.materials)
                         {
-                            mat.shader = Shader.Find("Transparent/Diffuse");
-                            mat.color = new Color(1, 0, 0, 0.5f);
+                            mat.shader = redBuildMaterial.shader;
+                            mat.color = redBuildMaterial.color;
                         }
                     }
                     canBuild = false;
@@ -349,10 +363,11 @@ public class BuildMenuController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && canBuild) // The user clicks and we can build here
         {
-            Destroy(curInstantiated); // Destroy the preview turbine
             BuildNow(plantGrid, plantPos); // Run the build function
-            gameObject.transform.parent.gameObject.SetActive(false);
+            infoCamera.enabled = false;
+            curSelected = null;
             UIScript.GetInstance().SetInBuildMode(false);
+            gameObject.transform.parent.gameObject.SetActive(false);
         }
     }
 
@@ -361,7 +376,22 @@ public class BuildMenuController : MonoBehaviour
         if (isTurbine) // If we want to build a turbine...
         {
             GameResources.BuyTurbine(curInstantiated.GetComponent<TurbineController>().price);
-            world.AddTurbine(curSelected, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
+            curInstantiated.GetComponent<TurbineController>().enabled = true;
+            Renderer[] rens = curInstantiated.GetComponentsInChildren<Renderer>();
+            Renderer[] rensPrefab = curSelected.GetComponentsInChildren<Renderer>();
+            int count = 0;
+            foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
+            {
+                foreach (Material mat in ren.materials)
+                {
+                    mat.shader = Shader.Find("Standard");
+                    mat.color = originalMaterial[count];
+                    count++;
+
+                }
+            }
+            world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, 1, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
+            curInstantiated = null;
         }
     }
 }

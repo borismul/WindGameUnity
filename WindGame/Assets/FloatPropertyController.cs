@@ -38,6 +38,7 @@ public class FloatPropertyController : MonoBehaviour
             if(floatProperty.graphicsFunction != null)
                 floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });
 
+            floatProperty.property = float.Parse(value);
         }
     }
 
@@ -47,6 +48,8 @@ public class FloatPropertyController : MonoBehaviour
         inputField.text = value.ToString();
         if (floatProperty.graphicsFunction != null)
             floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });
-        
+
+        floatProperty.property = value;
+
     }
 }

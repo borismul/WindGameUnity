@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 /**
 	The turbine manager SINGLETON is the object keeping track of all turbines.
@@ -9,16 +10,15 @@ using System.Collections.Generic;
 **/
 public class TurbineManager : MonoBehaviour{
 	private List<GameObject> turbines = new List<GameObject>();
-
     private static TurbineManager instance;
 
     public GameObject[] turbinePrefabs;
+    public Text[] turbineText;
 
     // Use this for initialization
     void Awake()
     {
         CreateSingleton();
-        SetTurbines();
 
     }
 
@@ -32,14 +32,6 @@ public class TurbineManager : MonoBehaviour{
             return;
         }
         instance = this;
-    }
-
-    void SetTurbines()
-    {
-        foreach (GameObject turbine in turbinePrefabs)
-        {
-            turbine.GetComponent<PersianTurbineSpecificsController>().Create();
-        }
     }
 
     // Get the singleton instance
