@@ -61,7 +61,7 @@ public class WindController : MonoBehaviour {
             length = Mathf.Sqrt(Mathf.Pow(tileX, 2) + Mathf.Pow(tileY, 2));
             tileX = tileX / length;
             tileY = tileY / length;
-            dot = tileX * -Mathf.Cos(direction) + tileY * -Mathf.Sin(direction);
+            dot = tileX * -Mathf.Sin(direction) + tileY * -Mathf.Cos(direction);
             //theta = Mathf.Acos(dot);
             //theta = theta / (2 * Mathf.PI) * 360;
 
