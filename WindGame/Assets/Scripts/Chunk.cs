@@ -169,7 +169,16 @@ public class Chunk : MonoBehaviour {
 
        
         Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
-        terrain.world[startI+ iPos, startK + jPos] = new GridTile(position + transform.position, worldPositions, biome, 0, null);
+        GridTile tile = new GridTile(position + transform.position, worldPositions, biome, 0, null);
+        if (yAvg < TerrainController.thisTerrainController.waterLevel)
+        {
+            tile.underwater = true;
+        }
+        else
+        {
+            tile.underwater = false;
+        }
+        terrain.world[startI + iPos, startK + jPos] = tile;
     }
 
     // Generate the mesh of this chunk
