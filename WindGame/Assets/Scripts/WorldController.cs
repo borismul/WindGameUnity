@@ -107,6 +107,10 @@ public class WorldController : MonoBehaviour
     public bool CanBuild(Vector3 pos, float size, bool neglectTerrainObjects)
     {
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size/2);
+        GridTile thisTile = GridTile.FindClosestGridTile(pos);
+
+        if (thisTile.underWater)
+            return false;
 
         foreach (GridTile tile in gridtiles)
         {

@@ -20,10 +20,11 @@ public class boolPropertyController : MonoBehaviour {
 
     void ToggleChange(bool isOn)
     {
+        boolProperty.property = isOn;
+
         if (boolProperty.graphicsFunction != null)
             boolProperty.graphicsFunction.Invoke(boolProperty.callObject, new object[] { toggle.isOn });
 
-        boolProperty.property = isOn;
     }
 
 

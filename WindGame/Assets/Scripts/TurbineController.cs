@@ -79,19 +79,24 @@ public class TurbineController : MonoBehaviour {
     void UpdatePower(float gameDeltaTime)
     {
         power = 1;
-        foreach (FloatProperty floatProperty in turbineProperties.floatProperty)
+        foreach (FloatProperty prop in turbineProperties.floatProperty)
         {
-            power *= OptimumCalculator(floatProperty.optimalValue, floatProperty.spread, floatProperty.property);
+            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
         }
 
-        foreach (IntProperty intProperty in turbineProperties.intProperty)
+        foreach (IntProperty prop in turbineProperties.intProperty)
         {
-            power *= OptimumCalculator(intProperty.optimalValue, intProperty.spread, intProperty.property);
+            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
+
         }
 
-        foreach (BoolProperty boolProperty in turbineProperties.boolProperty)
+        foreach (BoolProperty prop in turbineProperties.boolProperty)
         {
-            power *= boolProperty.isOnMultiplier;
+            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
+
         }
 
         power *= WindController.magnitude * WindController.magnitude * WindController.magnitude;
@@ -106,11 +111,7 @@ public class TurbineController : MonoBehaviour {
         health -= decay;
     }
 
-    float OptimumCalculator(float optimum, float spread, float at)
-    {
-        float value = Mathf.Exp(-Mathf.Pow(at - optimum, 2f) / (2f * spread * spread));
-        return value;
-    }
+
 
 
     // Method that determines the rotation speed, based on the Incomming flow speed (Uinfinity), the tip speed ration (TSR) and the Radius of the acuator disk (R)
@@ -174,23 +175,21 @@ public class FloatProperty
     public float property;
     public float minValue;
     public float maxValue;
-    public float optimalValue;
-    public float spread;
+    public MethodInfo powerFunction;
     public MethodInfo graphicsFunction;
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
 
     public object callObject;
 
-    public FloatProperty(string propertyName, string unit, float property, float minValue, float maxValue, float optimalValue, float spread, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
+    public FloatProperty(string propertyName, string unit, float property, float minValue, float maxValue, MethodInfo powerFunction, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.unit = unit;
         this.property = property;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.optimalValue = optimalValue;
-        this.spread = spread;
+        this.powerFunction = powerFunction;
         this.graphicsFunction = graphicsFunction;
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
@@ -206,22 +205,20 @@ public class IntProperty
     public int property;
     public int minValue;
     public int maxValue;
-    public int optimalValue;
-    public int spread;
+    public MethodInfo powerFunction;
     public MethodInfo graphicsFunction;
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
     public object callObject;
 
-    public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, int optimalValue, int spread, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
+    public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, MethodInfo powerFunction, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.unit = unit;
         this.property = property;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.optimalValue = optimalValue;
-        this.spread = spread;
+        this.powerFunction = powerFunction;
         this.graphicsFunction = graphicsFunction;
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
@@ -233,21 +230,21 @@ public class BoolProperty
 {
     public string propertyName;
     public bool property;
+    public MethodInfo powerFunction;
     public MethodInfo graphicsFunction;
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
     public object callObject;
-    public float isOnMultiplier;
 
-    public BoolProperty(string propertyName, bool property, float isOnMultiplier, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
+    public BoolProperty(string propertyName, bool property, MethodInfo powerFunction, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
         this.propertyName = propertyName;
         this.property = property;
+        this.powerFunction = powerFunction;
         this.graphicsFunction = graphicsFunction;
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
         this.callObject = callObject;
-        this.isOnMultiplier = isOnMultiplier;
     }
 
 }

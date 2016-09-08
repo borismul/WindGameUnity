@@ -8,7 +8,7 @@ public class GridTile{
     public Vector3 position;
     public int biome;
     public GridTileOccupant occupant;
-    public bool underwater;
+    public bool underWater;
     public List<Vector3> vert;
 
     // 0 is empty tile
@@ -16,13 +16,14 @@ public class GridTile{
     // 2 is self build. (Maybe more types)
     public GridTileOccupant.OccupantType type;
 
-    public GridTile(Vector3 position, List<Vector3> vert, int biome, GridTileOccupant.OccupantType OccupantType, GridTileOccupant occupant)
+    public GridTile(Vector3 position, List<Vector3> vert, int biome, bool isUnderWater, GridTileOccupant.OccupantType OccupantType, GridTileOccupant occupant)
     {
         this.position = position;
         this.biome = biome;
         this.type = OccupantType;
         this.occupant = occupant;
         this.vert = vert;
+        this.underWater = isUnderWater;
     }
 
     public static GridTile FindClosestGridTile(Vector3 point)
