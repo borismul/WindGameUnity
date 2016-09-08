@@ -18,6 +18,9 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     TurbineController controller;
 
     public static GameObject previewTurbine;
+
+    float height;
+    GameObject curTurbineBase;
     // Use this for initialization
 
 
@@ -59,7 +62,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         maxValue = 10;
         optimalValue = 10;
         spread = 20;
-        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, null, GetType().GetMethod("HeightCost"), null, this));
+        controller.turbineProperties.floatProperty.Add(new FloatProperty(propertyName, unit, property, minValue, maxValue, optimalValue, spread, GetType().GetMethod("SetUpHeight"), GetType().GetMethod("HeightCost"), null, this));
 
         propertyName = "Has Wall";
         bool isOn = false;
@@ -75,7 +78,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         previewTurbine.GetComponent<TurbinePreviewController>().blades.Clear();
 
         for (int i = 0; i< blades; i++)
-            previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
+            previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position + Vector3.up *height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
     }
 
     public int BladesCost(int blades)
@@ -87,7 +90,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     {
         if (isOn)
         {
-            previewTurbine.GetComponent<TurbinePreviewController>().wall = (GameObject)Instantiate(wall, previewTurbine.transform.position, Quaternion.Euler(-90, 0, 0), previewTurbine.transform);
+            previewTurbine.GetComponent<TurbinePreviewController>().wall = (GameObject)Instantiate(wall, previewTurbine.transform.position + Vector3.up *height, Quaternion.Euler(-90, 0, 0), previewTurbine.transform);
         }
         else
         {
@@ -106,8 +109,15 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public void SetUpHeight(float height)
     {
-        GameObject turbineBase = (GameObject)Instantiate(turbineBasePrefab, previewTurbine.transform.position, previewTurbine.transform.rotation, previewTurbine.transform);
-        turbineBase.transform.localScale = Vector3.one * 10;
+        if (curTurbineBase != null)
+            Destroy(curTurbineBase);
+
+        float dh = height - this.height;
+        this.height = height;
+        previewTurbine.transform.GetChild(0).position += Vector3.up * dh;
+        curTurbineBase = (GameObject)Instantiate(turbineBasePrefab, previewTurbine.transform.position + Vector3.up * height/2, previewTurbine.transform.rotation, previewTurbine.transform);
+        curTurbineBase.transform.localScale = new Vector3(curTurbineBase.transform.localScale.x, 0, curTurbineBase.transform.localScale.z) + Vector3.up * height;
+        transform.parent.position -= Vector3.up * dh *0.5f;
     }
 
     public int HeightCost(float height)

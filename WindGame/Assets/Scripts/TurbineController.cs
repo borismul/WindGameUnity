@@ -208,9 +208,9 @@ public class IntProperty
     public int maxValue;
     public int optimalValue;
     public int spread;
-    public System.Reflection.MethodInfo graphicsFunction;
-    public System.Reflection.MethodInfo costFunction;
-    public System.Reflection.MethodInfo degenFunction;
+    public MethodInfo graphicsFunction;
+    public MethodInfo costFunction;
+    public MethodInfo degenFunction;
     public object callObject;
 
     public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, int optimalValue, int spread, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
