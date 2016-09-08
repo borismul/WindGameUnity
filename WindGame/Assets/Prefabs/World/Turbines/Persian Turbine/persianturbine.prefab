@@ -51,7 +51,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010085128274}
-  - 114: {fileID: 114000012733748248}
   - 114: {fileID: 114000012748795752}
   - 114: {fileID: 114000010430950158}
   m_Layer: 0
@@ -194,6 +193,7 @@ MonoBehaviour:
   heightCostMultiplier: 3
   heightOptimalValue: 10
   heightSpread: 20
+  baseStartScale: 13
   costPerBlade: 20
   bladesOptimalValue: 7
   bladesSpread: 8
@@ -203,19 +203,6 @@ MonoBehaviour:
   curvedCost: 500
   curvedMinWallMultiplier: 0.8
   noCurvedNoWallMultiplier: 0
---- !u!114 &114000012733748248
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013478390948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1ddfb411cb483c49a5ef6837ea39247, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blades: []
-  wall: {fileID: 0}
 --- !u!114 &114000012748795752
 MonoBehaviour:
   m_ObjectHideFlags: 1

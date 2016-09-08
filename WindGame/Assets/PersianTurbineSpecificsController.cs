@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System.Collections.Generic;
 
 public class PersianTurbineSpecificsController : MonoBehaviour {
 
@@ -21,6 +22,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public float heightCostMultiplier = 3;
     public float heightOptimalValue = 10;
     public float heightSpread = 20;
+    public float baseStartScale = 15;
 
     [Header("Number Of Blades Properties")]
     public int costPerBlade = 20;
@@ -45,10 +47,10 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     TurbineController controller;
 
-    public static GameObject previewTurbine;
-
     float height;
     GameObject curTurbineBase;
+    List<GameObject> currentBlades = new List<GameObject>();
+    GameObject currentWall;
     // Use this for initialization
 
 
@@ -77,7 +79,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         propertyName = "Frontal Area";
         unit = "m^2";
         property = 10;
-        minValue = 1;
+        minValue = 5;
         maxValue = 50;
 
         areaProperty = new FloatProperty(propertyName, unit, property, minValue, maxValue, GetType().GetMethod("AreaPower"), GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this);
@@ -112,13 +114,13 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             CreateCurvedBlades(true);
         else
         {
-            for (int i = 0; i < previewTurbine.GetComponent<TurbinePreviewController>().blades.Count; i++)
-                Destroy(previewTurbine.GetComponent<TurbinePreviewController>().blades[i]);
+            for (int i = 0; i < currentBlades.Count; i++)
+                Destroy(currentBlades[i]);
 
-            previewTurbine.GetComponent<TurbinePreviewController>().blades.Clear();
+            currentBlades.Clear();
 
             for (int i = 0; i < blades; i++)
-                previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(persianBlade, previewTurbine.transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
+                currentBlades.Add((GameObject)Instantiate(persianBlade, transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
         }
     }
 
@@ -137,12 +139,12 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     {
         if (isOn)
         {
-            previewTurbine.GetComponent<TurbinePreviewController>().wall = (GameObject)Instantiate(wall, previewTurbine.transform.position + Vector3.up *height, Quaternion.Euler(-90, 0, 0), baseTurbineObject.transform);
+            currentWall = (GameObject)Instantiate(wall, transform.position + Vector3.up *height, Quaternion.Euler(-90, 0, 0), baseTurbineObject.transform);
         }
         else
         {
-            if(previewTurbine.GetComponent<TurbinePreviewController>().wall != null)
-                Destroy(previewTurbine.GetComponent<TurbinePreviewController>().wall);
+            if(currentWall != null)
+                Destroy(currentWall);
         }
     }
 
@@ -178,13 +180,14 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
         float dh = height - this.height;
         this.height = height;
-        previewTurbine.transform.GetChild(0).position += Vector3.up * dh;
+        transform.GetChild(0).position += Vector3.up * dh;
         if (height <= 0)
             return;
 
-        curTurbineBase = (GameObject)Instantiate(turbineBasePrefab, previewTurbine.transform.position + Vector3.up * height/2, previewTurbine.transform.rotation, previewTurbine.transform);
-        curTurbineBase.transform.localScale = new Vector3(curTurbineBase.transform.localScale.x, 0, curTurbineBase.transform.localScale.z) + Vector3.up * height;
+        curTurbineBase = (GameObject)Instantiate(turbineBasePrefab, transform.position + Vector3.up * height/2, transform.rotation, transform);
+        curTurbineBase.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up * heightProperty.property;
         transform.parent.position -= Vector3.up * dh *0.5f;
+
     }
 
     public int HeightCost(float height)
@@ -205,7 +208,13 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public void ScaleByArea(float area)
     {
-        previewTurbine.GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
+        baseTurbineObject.transform.localScale = Vector3.one *area/unitScaleArea;
+
+        if (curTurbineBase != null)
+            curTurbineBase.transform.localScale = (Vector3.right + Vector3.forward) * area/unitScaleArea * baseStartScale + Vector3.up * heightProperty.property;
+
+        transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (area/2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (area / Mathf.Tan(30 * Mathf.Deg2Rad));
+        GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
     }
 
     public float AreaPower(float area)
@@ -223,13 +232,13 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
         else
         {
-            for (int i = 0; i < previewTurbine.GetComponent<TurbinePreviewController>().blades.Count; i++)
-                Destroy(previewTurbine.GetComponent<TurbinePreviewController>().blades[i]);
+            for (int i = 0; i < currentBlades.Count; i++)
+                Destroy(currentBlades[i]);
 
-            previewTurbine.GetComponent<TurbinePreviewController>().blades.Clear();
+            currentBlades.Clear();
 
             for (int i = 0; i < blades; i++)
-                previewTurbine.GetComponent<TurbinePreviewController>().blades.Add((GameObject)Instantiate(curvedBladePrefab, previewTurbine.transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
+                currentBlades.Add((GameObject)Instantiate(curvedBladePrefab, transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
         }
 
     }

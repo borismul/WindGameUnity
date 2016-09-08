@@ -80,7 +80,6 @@ public class WorldController : MonoBehaviour
         t.transform.rotation = rotation;
         t.transform.SetParent(parent);
         TurbineController controller = t.GetComponent<TurbineController>();
-        t.transform.localScale = Vector3.one * scale;
         t.tag = "turbine";
 
         AddToGridTiles(t, pos, (controller.diameter * scale)/2, type);

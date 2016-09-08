@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 public class TurbinePreviewController : MonoBehaviour {
 
-
-    public List<GameObject> blades = new List<GameObject>();
-    [HideInInspector]
-    public GameObject wall;
-
 	// Use this for initialization
 	void Start () {
 	

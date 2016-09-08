@@ -138,6 +138,7 @@ public class BuildMenuController : MonoBehaviour
             curSelected = null;
             UIScript.GetInstance().SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
+            instantHere.SetActive(false);
             gameObject.transform.parent.gameObject.SetActive(false);
 
         }
@@ -181,13 +182,13 @@ public class BuildMenuController : MonoBehaviour
         curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
         buildPrice.text = curSelected.GetComponent<TurbineController>().price.ToString();
-        PersianTurbineSpecificsController.previewTurbine = curInstantiated;
         DestroyProperties();
         CreateProperties();
         Canvas.ForceUpdateCanvases();
         propertiesScroller.verticalScrollbar.value = 0;
         propertiesScroller.verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
+        instantHere.SetActive(true);
 
     }
 
@@ -282,8 +283,7 @@ public class BuildMenuController : MonoBehaviour
             }
         }
 
-        curInstantiated.GetComponent<TurbinePreviewController>().enabled = false;
-
+        curInstantiated.transform.SetParent(null);
     }
 
     void BuildPriceColorUpdate()
@@ -309,7 +309,6 @@ public class BuildMenuController : MonoBehaviour
         RaycastHit hit;
         bool canBuild = false;
         Camera.main.GetComponent<CameraController>().SetHaveControl(true);
-        curInstantiated.transform.localScale = Vector3.one * curInstantiated.GetComponent<TurbineController>().desiredScale;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildMask))
         {
             plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
@@ -369,6 +368,7 @@ public class BuildMenuController : MonoBehaviour
             infoCamera.enabled = false;
             curSelected = null;
             UIScript.GetInstance().SetInBuildMode(false);
+            instantHere.SetActive(false);
             gameObject.transform.parent.gameObject.SetActive(false);
         }
     }
@@ -392,8 +392,7 @@ public class BuildMenuController : MonoBehaviour
 
                 }
             }
-
-            world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.transform.localScale.x, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
+            world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<TurbineController>().desiredScale, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
             curInstantiated = null;
         }
     }
