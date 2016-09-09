@@ -177,32 +177,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e563d4bfeb354646a05c4b970beada8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  persianBlade: {fileID: 1000010087480280, guid: 1e982e288293a7f4789eff61058f9e59,
-    type: 2}
-  wall: {fileID: 1000011848254048, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
   axis: {fileID: 1000013803109158}
   baseTurbineObject: {fileID: 1000012505210070}
-  turbineBasePrefab: {fileID: 1000011199387504, guid: b4e1a2d8812d1ee498edacfa52bad2be,
-    type: 2}
-  curvedBladePrefab: {fileID: 1000010087480280, guid: 408ade6e3adbfa14faeede720b1338cb,
-    type: 2}
+  areaPropertyName: Frontal Area
+  areaUnit: m^2
+  areaStartValue: 10
+  areaMinValue: 5
+  areaMaxValue: 50
   areaOptimalValue: 50
   areaSpread: 35
   areaCostMultiplier: 5
   unitScaleArea: 7.5
+  heightPropertyName: Height
+  heightUnit: m
+  heightStartValue: 0
+  heightMinValue: 0
+  heightMaxValue: 50
   heightCostMultiplier: 3
   heightOptimalValue: 10
   heightSpread: 20
   baseStartScale: 13
+  turbineBasePrefab: {fileID: 1000011199387504, guid: b4e1a2d8812d1ee498edacfa52bad2be,
+    type: 2}
+  bladesPropertyName: '# Blades'
+  bladesUnit: 
+  bladesStartValue: 3
+  bladesMinValue: 0
+  bladesMaxValue: 20
   costPerBlade: 20
   bladesOptimalValue: 7
   bladesSpread: 8
+  persianBlade: {fileID: 1000010087480280, guid: 1e982e288293a7f4789eff61058f9e59,
+    type: 2}
+  wallPropertyName: Use A Wall
+  wallUnit: 
   wallCost: 1000
   wallPlusCurvedMultiplier: 1.2
   wallMinCurvedMultiplier: 1
+  wallIsOn: 0
+  wall: {fileID: 1000011848254048, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
+  curvedPropertyName: Use Curved Blades
+  curvedUnit: m
   curvedCost: 500
   curvedMinWallMultiplier: 0.8
   noCurvedNoWallMultiplier: 0
+  curvedIsOn: 0
+  curvedBladePrefab: {fileID: 1000010087480280, guid: 408ade6e3adbfa14faeede720b1338cb,
+    type: 2}
 --- !u!114 &114000012748795752
 MonoBehaviour:
   m_ObjectHideFlags: 1

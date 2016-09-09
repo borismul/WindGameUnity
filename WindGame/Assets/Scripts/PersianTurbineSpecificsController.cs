@@ -1,109 +1,127 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 using System.Collections.Generic;
 
+/// <summary>
+/// This script contains the properties for the persian turbine. The properties are 
+/// created as the turbine is created and are subsequently added to the TurbineController
+/// script. The functions for each the properties, calculation of power, cost, health 
+/// degeneration and a graphics funcion, are determined in this script.
+/// </summary>
+[RequireComponent(typeof(TurbineController))]
 public class PersianTurbineSpecificsController : MonoBehaviour {
 
-    public GameObject persianBlade;
-    public GameObject wall;
-    public GameObject axis;
-    public GameObject baseTurbineObject;
-    public GameObject turbineBasePrefab;
-    public GameObject curvedBladePrefab;
+    public GameObject axis;                                 // Axis where the blades attach to
+    public GameObject baseTurbineObject;                    // Turbine object without the base to make it heigher
 
     [Header("Area Properties")]
+    // Property variables
+    public string areaPropertyName = "Frontal Area";
+    public string areaUnit = "m^2";
+    public float areaStartValue = 10;
+    public float areaMinValue = 5;
+    public float areaMaxValue = 50;
     public float areaOptimalValue = 50;
     public float areaSpread = 35;
     public float areaCostMultiplier = 5;
     public float unitScaleArea = 9;
 
     [Header("Height Properties")]
+    // Property variables
+    public string heightPropertyName = "Height";
+    public string heightUnit = "m";
+    public float heightStartValue = 0;
+    public float heightMinValue = 50;
+    public float heightMaxValue = 50;
     public float heightCostMultiplier = 3;
     public float heightOptimalValue = 10;
     public float heightSpread = 20;
     public float baseStartScale = 15;
+    // Property prefabs
+    public GameObject turbineBasePrefab;
+
 
     [Header("Number Of Blades Properties")]
+    // Property variables
+    public string bladesPropertyName = "# Blades";
+    public string bladesUnit = "";
+    public int bladesStartValue = 3;
+    public int bladesMinValue = 0;
+    public int bladesMaxValue = 20;
     public int costPerBlade = 20;
     public int bladesOptimalValue = 7;
     public int bladesSpread = 4;
+    // Property prefabs
+    public GameObject persianBlade;
+
 
     [Header("Wall Properties")]
+    // Property variables
+    public string wallPropertyName = "Use A Wall";
+    public string wallUnit = "";
     public int wallCost = 1000;
     public float wallPlusCurvedMultiplier = 1.2f;
     public float wallMinCurvedMultiplier = 1;
+    public bool wallIsOn = false;
+
+    // Property prefabs
+    public GameObject wall;
 
     [Header("Curved Properties")]
+    // Property variables
+    public string curvedPropertyName = "Use Curved Blades";
+    public string curvedUnit = "m";
     public int curvedCost = 500;
     public float curvedMinWallMultiplier = 0.8f;
     public float noCurvedNoWallMultiplier = 0f;
+    public bool curvedIsOn = false;
 
+    // Property prefabs
+    public GameObject curvedBladePrefab;
+
+
+    // Properties, used for cross linking values to eachother
     FloatProperty areaProperty;
     FloatProperty heightProperty;
     IntProperty bladesProperty;
     BoolProperty wallProperty;
     BoolProperty curvedProperty; 
-
+    
     TurbineController controller;
 
-    float height;
-    GameObject curTurbineBase;
-    List<GameObject> currentBlades = new List<GameObject>();
-    GameObject currentWall;
-    // Use this for initialization
-
+    float height;                                               // Current height of the turbine
+    GameObject curTurbineBase;                                  // The instantiated base, if there is one
+    List<GameObject> currentBlades = new List<GameObject>();    // The instantiated blades, if there is at least one
+    GameObject currentWall;                                     // The instantiate wall, if there is one
 
     void Awake()
     {
-        Create();
+        GenerateProperties();
     }
-
-    public void Create () {
-        controller = GetComponent<TurbineController>();
-        PersianTurbine();
-	}
 	
-    // Persian Turbine Section
-    void PersianTurbine()
+    // Generate the properties for the persian turbine
+    void GenerateProperties()
     {
-        string propertyName = "# Blades";
-        string unit = "";
-        float property = 3;
-        float minValue = 0;
-        float maxValue = 20;
+        controller = GetComponent<TurbineController>();
 
-        bladesProperty = new IntProperty(propertyName, unit, Mathf.RoundToInt(property), Mathf.RoundToInt(minValue), Mathf.RoundToInt(maxValue), GetType().GetMethod("BladesPower"), GetType().GetMethod("CreateBlades"), GetType().GetMethod("BladesCost"), null, this);
+        // Number of blades
+        bladesProperty = new IntProperty(bladesPropertyName, bladesUnit, bladesStartValue, bladesMinValue, bladesMaxValue, GetType().GetMethod("BladesPower"), GetType().GetMethod("CreateBlades"), GetType().GetMethod("BladesCost"), null, this);
         controller.turbineProperties.intProperty.Add(bladesProperty);
 
-        propertyName = "Frontal Area";
-        unit = "m^2";
-        property = 10;
-        minValue = 5;
-        maxValue = 50;
-
-        areaProperty = new FloatProperty(propertyName, unit, property, minValue, maxValue, GetType().GetMethod("AreaPower"), GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this);
+        // Frontal area
+        areaProperty = new FloatProperty(areaPropertyName, areaUnit, areaStartValue, areaMinValue, areaMaxValue, GetType().GetMethod("AreaPower"), GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this);
         controller.turbineProperties.floatProperty.Add(areaProperty);
 
-        propertyName = "Turbine Height";
-        unit = "m";
-        property = 0;
-        minValue = 0;
-        maxValue = 10;
-
-        heightProperty = new FloatProperty(propertyName, unit, property, minValue, maxValue, GetType().GetMethod("HeightPower"), GetType().GetMethod("SetUpHeight"), GetType().GetMethod("HeightCost"), null, this);
+        // Height
+        heightProperty = new FloatProperty(heightPropertyName, heightUnit, heightStartValue, heightMinValue, heightMaxValue, GetType().GetMethod("HeightPower"), GetType().GetMethod("SetUpHeight"), GetType().GetMethod("HeightCost"), null, this);
         controller.turbineProperties.floatProperty.Add(heightProperty);
 
-        propertyName = "Has Wall";
-        bool isOn = false;
-
-        wallProperty = new BoolProperty(propertyName, isOn, GetType().GetMethod("WallPower"), GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this);
+        // Wall
+        wallProperty = new BoolProperty(wallPropertyName, wallIsOn, GetType().GetMethod("WallPower"), GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this);
         controller.turbineProperties.boolProperty.Add(wallProperty);
 
-        propertyName = "Curved Blades";
-        isOn = false;
-
-        curvedProperty = new BoolProperty(propertyName, isOn, GetType().GetMethod("CurvedPower"), GetType().GetMethod("CreateCurvedBlades"), GetType().GetMethod("CurvedCost"), null, this);
+        // Curved Blades
+        curvedProperty = new BoolProperty(curvedPropertyName, curvedIsOn, GetType().GetMethod("CurvedPower"), GetType().GetMethod("CreateCurvedBlades"), GetType().GetMethod("CurvedCost"), null, this);
         controller.turbineProperties.boolProperty.Add(curvedProperty);
     }
 
@@ -187,6 +205,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         curTurbineBase = (GameObject)Instantiate(turbineBasePrefab, transform.position + Vector3.up * height/2, transform.rotation, transform);
         curTurbineBase.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up * heightProperty.property;
         transform.parent.position -= Vector3.up * dh *0.5f;
+        transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (areaProperty.property / 2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (areaProperty.property / Mathf.Tan(30 * Mathf.Deg2Rad));
+
 
     }
 
@@ -256,7 +276,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         return 1;
     }
 
-
+    // Function calculates a value between 0 and 1, when at == optimum it gives 1. Else it will 
+    // give a value lower than 1, depending on the spread and how far at is from the optimum.
     float OptimumCalculator(float optimum, float spread, float at)
     {
         float value = Mathf.Exp(-Mathf.Pow(at - optimum, 2f) / (2f * spread * spread));
