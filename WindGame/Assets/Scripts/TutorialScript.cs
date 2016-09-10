@@ -143,7 +143,7 @@ public class TutorialScript : MonoBehaviour {
 
 	}
 	
-	// Update is called once per frame
+	// Update is needed if an interacive phase is active
 	void Update () {
 
         if (playerTime)
@@ -232,6 +232,7 @@ public class TutorialScript : MonoBehaviour {
 
     // Interactive phases managers
 
+    // Checks which camera controls the player has tried
     void TryCamera()
     {
 
@@ -277,6 +278,7 @@ public class TutorialScript : MonoBehaviour {
 
     }
 
+    // Checks if the player has opened the build menu
     void Build1()
     {
 
@@ -289,6 +291,7 @@ public class TutorialScript : MonoBehaviour {
         Handle();
     }
 
+    // Checks if the player has built a wind pole
     void Pole()
     {
         playerTime = false;
@@ -297,6 +300,7 @@ public class TutorialScript : MonoBehaviour {
         Handle();
     }
 
+    // Checks if the wind pole info menu is open
     void Rose()
     {
         playerTime = false;
@@ -305,6 +309,7 @@ public class TutorialScript : MonoBehaviour {
         Handle();
     }
 
+    // Checks if the build menu is open
     void Build2()
     {
         playerTime = false;
@@ -313,6 +318,7 @@ public class TutorialScript : MonoBehaviour {
         Handle();
     }
 
+    // Checks if the player has built a (Persian) wind turbine
     void Turbine()
     {
         playerTime = false;
@@ -321,6 +327,7 @@ public class TutorialScript : MonoBehaviour {
         Handle();
     }
 
+    // Checks if the wind turbine info menu is open
     void Info()
     {
         playerTime = false;
