@@ -106,9 +106,10 @@ public class TurbineController : MonoBehaviour {
 
         }
 
-        power *= WindController.magnitude * WindController.magnitude * WindController.magnitude;
+        float magnitude = Mathf.Pow(WindController.GetWindAtTile(GridTile.FindClosestGridTile(transform.position)), 3);
+        power *= magnitude;
 
-        efficiency = power / (WindController.magnitude * WindController.magnitude * WindController.magnitude);
+        efficiency = power / magnitude;
 
         avgPower = (avgPower * avgPowerCount + power) / (avgPowerCount + 1);
         avgPowerCount++;
