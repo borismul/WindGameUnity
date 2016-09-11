@@ -36,6 +36,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011041136072}
+  - 65: {fileID: 65000014029904570}
   m_Layer: 0
   m_Name: Turbine
   m_TagString: Untagged
@@ -166,6 +167,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011966378136}
   m_Mesh: {fileID: 4300004, guid: e62ad045231b3a04c88ca19a5655488c, type: 3}
+--- !u!65 &65000014029904570
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012505210070}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 6, z: 10}
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!114 &114000010430950158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -194,7 +207,7 @@ MonoBehaviour:
   heightMinValue: 0
   heightMaxValue: 50
   heightCostMultiplier: 3
-  heightOptimalValue: 10
+  heightOptimalValue: 50
   heightSpread: 20
   baseStartScale: 13
   turbineBasePrefab: {fileID: 1000011199387504, guid: b4e1a2d8812d1ee498edacfa52bad2be,
@@ -212,14 +225,14 @@ MonoBehaviour:
   wallPropertyName: Use A Wall
   wallUnit: 
   wallCost: 1000
-  wallPlusCurvedMultiplier: 1.2
-  wallMinCurvedMultiplier: 1
+  wallPlusCurvedMultiplier: 1
+  wallMinCurvedMultiplier: 0.8
   wallIsOn: 0
   wall: {fileID: 1000011848254048, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
   curvedPropertyName: Use Curved Blades
   curvedUnit: m
   curvedCost: 500
-  curvedMinWallMultiplier: 0.8
+  curvedMinWallMultiplier: 0.6
   noCurvedNoWallMultiplier: 0
   curvedIsOn: 0
   curvedBladePrefab: {fileID: 1000010087480280, guid: 408ade6e3adbfa14faeede720b1338cb,
@@ -237,12 +250,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blades: {fileID: 1000013803109158}
   nacelle: {fileID: 0}
-  turbineName: 
   power: 0
+  efficiency: 0
   health: 0.0000023548706404986452
   avgPower: 0
   desiredScale: 0
   desiredHeight: 0
+  turbineName: Persian Windmill
   diameter: 15
   price: 4500
   canRotateAtBuild: 1

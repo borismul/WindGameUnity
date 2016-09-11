@@ -17,9 +17,9 @@ public class TurbineController : MonoBehaviour {
     public TurbineProperties turbineProperties = new TurbineProperties();
 
     [HideInInspector]
-    public string turbineName;
-    [HideInInspector]
     public float power;
+    [HideInInspector]
+    public float efficiency;
     [HideInInspector]
     public double health = 1;
     [HideInInspector]
@@ -29,11 +29,18 @@ public class TurbineController : MonoBehaviour {
     [HideInInspector]
     public float desiredHeight;
 
+    public string turbineName;
     public float diameter;
     public float price;
 
     public bool canRotateAtBuild;
 
+    float avgPowerCount = 0;
+
+    void Start()
+    {
+        health = 1;
+    }
 	// Update is called once per frame
 	void Update ()
     {
@@ -100,6 +107,11 @@ public class TurbineController : MonoBehaviour {
         }
 
         power *= WindController.magnitude * WindController.magnitude * WindController.magnitude;
+
+        efficiency = power / (WindController.magnitude * WindController.magnitude * WindController.magnitude);
+
+        avgPower = (avgPower * avgPowerCount + power) / (avgPowerCount + 1);
+        avgPowerCount++;
     }
 
     void UpdateHealth(float gameDeltaTime)
@@ -110,9 +122,6 @@ public class TurbineController : MonoBehaviour {
         if (health - decay < 0) return;
         health -= decay;
     }
-
-
-
 
     // Method that determines the rotation speed, based on the Incomming flow speed (Uinfinity), the tip speed ration (TSR) and the Radius of the acuator disk (R)
     float RotationSpeed(float Uinfinity, float R)
@@ -189,7 +198,7 @@ public class FloatProperty
         this.property = property;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.powerFunction = powerFunction;
+        this.powerFunction = powerFunction; 
         this.graphicsFunction = graphicsFunction;
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;

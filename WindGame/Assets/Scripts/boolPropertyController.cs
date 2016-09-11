@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class boolPropertyController : MonoBehaviour {
+public class BoolPropertyController : MonoBehaviour {
 
     public Toggle toggle;
     public Text nameText;
