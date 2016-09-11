@@ -73,8 +73,10 @@ public class WorldInteractionController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             GameObject hitObject = hit.collider.gameObject;
-            if(hitObject.GetComponent<TurbineController>() != null)
-                UIScript.GetInstance().OpenTurbineMenu(hitObject);
+
+            TurbineController controller = hit.transform.GetComponentInParent<TurbineController>();
+            if (controller != null)
+                UIScript.GetInstance().OpenTurbineMenu(controller);
         }
         
     }

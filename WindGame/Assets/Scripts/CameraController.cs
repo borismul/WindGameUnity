@@ -164,7 +164,16 @@ public class CameraController : MonoBehaviour
         // Determine horizontal, vertical input, the scrollwheel of the mouse and if the middle mouse button is clicked
         xInput = Input.GetAxisRaw("Horizontal");
         zInput = Input.GetAxisRaw("Vertical");
-        scrollInput = -Input.GetAxis("Mouse ScrollWheel");
+
+        // Check if the mouse hovers over a menu which can be scrolled, only allow camera scrolling when this is not the case
+        if (!PointerInfo.inScrollableArea)
+        {
+            scrollInput = -Input.GetAxis("Mouse ScrollWheel");
+        }
+        else
+        {
+            scrollInput = 0;
+        }
         middleMouse = Input.GetMouseButton(2);
 
         if (Input.GetMouseButtonDown(2))

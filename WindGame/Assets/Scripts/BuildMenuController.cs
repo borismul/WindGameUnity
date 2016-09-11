@@ -64,7 +64,7 @@ public class BuildMenuController : MonoBehaviour
 
     List<FloatPropertyController> floatProperties = new List<FloatPropertyController>();
     List<IntPropertyController> intProperties = new List<IntPropertyController>();
-    List<boolPropertyController> boolProperties = new List<boolPropertyController>();
+    List<BoolPropertyController> boolProperties = new List<BoolPropertyController>();
 
     // Used to check wheter a turbine is selected.
     bool isTurbine;
@@ -173,7 +173,7 @@ public class BuildMenuController : MonoBehaviour
             Destroy(curInstantiated); // If we have an object on curInstantiated, destroy it
 
         // Grab some information from the selected turbine
-        nameText.text = turbines[index].name;
+        nameText.text = turbines[index].GetComponent<TurbineController>().turbineName;
         infoText.text = turbineText[index].text;
         curSelected = turbines[index];
 
@@ -181,15 +181,13 @@ public class BuildMenuController : MonoBehaviour
         curInstantiated = (GameObject)Instantiate(curSelected);
         curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
-        buildPrice.text = curSelected.GetComponent<TurbineController>().price.ToString();
         DestroyProperties();
         CreateProperties();
         Canvas.ForceUpdateCanvases();
-        propertiesScroller.verticalScrollbar.value = 0;
-        propertiesScroller.verticalNormalizedPosition = 0;
+        propertiesScroller.verticalScrollbar.value = 1;
+        propertiesScroller.verticalNormalizedPosition = 1;
         Canvas.ForceUpdateCanvases();
         instantHere.SetActive(true);
-
     }
 
     void DestroyProperties()
@@ -200,7 +198,7 @@ public class BuildMenuController : MonoBehaviour
         foreach (IntPropertyController controller in intProperties)
             Destroy(controller.gameObject);
 
-        foreach (boolPropertyController controller in boolProperties)
+        foreach (BoolPropertyController controller in boolProperties)
             Destroy(controller.gameObject);
 
         floatProperties.Clear();
@@ -231,8 +229,8 @@ public class BuildMenuController : MonoBehaviour
         {
             GameObject boolSlider = (GameObject)Instantiate(boolPropertyPrefab);
             boolSlider.transform.SetParent(turbineProperties.transform, false);
-            boolSlider.GetComponent<boolPropertyController>().boolProperty = boolProperty;
-            boolProperties.Add(boolSlider.GetComponent<boolPropertyController>());
+            boolSlider.GetComponent<BoolPropertyController>().boolProperty = boolProperty;
+            boolProperties.Add(boolSlider.GetComponent<BoolPropertyController>());
 
         }
     }

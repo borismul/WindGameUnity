@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// This script contains the properties for the persian turbine. The properties are 
-/// created as the turbine is created and are subsequently added to the TurbineController
+/// created as the turbine is created and are subsequently added to the TurbineController 
 /// script. The functions for each the properties, calculation of power, cost, health 
 /// degeneration and a graphics funcion, are determined in this script.
 /// </summary>
@@ -34,7 +34,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public float heightMinValue = 50;
     public float heightMaxValue = 50;
     public float heightCostMultiplier = 3;
-    public float heightOptimalValue = 10;
+    public float heightOptimalValue = 50;
     public float heightSpread = 20;
     public float baseStartScale = 15;
     // Property prefabs
@@ -60,8 +60,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public string wallPropertyName = "Use A Wall";
     public string wallUnit = "";
     public int wallCost = 1000;
-    public float wallPlusCurvedMultiplier = 1.2f;
-    public float wallMinCurvedMultiplier = 1;
+    public float wallPlusCurvedMultiplier = 1f;
+    public float wallMinCurvedMultiplier = .8f;
     public bool wallIsOn = false;
 
     // Property prefabs
@@ -72,7 +72,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public string curvedPropertyName = "Use Curved Blades";
     public string curvedUnit = "m";
     public int curvedCost = 500;
-    public float curvedMinWallMultiplier = 0.8f;
+    public float curvedMinWallMultiplier = 0.6f;
     public float noCurvedNoWallMultiplier = 0f;
     public bool curvedIsOn = false;
 

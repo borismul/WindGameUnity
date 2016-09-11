@@ -129,12 +129,12 @@ public class UIScript : MonoBehaviour {
         }
     }
 
-    public void OpenTurbineMenu(GameObject target)
+    public void OpenTurbineMenu(TurbineController target)
     {
         if (menuActive > -1) return;
 
         menuActive = 3;
-        menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(target.GetComponent<TurbineController>());
+        menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(target);
         menus[3].SetActive(true);
     }
 
