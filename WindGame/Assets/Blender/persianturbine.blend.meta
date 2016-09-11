@@ -10,23 +10,38 @@ ModelImporter:
     100004: TurbineHolder
     100006: axis
     100008: blade
+    100010: Building
+    100012: Cube
+    100014: Cube_001
     400000: //RootNode
     400002: Turbine
     400004: TurbineHolder
     400006: axis
     400008: blade
+    400010: Building
+    400012: Cube
+    400014: Cube_001
     2300000: Turbine
     2300002: TurbineHolder
     2300004: axis
     2300006: blade
+    2300008: Building
+    2300010: Cube
+    2300012: Cube_001
     3300000: Turbine
     3300002: TurbineHolder
     3300004: axis
     3300006: blade
+    3300008: Building
+    3300010: Cube
+    3300012: Cube_001
     4300000: Turbine
     4300002: TurbineHolder
     4300004: axis
     4300006: blade
+    4300008: Cube_001
+    4300010: Cube
+    4300012: Building
     7400000: Default Take
     9500000: //RootNode
   materials:

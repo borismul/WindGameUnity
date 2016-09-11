@@ -11,6 +11,7 @@ GameObject:
   - 33: {fileID: 3315788}
   - 23: {fileID: 2398004}
   - 114: {fileID: 11410176}
+  - 114: {fileID: 114000013330650598}
   m_Layer: 0
   m_Name: NewTreeEmpty
   m_TagString: Untagged
@@ -96,3 +97,16 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151212}
   m_IsPrefabParent: 1
+--- !u!114 &114000013330650598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 893800648c041af49b99249ebaa35097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectHeight: 10
+  objectDensity: 0.2
