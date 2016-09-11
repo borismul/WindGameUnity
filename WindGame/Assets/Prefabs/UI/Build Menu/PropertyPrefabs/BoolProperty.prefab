@@ -260,9 +260,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toggle: {fileID: 114000011916100408}
   nameText: {fileID: 114000013428992028}
-  boolProperty:
-    propertyName: 
-    property: 0
 --- !u!114 &114000014234867286
 MonoBehaviour:
   m_ObjectHideFlags: 1
