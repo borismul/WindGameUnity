@@ -13,6 +13,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public GameObject axis;                                 // Axis where the blades attach to
     public GameObject baseTurbineObject;                    // Turbine object without the base to make it heigher
+    public GameObject turbineHouse;
+    public GameObject turbineBase;
 
     [Header("Area Properties")]
     // Property variables
@@ -90,7 +92,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     TurbineController controller;
 
     float height;                                               // Current height of the turbine
-    GameObject curTurbineBase;                                  // The instantiated base, if there is one
     List<GameObject> currentBlades = new List<GameObject>();    // The instantiated blades, if there is at least one
     GameObject currentWall;                                     // The instantiate wall, if there is one
 
@@ -192,9 +193,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     // Height //
     public void SetUpHeight(float height)
     {
-        if (curTurbineBase != null)
-            Destroy(curTurbineBase);
-
 
         float dh = height - this.height;
         this.height = height;
@@ -202,12 +200,10 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         if (height <= 0)
             return;
 
-        curTurbineBase = (GameObject)Instantiate(turbineBasePrefab, transform.position + Vector3.up * height/2, transform.rotation, transform);
-        curTurbineBase.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up * heightProperty.property;
+        turbineBase.transform.localScale = (Vector3.right + Vector3.up) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.forward * (heightProperty.property + 1);
+        turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up;
         transform.parent.position -= Vector3.up * dh *0.5f;
         transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (areaProperty.property / 2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (areaProperty.property / Mathf.Tan(30 * Mathf.Deg2Rad));
-
-
     }
 
     public int HeightCost(float height)
@@ -228,12 +224,12 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public void ScaleByArea(float area)
     {
-        baseTurbineObject.transform.localScale = Vector3.one *area/unitScaleArea;
-
-        if (curTurbineBase != null)
-            curTurbineBase.transform.localScale = (Vector3.right + Vector3.forward) * area/unitScaleArea * baseStartScale + Vector3.up * heightProperty.property;
+        turbineBase.transform.localScale = (Vector3.right + Vector3.up) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.forward * (heightProperty.property + 1);
 
         transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (area/2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (area / Mathf.Tan(30 * Mathf.Deg2Rad));
+        turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale +Vector3.up;
+        baseTurbineObject.transform.localScale = Vector3.one * areaProperty.property / unitScaleArea * baseStartScale;
+
         GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
     }
 
