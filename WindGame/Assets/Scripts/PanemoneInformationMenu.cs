@@ -70,8 +70,12 @@ public class PanemoneInformationMenu : MonoBehaviour {
         foreach (GameObject obj in globalElements)
             Destroy(obj);
 
+        foreach (GameObject obj in separators)
+            Destroy(obj);
+
         turbineSpecificElements.Clear();
         globalElements.Clear();
+        separators.Clear();
     }
 
     void CreateGlobalInfo()
