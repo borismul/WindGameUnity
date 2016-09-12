@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012027871792}
   m_Layer: 0
-  m_Name: blade
+  m_Name: CurvedBlade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +83,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 785e529c19592134f81621bd14f79982, type: 2}
+  - {fileID: 2100000, guid: 7db490eb10929b54586b7ea221e85c02, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}

@@ -491,7 +491,7 @@ MonoBehaviour:
   wallPlusCurvedMultiplier: 1
   wallMinCurvedMultiplier: 0.8
   wallIsOn: 0
-  wall: {fileID: 1000011848254048, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
+  wall: {fileID: 1000013120947920, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
   curvedPropertyName: Use Curved Blades
   curvedUnit: m
   curvedCost: 500
