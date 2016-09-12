@@ -47,6 +47,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
     void OnDisable()
     {
         DestroyAllElements();
+        OnMouseExit();
     }
 
     // Update is called once per frame
@@ -80,7 +81,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     void CreateGlobalInfo()
     {
-        CreateSeparator("Production Info:");
+        separators.Add(CreateSeparator("Production Info:"));
         GameObject infoElement = CreateProperty("Efficiency", turbine.efficiency.ToString("F2"), "");
         infoElement.transform.GetChild(1).GetComponent<Text>().color = RYGInterpolation(1- turbine.efficiency);
         globalElements.Add(infoElement);
@@ -113,7 +114,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     public void GenerateInfoElements()
     {
-        CreateSeparator("User Variables:");
+        separators.Add(CreateSeparator("User Variables:"));
 
         foreach (FloatProperty prop in turbine.turbineProperties.floatProperty)
         {

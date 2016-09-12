@@ -139,7 +139,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             currentBlades.Clear();
 
             for (int i = 0; i < blades; i++)
-                currentBlades.Add((GameObject)Instantiate(persianBlade, transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
+                currentBlades.Add((GameObject)Instantiate(persianBlade, axis.transform.position, Quaternion.Euler(0, i * (360 / blades), 0), axis.transform));
         }
     }
 
@@ -158,7 +158,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     {
         if (isOn)
         {
-            currentWall = (GameObject)Instantiate(wall, transform.position + Vector3.up *height, Quaternion.Euler(-90, 0, 0), baseTurbineObject.transform);
+            currentWall = (GameObject)Instantiate(wall, baseTurbineObject.transform.position, Quaternion.Euler(0, baseTurbineObject.transform.rotation.eulerAngles.y, 0), baseTurbineObject.transform);
         }
         else
         {
@@ -226,8 +226,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     {
         turbineBase.transform.localScale = (Vector3.right + Vector3.up) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.forward * (heightProperty.property + 1);
 
-        transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (area/2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (area / Mathf.Tan(30 * Mathf.Deg2Rad));
-        turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale +Vector3.up;
+        transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (area/2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (area *baseStartScale / Mathf.Tan(30 * Mathf.Deg2Rad));
+        turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up * baseStartScale;
         baseTurbineObject.transform.localScale = Vector3.one * areaProperty.property / unitScaleArea * baseStartScale;
 
         GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
@@ -254,7 +254,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             currentBlades.Clear();
 
             for (int i = 0; i < blades; i++)
-                currentBlades.Add((GameObject)Instantiate(curvedBladePrefab, transform.position + Vector3.up * height, Quaternion.Euler(-90, i * (360 / blades), 0), axis.transform));
+                currentBlades.Add((GameObject)Instantiate(curvedBladePrefab, axis.transform.position, Quaternion.Euler(0, i * (360 / blades), 0), axis.transform));
         }
 
     }

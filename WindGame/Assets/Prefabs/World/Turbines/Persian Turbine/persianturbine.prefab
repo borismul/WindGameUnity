@@ -194,8 +194,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011966378136}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -4.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_Children: []
@@ -208,7 +208,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012505210070}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.04, z: 0}
+  m_LocalPosition: {x: 0, y: 0.024, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -222,7 +222,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013803109158}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.030000042, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -452,15 +452,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {fileID: 1000013803109158}
-  baseTurbineObject: {fileID: 1000012505210070}
+  baseTurbineObject: {fileID: 1000011497124286}
   turbineHouse: {fileID: 1000011593488806}
   turbineBase: {fileID: 1000012976430290}
   areaPropertyName: Frontal Area
   areaUnit: m^2
   areaStartValue: 10
   areaMinValue: 5
-  areaMaxValue: 50
-  areaOptimalValue: 50
+  areaMaxValue: 25
+  areaOptimalValue: 25
   areaSpread: 35
   areaCostMultiplier: 5
   unitScaleArea: 7.5
@@ -471,7 +471,7 @@ MonoBehaviour:
   heightMaxValue: 50
   heightCostMultiplier: 3
   heightOptimalValue: 50
-  heightSpread: 20
+  heightSpread: 1000000
   baseStartScale: 1
   turbineBasePrefab: {fileID: 1000012828979096, guid: b040fb47daf574943910023a0edd4460,
     type: 2}
@@ -483,7 +483,7 @@ MonoBehaviour:
   costPerBlade: 20
   bladesOptimalValue: 7
   bladesSpread: 8
-  persianBlade: {fileID: 1000010087480280, guid: 1e982e288293a7f4789eff61058f9e59,
+  persianBlade: {fileID: 1000014047877730, guid: 1e982e288293a7f4789eff61058f9e59,
     type: 2}
   wallPropertyName: Use A Wall
   wallUnit: 
@@ -498,7 +498,7 @@ MonoBehaviour:
   curvedMinWallMultiplier: 0.6
   noCurvedNoWallMultiplier: 0
   curvedIsOn: 0
-  curvedBladePrefab: {fileID: 1000010087480280, guid: 408ade6e3adbfa14faeede720b1338cb,
+  curvedBladePrefab: {fileID: 1000014047877730, guid: 5817b2227e06e944690fa65319bb24d0,
     type: 2}
 --- !u!114 &114000012748795752
 MonoBehaviour:
