@@ -199,6 +199,7 @@ public class TerrainController : MonoBehaviour {
     // Create chunks by instantiating the prefabs at the desired locations
     IEnumerator BuildTerrain()
     {
+        float timeNow = Time.realtimeSinceStartup;
         // Loop thourgh all chunks
         for (int i = 0; i < length / chunkSize; i++)
         {
@@ -207,7 +208,12 @@ public class TerrainController : MonoBehaviour {
                 // Instantiate one at the right position
                 GameObject chunk = (GameObject)Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
                 chunk.transform.parent = this.transform;
-                yield return null;
+
+                if (Time.realtimeSinceStartup - timeNow > 1f / 5)
+                {
+                    yield return null;
+                    timeNow = Time.realtimeSinceStartup;
+                }
             }
         }
 

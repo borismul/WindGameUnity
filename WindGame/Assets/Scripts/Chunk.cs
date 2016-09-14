@@ -21,7 +21,9 @@ public class Chunk : MonoBehaviour {
 
     // Chunk Details
     GameObject chunkPrefab;
+    [HideInInspector]
     int chunkSize;
+    [HideInInspector]
     int tileSize;
 
     // List of 3D, 2D offsets that is used to calculate noise at different x,y,z and x,y
@@ -56,7 +58,7 @@ public class Chunk : MonoBehaviour {
         {
             GenerateTerrain();
         }
-        GenerateTerrainMesh();
+        GenerateTerrainMesh(false);
     }
 
     // Initialization of important attributes
@@ -177,7 +179,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Generate the mesh of this chunk
-    public void GenerateTerrainMesh()
+    public void GenerateTerrainMesh(bool update)
     {
         // Clear all lists of vertices, triangles, normals and uvs
         vert.Clear();
@@ -192,7 +194,7 @@ public class Chunk : MonoBehaviour {
         AddVertsAndUVAndNorm(n);
 
         // calculate the triangles and grid tiles
-        AddTrisAndGridTiles(n);
+        AddTrisAndGridTiles(n, update);
         
         // Set the mesh the the MeshFilter of this GameOject
         SetMesh();
@@ -219,7 +221,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Calculate triangles and Generate Grid tiles
-    void AddTrisAndGridTiles(int n)
+    void AddTrisAndGridTiles(int n, bool update)
     {
         // Loop through each of the vertics in the vert list
         for (int i = 0; i < vert.Count - (n - 3 + n - 2); i++)
@@ -259,8 +261,9 @@ public class Chunk : MonoBehaviour {
             positions.Add(vert[UR]);
             positions.Add(vert[BR]);
 
-            // Generate the grid tile
-            GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
+            if(!update)
+                // Generate the grid tile
+                GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
         }
     }
 
@@ -334,4 +337,103 @@ public class Chunk : MonoBehaviour {
         return uv;
     }
 
+    // Finds index of a vertex in the map 2d array, also gives the indices of the vertices that are only used for normal calculation if the vertex is on a boundary of a chunk
+    public static List<int[]> FindClosestVertices(Vector3 pos, Chunk chunk)
+    {
+        List<int[]> vertices = new List<int[]>();
+        TerrainController terrain = TerrainController.thisTerrainController;
+
+        Vector3 localPos = pos - chunk.transform.position;
+
+        float posX = localPos.x / terrain.chunkSize * ((terrain.chunkSize / terrain.tileSize)) + 1;
+        float posZ = localPos.z / terrain.chunkSize * ((terrain.chunkSize / terrain.tileSize)) + 1;
+
+        int vertX = Mathf.RoundToInt(posX);
+        int vertZ = Mathf.RoundToInt(posZ);
+
+        //print(vertX + "  " + vertZ);
+        vertices.Add(new int[2] { vertX, vertZ });
+
+        if(vertX == 1)
+            vertices.Add(new int[2] { 0, vertZ });
+
+        if(vertZ == 1)
+            vertices.Add(new int[2] { vertX, 0 });
+
+        if (vertX == 1 && vertZ == 1)
+            vertices.Add(new int[2] { 0, 0 });
+
+        if (vertX == chunk.map.GetLength(0) - 2)
+            vertices.Add(new int[2] { chunk.map.GetLength(0) -1 , vertZ });
+
+        if (vertZ == chunk.map.GetLength(1) - 2)
+            vertices.Add(new int[2] { vertX, chunk.map.GetLength(1) -1 });
+
+        if (vertX == chunk.map.GetLength(0) - 2 && vertZ == chunk.map.GetLength(1) - 2)
+            vertices.Add(new int[2] { chunk.map.GetLength(0) -1, chunk.map.GetLength(1) -1});
+
+        if (vertX == 1 && vertZ == chunk.map.GetLength(1) - 2)
+            vertices.Add(new int[2] { 0, chunk.map.GetLength(1) - 1 });
+
+        if (vertX == chunk.map.GetLength(0) - 2 && vertZ == 1)
+            vertices.Add(new int[2] { chunk.map.GetLength(0) - 1, 0 });
+
+
+        return vertices;
+    }
+    
+    // Finds the chunk where a vertex is on
+    public static Chunk[] FindChunksWithVertex(Vector3 vertex)
+    {
+        TerrainController terrain = TerrainController.thisTerrainController;
+
+        List<Chunk> chunks = new List<Chunk>();
+
+        float posX = vertex.x / terrain.chunkSize;
+        float posZ = vertex.z / terrain.chunkSize;
+
+        int chunkX = Mathf.FloorToInt(posX);
+        int chunkZ = Mathf.FloorToInt(posZ);
+
+        int chunksInRow = terrain.length / terrain.chunkSize;
+        int index = chunkZ + chunkX * chunksInRow;
+        chunks.Add(terrain.chunks[index]);
+
+        float tileNormalizedLength = terrain.tileSize * 1.1f / terrain.chunkSize;
+        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) <= tileNormalizedLength)
+        { 
+            chunks.Add(terrain.chunks[index - chunksInRow]);
+        }
+        if (Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index - 1]);
+        }
+        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index - 1 - chunksInRow]);
+        }
+        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1 )) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index + chunksInRow]);
+        }
+        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1) ) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index + 1]);
+        }
+        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1) ) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index + 1 + chunksInRow]);
+        }
+        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1)) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index + 1 - chunksInRow]);
+        }
+        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        {
+            chunks.Add(terrain.chunks[index - 1 + chunksInRow]);
+        }
+
+        return chunks.ToArray();
+
+    }
 }

@@ -53,9 +53,9 @@ public class CameraController : MonoBehaviour
     bool middleMouse;
     bool overRuleCam;
     bool setStartPos;
-    bool hasStarted;
+    public bool hasStarted;
     //[HideInInspector]
-    bool haveControl;
+    public bool haveControl;
 
     TerrainController terrain;
     float camScrollLerpSet;
