@@ -80,10 +80,44 @@ public class WorldController : MonoBehaviour
         t.transform.rotation = rotation;
         t.transform.SetParent(parent);
         TurbineController controller = t.GetComponent<TurbineController>();
-        AddToGridTiles(t, pos, (controller.diameter * scale)/2, type);
-
+        AddToGridTiles(t, pos, (controller.diameter * scale)  * 1.4f, type);
+        EqualTerrain(pos, (controller.diameter * scale) * 1.1f );
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 
+    }
+
+    void EqualTerrain(Vector3 pos, float circleRadius)
+    {
+        GridTile middleTile = GridTile.FindClosestGridTile(pos);
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
+
+        List<Chunk> updateChunks = new List<Chunk>();       
+        foreach(GridTile tile in gridtiles)
+        {
+            for(int i = 2; i<tile.vert.Count; i++)
+            {
+                Vector3 vertex = tile.vert[i];
+                Chunk[] chunks = Chunk.FindChunksWithVertex(vertex);
+
+                foreach (Chunk chunk in chunks)
+                {
+                    List<int[]> vertexIndices = Chunk.FindClosestVertices(vertex, chunk);
+
+                    foreach (int[] index in vertexIndices)
+                    {
+                        Vector3 newPos = new Vector3(chunk.map[index[0], index[1]].x, middleTile.position.y, chunk.map[index[0], index[1]].z);
+                        chunk.map[index[0], index[1]] = newPos;
+                    }
+
+                    if (!updateChunks.Contains(chunk))
+                        updateChunks.Add(chunk);
+                }
+            }
+        }
+
+        foreach (Chunk chunk in updateChunks)
+            chunk.GenerateTerrainMesh(true);
+
     }
 
     public void RemoveTurbine(TurbineController turbineController)
@@ -127,7 +161,9 @@ public class WorldController : MonoBehaviour
         foreach (GridTile tile in gridtiles)
         {
             if (tile.type == GridTileOccupant.OccupantType.TerrainGenerated)
+            {
                 TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
+            }
 
             tile.occupant = new GridTileOccupant(something);
             tile.type = type;
