@@ -46,7 +46,7 @@ public class WindController : MonoBehaviour {
 
     //Uses the windgradient formula to calculate the wind speed at different heights using the hellman exponent
     //Formula found on the wind gradient wikipedia page
-    public static float GetWindAtTile(GridTile tile)
+    public static float GetWindAtTile(GridTile tile, float height)
     {
         //Calculates the base magnitude depending on the season
         float baseWind = magnitude * seasonvalues[seasons[GameResources.getDate().Month - 1]];
@@ -83,7 +83,7 @@ public class WindController : MonoBehaviour {
                     if (terrainObj != null)
                     {
                         WindEffectController controller = nearTiles[i].occupant.obj.GetComponent<WindEffectController>();
-                        if(deltaHeight + controller.objectHeight > turbineHeight) blockedTile += controller.objectDensity;
+                        if(deltaHeight + controller.objectHeight > height) blockedTile += controller.objectDensity;
                         testDirection++;
                     }
                 }
@@ -95,6 +95,11 @@ public class WindController : MonoBehaviour {
         //print("Coefficient of blocked wind: " + blockedWind);
         blockedWind = Mathf.Min(blockedWind, 0.9f);
 
-        return Mathf.Max(baseWind * (1 - blockedWind), 0);
+        return 1f - blockedWind;
+    }
+
+    public static float getMaximumWind()
+    {
+        return magnitude;
     }
 }

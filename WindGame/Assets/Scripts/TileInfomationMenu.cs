@@ -55,7 +55,6 @@ public class TileInfomationMenu : MonoBehaviour {
             }
         }
         position.text = tile.position.ToString("F0");
-        WindController.GetWindAtTile(tile);
     }
 
     public void clearTile()
