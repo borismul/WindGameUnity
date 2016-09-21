@@ -14,6 +14,8 @@ using System;
 
 public class GameResources : MonoBehaviour
 {
+    public static int currentMission = 1;
+
 	const float startingWealth = 500000;
 	const float initialAcceptance = 50;
 	const float nuisanceModifier = 0.5f;
@@ -25,6 +27,7 @@ public class GameResources : MonoBehaviour
 	static DateTime date;
     static float gameSpeed;
     static bool paused;
+    static string objectiveText;
 
 	static float costOfElectricity = 0.002f;
 
@@ -165,5 +168,15 @@ public class GameResources : MonoBehaviour
     public static bool isPaused()
     {
         return paused;
+    }
+
+    public static void setObjectiveText(string text)
+    {
+        objectiveText = text;
+    }
+
+    public static string getObjectiveText()
+    {
+        return objectiveText;
     }
 }
