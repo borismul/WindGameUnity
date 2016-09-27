@@ -37,8 +37,8 @@ public class WaterChunk : MonoBehaviour {
         if (Vector3.Magnitude(transform.position - terrain.middlePoint) > terrain.length)
             return;
 
-        UpdateWater();
-        CreateMesh();
+        //UpdateWater();
+        //CreateMesh();
     }
 
     void Initialize()
@@ -64,7 +64,7 @@ public class WaterChunk : MonoBehaviour {
 
     void CreateWater()
     {
-        for (int i = 0; i< size / tileSize + 3; i++)
+        for (int i = 0; i < size / tileSize + 3; i++)
         {
             for (int j = 0; j < size / tileSize + 3; j++)
             {
@@ -154,14 +154,14 @@ public class WaterChunk : MonoBehaviour {
     {
         vert.Clear();
         tri.Clear();
-        for (int i = 1; i<map.GetLength(0) - 1; i++)
+        for (int i = 1; i < map.GetLength(0) - 1; i++)
         {
             for (int j = 1; j < map.GetLength(1) - 1; j++)
             {
                 Vector3 vertex = map[i, j];
                 float diff;
 
-                diff = Noise.PerlinNoise(new Vector2(vertex.x, vertex.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * ((Time.timeSinceLevelLoad * 100)+10000000), octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
+                diff = Noise.PerlinNoise(new Vector2(vertex.x, vertex.z) + new Vector2(transform.position.x, transform.position.z), Vector2.up * ((Time.timeSinceLevelLoad * 100) + 10000000), octaves, persistance, frequency, -maxWaveHeight, maxWaveHeight);
 
                 map[i, j] = (new Vector3(vertex.x, level + diff, vertex.z));
 

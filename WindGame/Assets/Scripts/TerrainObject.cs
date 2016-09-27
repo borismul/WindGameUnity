@@ -18,6 +18,8 @@ public class TerrainObject : MonoBehaviour {
 
     List<CombineInstance> instances = new List<CombineInstance>();
 
+    List<Mesh[]> removeList = new List<Mesh[]>();
+
     // Use this for initialization
     void Awake ()
     {
@@ -30,6 +32,11 @@ public class TerrainObject : MonoBehaviour {
             instances.Add(new CombineInstance());
         }
 	}
+
+    void Start()
+    {
+        StartCoroutine("RemoveObject");
+    }
 	
     public void Reload()
     {
@@ -77,13 +84,18 @@ public class TerrainObject : MonoBehaviour {
 
     public void RemoveMesh(Mesh[] mesh)
     {
+        removeList.Add(mesh);
+    }
+
+    void RemoveMeshCompletely(Mesh[] mesh)
+    {
         Mesh[] subMeshes = nonCombinedMesh.ToArray();
         CombineInstance[] combiner = new CombineInstance[subMeshes.Length];
         for (int k = 0; k < subMeshes.Length; k++)
         {
             // Vertices
             List<Vector3> currentVertices = subMeshes[k].vertices.ToList();
-            List<Vector3> verticesToRemove = mesh[k].vertices.ToList<Vector3>();
+            List<Vector3> verticesToRemove = mesh[k].vertices.ToList();
 
             Vector3 firstVert = mesh[k].vertices[0];
 
@@ -135,7 +147,53 @@ public class TerrainObject : MonoBehaviour {
         result.CombineMeshes(combiner, false);
         Destroy(GetComponent<MeshFilter>().mesh);
         GetComponent<MeshFilter>().mesh = result;
+        GetComponent<MeshFilter>().mesh.RecalculateNormals();
     }
 
+    void MoveMesh(Mesh[] mesh)
+    {
+        Mesh[] subMeshes = nonCombinedMesh.ToArray();
+        CombineInstance[] combiner = new CombineInstance[subMeshes.Length];
+        for (int k = 0; k < subMeshes.Length; k++)
+        {
+            // Vertices
+            List<Vector3> currentVertices = GetComponent<MeshFilter>().mesh.vertices.ToList();
+            List<Vector3> verticesToRemove = mesh[k].vertices.ToList();
+
+            Vector3 firstVert = mesh[k].vertices[0];
+
+            int minVertPos = 0;
+
+            for (int i = 0; i < currentVertices.Count; i++)
+            {
+                if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
+                {
+                    minVertPos = i;
+                    break;
+                }
+            }
+            
+            for (int i = 0; i<verticesToRemove.Count; i++)
+            {
+                currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
+            }
+
+            GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
+        }
+    }
+
+    public IEnumerator RemoveObject()
+    {
+        while (true)
+        {
+            if(removeList.Count != 0)
+            {
+                MoveMesh(removeList[0]);
+                removeList.RemoveAt(0);
+            }
+
+            yield return null;
+        }
+    }
     
 }

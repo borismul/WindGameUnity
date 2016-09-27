@@ -208,13 +208,10 @@ public class TerrainController : MonoBehaviour {
                 // Instantiate one at the right position
                 GameObject chunk = (GameObject)Instantiate(chunkPrefab, new Vector3(i * chunkSize, 0, j * chunkSize), Quaternion.identity);
                 chunk.transform.parent = this.transform;
-
-                if (Time.realtimeSinceStartup - timeNow > 1f / 5)
-                {
-                    yield return null;
-                    timeNow = Time.realtimeSinceStartup;
-                }
+                timeNow = Time.realtimeSinceStartup;
             }
+            yield return null;
+
         }
 
         yield return null;
@@ -350,6 +347,8 @@ public class TerrainController : MonoBehaviour {
         levelLoaded = true;
 
         UIScript.GetInstance().DisableLoadingScreen();
+
+        WorldController.SetBorders(new Vector3(2000, 0, 2000), 60, 60);
     }
 
     // Method that generates an object on the terrain based on the inputs
@@ -540,7 +539,7 @@ public class TerrainController : MonoBehaviour {
             // also calculate the normals bounds and optimize it
             newMesh.RecalculateNormals();
             newMesh.RecalculateBounds();
-            newMesh.Optimize();
+            ;
 
             // add it to the list of submeshes
             allMeshes[i] = newMesh;
@@ -562,7 +561,7 @@ public class TerrainController : MonoBehaviour {
             // Get the submeshes that should be in this particular terrain object from the biomemeshes
             Mesh[] objMeshes = thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
 
-            // create a array of meshes that should be removed
+            // create an array of meshes that should be removed
             Mesh[] removeMesh = new Mesh[objMeshes.Length];
 
             // for each of these meshes
@@ -575,21 +574,9 @@ public class TerrainController : MonoBehaviour {
             // remove the meshes
             terrainObj.RemoveMesh(removeMesh);
 
-            // recalculate the normals of the mesh
-            terrainObj.GetComponent<MeshFilter>().mesh.RecalculateNormals();
-
             // set the tile occupant to null
             tile.occupant = null;
             tile.type = 0;
-            
-            // for each of the mesh copies that have been created destory it so it will not fill op the ram memory
-            if (removeMesh != null)
-            {
-                foreach (Mesh destroyMesh in removeMesh)
-                {
-                    Destroy(destroyMesh);
-                }
-            }
         }
     }
 

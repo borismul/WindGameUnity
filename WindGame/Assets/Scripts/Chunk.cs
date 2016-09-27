@@ -33,9 +33,9 @@ public class Chunk : MonoBehaviour {
     int nOffset = 3;
 
     // Lists of vertices, triangles and uvs for the mesh of the chunk
-    List<Vector3> vert = new List<Vector3>();
+    public List<Vector3> vert = new List<Vector3>();
     List<int> tri = new List<int>();
-    List<Vector2> uv = new List<Vector2>();
+    public List<Vector2> uv = new List<Vector2>();
     List<Vector3> norm = new List<Vector3>();
 
     // Ammount of textures in a line on the chunk texture
@@ -150,7 +150,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Function generates a grid tile in the world 2d Array in TerrainController
-    void GenerateGridTile(List<Vector3> positions, int biome, int iPos, int jPos)
+    void GenerateGridTile(List<Vector3> positions, List<int> vertIndex, int biome, int iPos, int jPos)
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
@@ -173,7 +173,7 @@ public class Chunk : MonoBehaviour {
         Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
 
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
-        GridTile tile = new GridTile(position + transform.position, worldPositions, biome, isUnderWater, 0, null);
+        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, 0, null);
 
         terrain.world[startI + iPos, startK + jPos] = tile;
     }
@@ -184,14 +184,15 @@ public class Chunk : MonoBehaviour {
         // Clear all lists of vertices, triangles, normals and uvs
         vert.Clear();
         tri.Clear();
-        uv.Clear();
+        if(!update)
+            uv.Clear();
         norm.Clear();
 
         // Determine dimension of map.
         int n = map.GetLength(0);
 
         // Calculate vertices uvs and normals and add them to the lists
-        AddVertsAndUVAndNorm(n);
+        AddVertsAndUVAndNorm(n, update);
 
         // calculate the triangles and grid tiles
         AddTrisAndGridTiles(n, update);
@@ -201,7 +202,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Calculate vertices, uvs and normal and add them to their corresponding lists
-    void AddVertsAndUVAndNorm(int n)
+    void AddVertsAndUVAndNorm(int n, bool update)
     {
         // Loop through each of the vertices in map except for first and last one. (Those are the overlapping vertices with the chunk next to it)
         for (int i = 1; i < n - 1; i++)
@@ -211,8 +212,11 @@ public class Chunk : MonoBehaviour {
                 // Add this vertex to the vert list
                 vert.Add(map[i, j]);
 
-                // Determine the uv of the vertex, depending on the biome
-                uv.Add(DetermineUV(biomeMap[i, j]));
+                if (!update)
+                {
+                    // Determine the uv of the vertex, depending on the biome
+                    uv.Add(DetermineUV(biomeMap[i, j]));
+                }
 
                 // Add the normal of the vertex. (Takes into account the overlapping vertices)
                 AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
@@ -256,14 +260,21 @@ public class Chunk : MonoBehaviour {
 
             // Make a list of positions of vertices of which the gridTile consists
             List<Vector3> positions = new List<Vector3>();
+            List<int> vertIndex = new List<int>();
+
             positions.Add(vert[BL]);
             positions.Add(vert[UL]);
             positions.Add(vert[UR]);
             positions.Add(vert[BR]);
 
-            if(!update)
+            vertIndex.Add(BL);
+            vertIndex.Add(UL);
+            vertIndex.Add(UR);
+            vertIndex.Add(BR);
+
+            if (!update)
                 // Generate the grid tile
-                GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
+                GenerateGridTile(positions, vertIndex, biomeMap[rowL, col], rowL, col);
         }
     }
 
@@ -303,10 +314,12 @@ public class Chunk : MonoBehaviour {
     }
 
     // Generate the mesh based on vertices, triangles, uvs, and normals
-    void SetMesh()
+    public void SetMesh()
     {
-        if(mesh == null)
+        if (mesh == null)
             mesh = new Mesh();
+        else
+            mesh.Clear();
         
         // Set mesh
         mesh.vertices = vert.ToArray();
@@ -328,11 +341,10 @@ public class Chunk : MonoBehaviour {
         Vector2 uv;
 
         // Determine the row and collum in which the texture is situated
-        int row = (biome / texturesPerLine);
-        int col = biome - row * texturesPerLine;
+        int col = biome;
 
         // Set the middle point of the texture to the vertex
-        uv = new Vector2((float)col / texturesPerLine + 1f/(texturesPerLine)/2f, (float)row / texturesPerLine + 1f / (texturesPerLine) / 2f);
+        uv = new Vector2((float)col / texturesPerLine + 1f/(texturesPerLine)/2f, 3f/8f);
 
         return uv;
     }

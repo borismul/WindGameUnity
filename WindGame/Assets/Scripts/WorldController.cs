@@ -72,7 +72,6 @@ public class WorldController : MonoBehaviour
         return instance;
     }
 
-
     // Builder function, some class wants the world to add an object
     public void AddTurbine(GameObject t, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
@@ -86,15 +85,17 @@ public class WorldController : MonoBehaviour
         turbManager.AddTurbine(t); 
     }
 
+    // Set the terrain height around a position to the tile closest to the entered position
     void EqualTerrain(Vector3 pos, float circleRadius)
     {
         GridTile middleTile = GridTile.FindClosestGridTile(pos);
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
 
-        List<Chunk> updateChunks = new List<Chunk>();       
+        List<Chunk> updateChunks = new List<Chunk>();
+                      
         foreach(GridTile tile in gridtiles)
         {
-            for(int i = 2; i<tile.vert.Count; i++)
+            for (int i = 2; i < tile.vert.Count; i++)
             {
                 Vector3 vertex = tile.vert[i];
                 Chunk[] chunks = Chunk.FindChunksWithVertex(vertex);
@@ -131,10 +132,12 @@ public class WorldController : MonoBehaviour
         GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
         t.transform.localScale = Vector3.one * scale;
 
+        EqualTerrain(pos, 30);
+
         AddToGridTiles(something, pos, size / 2, type);
     }
 
-    // Function that determines if a tile has a object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
+    // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
     public bool CanBuild(Vector3 pos, float size, bool neglectTerrainObjects)
     {
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size/2);
@@ -179,5 +182,22 @@ public class WorldController : MonoBehaviour
             tile.occupant = null;
             tile.type = GridTileOccupant.OccupantType.Empty;
         }
+    }
+    
+    public static void SetBorders(Vector3 mapMiddle, int width, int length)
+    {
+        foreach (Chunk chunk in TerrainController.thisTerrainController.chunks)
+        {
+            for (int i = 0; i < chunk.vert.Count; i++)
+            {
+                if (Vector3.Distance(chunk.vert[i] + chunk.transform.position, mapMiddle) > width * TerrainController.thisTerrainController.tileSize)
+                    chunk.uv[i] = new Vector2(chunk.uv[i].x, 3f / 8f);
+                else
+                    chunk.uv[i] = new Vector2(chunk.uv[i].x, 1f / 8f);
+            }
+
+            chunk.SetMesh();
+        }
+
     }
 }

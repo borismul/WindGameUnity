@@ -165,4 +165,4 @@ QualitySettings:
   m_PerPlatformDefaultQuality:
     Standalone: 5
     Web: 5
-    WebGL: 3
+    WebGL: 0

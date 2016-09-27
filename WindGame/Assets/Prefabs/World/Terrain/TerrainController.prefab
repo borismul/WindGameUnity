@@ -85,8 +85,8 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   seed: 1885953640
-  isIsland: 0
-  radius: 750
+  isIsland: 1
+  radius: 700
   baseHeight: 50
   islandSteepness: 0
   terrainOctaves: 5
@@ -96,8 +96,8 @@ MonoBehaviour:
   biomePersistance: 0.5
   biomeFrequency: 0.0003
   chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
-  chunkSize: 1000
-  tileSize: 20
+  chunkSize: 200
+  tileSize: 10
   tileSlope: 2
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
