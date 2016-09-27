@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject UIManagerPrefab;
     public GameObject mission1ManagerPrefab;
+    public GameObject mission2ManagerPrefab;
     public GameObject mainCameraPrefab;
 
     private static GameManager instance;
@@ -32,10 +33,22 @@ public class GameManager : MonoBehaviour {
     {
         GameObject obj = Instantiate(UIManagerPrefab);
         obj.transform.SetParent(transform);
-        obj = Instantiate(mission1ManagerPrefab);
-        obj.transform.SetParent(transform);
+
+        if (GameResources.currentMission == 1)
+        {
+            obj = Instantiate(mission1ManagerPrefab);
+            obj.transform.SetParent(transform);
+        }
+        else
+        {
+            obj = Instantiate(mission2ManagerPrefab);
+            obj.transform.SetParent(transform);
+        }
+
         obj = Instantiate(mainCameraPrefab);
         obj.transform.SetParent(transform);
+
+        
     }
 
     // Get the singleton instance

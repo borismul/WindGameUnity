@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class UIScript : MonoBehaviour {
@@ -205,6 +206,17 @@ public class UIScript : MonoBehaviour {
     public bool GetInBuildMode()
     {
         return inBuildMode;
+    }
+
+    public void GameWon()
+    {
+        GameResources.currentMission++;
+        SceneManager.LoadScene("Mission1");
+    }
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene("Mission1");
     }
 
 }

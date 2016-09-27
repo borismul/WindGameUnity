@@ -18,20 +18,8 @@ public class UIMainMenuManager : MonoBehaviour {
 	
 	void Update () {
         Mission1Controller missionController = Mission1Controller.GetInstance();
-        string result = "";
-        for (int i = 0; i < missionController.objectives.Length; i++)
-        {
-            if (missionController.objectivesCompleted[i])
-            {
-                result += "<color=green> ";
-            }
-            else
-            {
-                result += "<color=red> ";
-            }
-            result += missionController.objectives[i] + "</color> \n";
-        }
-        objectivesValue.text = result;
+        objectivesValue.text = GameResources.getObjectiveText();
+
     }
 
     void Exit()
