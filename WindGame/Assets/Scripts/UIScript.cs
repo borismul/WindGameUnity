@@ -210,13 +210,14 @@ public class UIScript : MonoBehaviour {
 
     public void GameWon()
     {
-        GameResources.currentMission++;
-        SceneManager.LoadScene("Mission1");
+        menuButtonPress();
+        menus[0].SetActive(false);
+        menus[1].GetComponent<UIMainMenuManager>().GameWon();
     }
 
     public void GameOver()
     {
-        SceneManager.LoadScene("Mission1");
+        menus[1].GetComponent<UIMainMenuManager>().GameOver();
     }
 
 }

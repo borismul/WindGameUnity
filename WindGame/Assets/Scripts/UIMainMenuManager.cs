@@ -8,23 +8,19 @@ public class UIMainMenuManager : MonoBehaviour {
 
     public Button restartButton;
 
-    public Button exitButton;
+    public GameObject nextMissionButton;
 
     public Text menuText;
     
     void Start () {
         restartButton.onClick.AddListener(RestartMission);
+        nextMissionButton.GetComponent<Button>().onClick.AddListener(NextMission);
+        restartButton.onClick.AddListener(MainMenu);
+        nextMissionButton.SetActive(false);
     }
 	
 	void Update () {
-        Mission1Controller missionController = Mission1Controller.GetInstance();
         objectivesValue.text = GameResources.getObjectiveText();
-
-    }
-
-    void Exit()
-    {
-        Application.Quit();
     }
 
     void RestartMission()
@@ -32,10 +28,27 @@ public class UIMainMenuManager : MonoBehaviour {
         TerrainController.thisTerrainController.DestroyAll();
         SceneManager.LoadScene("Mission1");
     }
+
+    void NextMission()
+    {
+        GameResources.currentMission++;
+        SceneManager.LoadScene("Mission1");
+    }
     
     void MainMenu()
     {
         TerrainController.thisTerrainController.DestroyAll();
         SceneManager.LoadScene("Main Menu");
+    }
+
+    public void GameOver()
+    {
+        menuText.text = "Game Over";
+    }
+
+    public void GameWon()
+    {
+        menuText.text = "Mission Succes";
+        nextMissionButton.SetActive(true);
     }
 }

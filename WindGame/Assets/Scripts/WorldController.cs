@@ -30,7 +30,13 @@ public class WorldController : MonoBehaviour
 
     void Start()
     {
-
+        if(GameResources.currentMission == 1)
+        {
+            transform.GetComponentInChildren<TerrainController>().seed = 1885953640;
+        } else if(GameResources.currentMission == 2)
+        {
+            transform.GetComponentInChildren<TerrainController>().seed = 1123992140;
+        }
     }
 
 
