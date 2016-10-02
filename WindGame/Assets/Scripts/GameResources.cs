@@ -15,6 +15,7 @@ using System;
 public class GameResources : MonoBehaviour
 {
     public static int currentMission = 1;
+    public static float finalScore = 0;
 
 	const float startingWealth = 500000;
 	const float initialAcceptance = 50;

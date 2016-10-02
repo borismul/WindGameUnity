@@ -174,7 +174,29 @@ public class Mission2Controller : MonoBehaviour
         if (!gameFinished)
         {
             gameFinished = true;
+            GameResources.finalScore = calculateFinalScore();
             UIScript.GetInstance().GameWon();
         }
+    }
+
+    float calculateFinalScore()
+    {
+        float result;
+        result = (float)(objDate.Subtract(GameResources.getDate()).TotalHours) / 1000;
+        //print("Score for time: " + (float)(objDate.Subtract(GameResources.getDate()).TotalHours) / 1000);
+
+        foreach (Transform child in TurbineManager.GetInstance().transform)
+        {
+            result += child.gameObject.GetComponent<TurbineController>().efficiency * 50;
+            //print("Score for turbine: " + child.gameObject.GetComponent<TurbineController>().efficiency * 50);
+        }
+
+        //print("Score for Public Acceptance: " + GameResources.getPublicAcceptance());
+        result += GameResources.getPublicAcceptance();
+
+        //print("Score for money: " + GameResources.getWealth() / 100);
+        result += GameResources.getWealth() / 100;
+
+        return result;
     }
 }

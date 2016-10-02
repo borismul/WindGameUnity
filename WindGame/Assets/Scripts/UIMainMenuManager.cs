@@ -20,7 +20,13 @@ public class UIMainMenuManager : MonoBehaviour {
     }
 	
 	void Update () {
-        objectivesValue.text = GameResources.getObjectiveText();
+        //objectivesValue.text = GameResources.getObjectiveText();
+        string objText = GameResources.getObjectiveText();
+        if(GameResources.finalScore != 0)
+        {
+            objText += "\n Your final score was: " + GameResources.finalScore.ToString("0");
+        }
+        objectivesValue.text = objText;
     }
 
     void RestartMission()
