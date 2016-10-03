@@ -95,7 +95,7 @@ public class WorldController : MonoBehaviour
                       
         foreach(GridTile tile in gridtiles)
         {
-            for (int i = 2; i < tile.vert.Count; i++)
+            for (int i = 0; i < tile.vert.Count; i++)
             {
                 Vector3 vertex = tile.vert[i];
                 Chunk[] chunks = Chunk.FindChunksWithVertex(vertex);
@@ -108,6 +108,7 @@ public class WorldController : MonoBehaviour
                     {
                         Vector3 newPos = new Vector3(chunk.map[index[0], index[1]].x, middleTile.position.y, chunk.map[index[0], index[1]].z);
                         chunk.map[index[0], index[1]] = newPos;
+
                     }
 
                     if (!updateChunks.Contains(chunk))
@@ -190,7 +191,8 @@ public class WorldController : MonoBehaviour
         {
             for (int i = 0; i < chunk.vert.Count; i++)
             {
-                if (Vector3.Distance(chunk.vert[i] + chunk.transform.position, mapMiddle) > width * TerrainController.thisTerrainController.tileSize)
+                if (Mathf.Abs(chunk.vert[i].x + chunk.transform.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
+                    Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.x) > length * TerrainController.thisTerrainController.tileSize)
                     chunk.uv[i] = new Vector2(chunk.uv[i].x, 3f / 8f);
                 else
                     chunk.uv[i] = new Vector2(chunk.uv[i].x, 1f / 8f);

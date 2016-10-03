@@ -348,7 +348,7 @@ public class TerrainController : MonoBehaviour {
 
         UIScript.GetInstance().DisableLoadingScreen();
 
-        WorldController.SetBorders(new Vector3(2000, 0, 2000), 60, 60);
+        WorldController.SetBorders(new Vector3(2000, 0, 2000), 30, 30);
     }
 
     // Method that generates an object on the terrain based on the inputs

@@ -32,8 +32,8 @@ public class GridTile{
         GridTile[,] world = TerrainController.thisTerrainController.world;
         int tileSize = TerrainController.thisTerrainController.tileSize;
 
-        int x = Mathf.FloorToInt((point.x) / tileSize);
-        int z = Mathf.FloorToInt((point.z) / tileSize);
+        int x = Mathf.FloorToInt((point.x +tileSize/2) / tileSize);
+        int z = Mathf.FloorToInt((point.z + tileSize / 2) / tileSize);
 
         if (x >= world.GetLength(0) || x < 0)
             return null;

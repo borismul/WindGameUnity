@@ -160,7 +160,7 @@ public class Chunk : MonoBehaviour {
         float zAvg = 0;
 
         List<Vector3> worldPositions = new List<Vector3>();
-        for (int i = 0; i< positions.Count; i++)
+        for (int i = 0; i < positions.Count; i++)
         {
             xAvg += positions[i].x;
             yAvg += positions[i].y;
@@ -169,9 +169,9 @@ public class Chunk : MonoBehaviour {
             worldPositions.Add(positions[i] + transform.position);
         }
 
-       
-        Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
 
+        //Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
+        Vector3 position = positions[0];
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
         GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, 0, null);
 
@@ -215,7 +215,7 @@ public class Chunk : MonoBehaviour {
                 if (!update)
                 {
                     // Determine the uv of the vertex, depending on the biome
-                    uv.Add(DetermineUV(biomeMap[i, j]));
+                    uv.Add(DetermineUV(biomeMap[i-1, j-1]));
                 }
 
                 // Add the normal of the vertex. (Takes into account the overlapping vertices)
@@ -357,39 +357,13 @@ public class Chunk : MonoBehaviour {
 
         Vector3 localPos = pos - chunk.transform.position;
 
-        float posX = localPos.x / terrain.chunkSize * ((terrain.chunkSize / terrain.tileSize)) + 1;
-        float posZ = localPos.z / terrain.chunkSize * ((terrain.chunkSize / terrain.tileSize)) + 1;
+        float posX = localPos.x / terrain.tileSize + 1;
+        float posZ = localPos.z / terrain.tileSize + 1;
 
         int vertX = Mathf.RoundToInt(posX);
         int vertZ = Mathf.RoundToInt(posZ);
 
-        //print(vertX + "  " + vertZ);
         vertices.Add(new int[2] { vertX, vertZ });
-
-        if(vertX == 1)
-            vertices.Add(new int[2] { 0, vertZ });
-
-        if(vertZ == 1)
-            vertices.Add(new int[2] { vertX, 0 });
-
-        if (vertX == 1 && vertZ == 1)
-            vertices.Add(new int[2] { 0, 0 });
-
-        if (vertX == chunk.map.GetLength(0) - 2)
-            vertices.Add(new int[2] { chunk.map.GetLength(0) -1 , vertZ });
-
-        if (vertZ == chunk.map.GetLength(1) - 2)
-            vertices.Add(new int[2] { vertX, chunk.map.GetLength(1) -1 });
-
-        if (vertX == chunk.map.GetLength(0) - 2 && vertZ == chunk.map.GetLength(1) - 2)
-            vertices.Add(new int[2] { chunk.map.GetLength(0) -1, chunk.map.GetLength(1) -1});
-
-        if (vertX == 1 && vertZ == chunk.map.GetLength(1) - 2)
-            vertices.Add(new int[2] { 0, chunk.map.GetLength(1) - 1 });
-
-        if (vertX == chunk.map.GetLength(0) - 2 && vertZ == 1)
-            vertices.Add(new int[2] { chunk.map.GetLength(0) - 1, 0 });
-
 
         return vertices;
     }
@@ -400,10 +374,12 @@ public class Chunk : MonoBehaviour {
         TerrainController terrain = TerrainController.thisTerrainController;
 
         List<Chunk> chunks = new List<Chunk>();
-
+        
+        // X and Z position of the vertex in chunksize unit
         float posX = vertex.x / terrain.chunkSize;
         float posZ = vertex.z / terrain.chunkSize;
 
+        // Floor this to an int to get the chunk row and collumn.
         int chunkX = Mathf.FloorToInt(posX);
         int chunkZ = Mathf.FloorToInt(posZ);
 
@@ -411,36 +387,46 @@ public class Chunk : MonoBehaviour {
         int index = chunkZ + chunkX * chunksInRow;
         chunks.Add(terrain.chunks[index]);
 
-        float tileNormalizedLength = terrain.tileSize * 1.1f / terrain.chunkSize;
-        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) <= tileNormalizedLength)
+        // This part finds vertices that excist in two different chunks i.e. at chunk borders
+        Vector3 chunkPos = terrain.chunks[index].transform.position;
+
+        // if vertex is on left border
+        if (vertex.x - chunkPos.x < 1.5f * terrain.tileSize)
         { 
             chunks.Add(terrain.chunks[index - chunksInRow]);
         }
-        if (Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        // if vertex is on bottom border
+        if (vertex.z - chunkPos.z < 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index - 1]);
         }
-        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        // if vertex is on bottom left corner
+        if (vertex.x - chunkPos.x < 1.5f * terrain.tileSize && vertex.z - chunkPos.z < 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index - 1 - chunksInRow]);
         }
-        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1 )) < tileNormalizedLength)
+        //if vertex is on right border
+        if (vertex.x - chunkPos.x > terrain.chunkSize - 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index + chunksInRow]);
         }
-        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1) ) < tileNormalizedLength)
+        // if vertex is on top border
+        if (vertex.z - chunkPos.z > terrain.chunkSize - 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index + 1]);
         }
-        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1) ) < tileNormalizedLength)
+        // if vertex is on top right corner
+        if (vertex.x - chunkPos.x > terrain.chunkSize - 1.5f * terrain.tileSize && vertex.z - chunkPos.z > terrain.chunkSize - 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index + 1 + chunksInRow]);
         }
-        if (Mathf.Abs(Mathf.Abs(chunkX - posX)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkZ - posZ) - 1)) < tileNormalizedLength)
+        // if vertex is on top left corner
+        if (vertex.x - chunkPos.x < 1.5f * terrain.tileSize && vertex.z - chunkPos.z > terrain.chunkSize - 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index + 1 - chunksInRow]);
         }
-        if (Mathf.Abs(Mathf.Abs(Mathf.Abs(chunkX - posX) - 1)) < tileNormalizedLength && Mathf.Abs(Mathf.Abs(chunkZ - posZ)) < tileNormalizedLength)
+        // if vertex is on bottom right corner
+        if (vertex.x - chunkPos.x > terrain.chunkSize - 1.5f * terrain.tileSize && vertex.z - chunkPos.z < 1.5f * terrain.tileSize)
         {
             chunks.Add(terrain.chunks[index - 1 + chunksInRow]);
         }
