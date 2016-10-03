@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Mission1Controller : MonoBehaviour{
+public class Mission2Controller : MonoBehaviour
+{
     public bool[] firstObjectivesCompleted;
     public string[] firstObjectives;
 
     public bool[] secondObjectivesCompleted;
     public string[] secondObjectives;
-    public System.DateTime obj1Date;
-    public System.DateTime obj2Date;
 
-    private static Mission1Controller instance;
+    public System.DateTime objDate;
+
+    private static Mission2Controller instance;
     private bool gameFinished = false;
 
     [Header("Prefabs")]
@@ -18,27 +19,29 @@ public class Mission1Controller : MonoBehaviour{
     public GameObject resourceManagerPrefab;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         CreateSingleton();
         InstantiateStartPrefabs();
 
-        firstObjectives = new string[] { "Build a turbine", "Build a turbine with efficiency of 0.5 or higher" };
+        firstObjectives = new string[] { "Build a turbine", "Build a turbine with efficiency of 0.7 or higher" };
         firstObjectivesCompleted = new bool[] { false, false };
 
         secondObjectivesCompleted = new bool[] { false, false, true };
-        secondObjectives = new string[] { "Generate 1000 power before 830 AD", "Get 20000 capital before 850 AD", "Keep public acceptance above -1" };
+        secondObjectives = new string[] { "Generate 1000 power before 830 AD", "Get 20000 capital before 830 AD", "Keep public acceptance above -1" };
 
-        obj1Date = new System.DateTime(830, 1, 1);
-        obj2Date = new System.DateTime(850, 1, 1);
-	}
+        objDate = new System.DateTime(830, 1, 1);
+    }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         if (firstObjectivesCompleted[0] && firstObjectivesCompleted[1])
         {
             checkSecondObjectives();
-        } else
+        }
+        else
         {
             checkFirstObjectives();
         }
@@ -66,10 +69,10 @@ public class Mission1Controller : MonoBehaviour{
             secondObjectivesCompleted[1] = false;
         }
 
-        if (System.DateTime.Compare(GameResources.getDate(), obj1Date) > 0 && !secondObjectivesCompleted[0])
+        if (System.DateTime.Compare(GameResources.getDate(), objDate) > 0 && !secondObjectivesCompleted[0])
             gameOver();
 
-        if (System.DateTime.Compare(GameResources.getDate(), obj2Date) > 0 && !secondObjectivesCompleted[1])
+        if (System.DateTime.Compare(GameResources.getDate(), objDate) > 0 && !secondObjectivesCompleted[1])
             gameOver();
 
         if (GameResources.getPublicAcceptance() < -1)
@@ -92,7 +95,7 @@ public class Mission1Controller : MonoBehaviour{
         {
             foreach (Transform child in TurbineManager.GetInstance().transform)
             {
-                if (child.gameObject.GetComponent<TurbineController>().efficiency > 0.5)
+                if (child.gameObject.GetComponent<TurbineController>().efficiency > 0.7)
                     firstObjectivesCompleted[1] = true;
             }
         }
@@ -120,7 +123,7 @@ public class Mission1Controller : MonoBehaviour{
     }
 
     // Get the singleton instance
-    public static Mission1Controller GetInstance()
+    public static Mission2Controller GetInstance()
     {
         return instance;
     }
@@ -129,7 +132,8 @@ public class Mission1Controller : MonoBehaviour{
     {
         string[] objectives;
         bool[] completion;
-        if (firstObjectivesCompleted[0] && firstObjectivesCompleted[1]) {
+        if (firstObjectivesCompleted[0] && firstObjectivesCompleted[1])
+        {
             objectives = secondObjectives;
             completion = secondObjectivesCompleted;
         }
@@ -175,13 +179,12 @@ public class Mission1Controller : MonoBehaviour{
         }
     }
 
-
     float calculateFinalScore()
     {
         float result;
-        result = (float)(obj2Date.Subtract(GameResources.getDate()).TotalHours) / 1000;
-        //print("Score for time: " + (float)(obj2Date.Subtract(GameResources.getDate()).TotalHours) / 1000);
-        
+        result = (float)(objDate.Subtract(GameResources.getDate()).TotalHours) / 1000;
+        //print("Score for time: " + (float)(objDate.Subtract(GameResources.getDate()).TotalHours) / 1000);
+
         foreach (Transform child in TurbineManager.GetInstance().transform)
         {
             result += child.gameObject.GetComponent<TurbineController>().efficiency * 50;
