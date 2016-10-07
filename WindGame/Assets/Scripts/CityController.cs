@@ -45,24 +45,19 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, 50, transform);
+        world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, transform);
 
         GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, startRadius, 1);
         foreach (GridTile tile in gridTiles)
         {
-            if (rand.NextDouble() < density && world.CanBuild(tile.position, 50, true))
+            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
+
+            if (rand.NextDouble() < density && world.CanBuild(tile.position, buildObject.prefab.GetComponent<SizeController>().diameter, true))
             {
-                CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, 50, transform);
+                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
             }
         }
     }
-
-    // Update is called once per frame
-    void Update ()
-    {
-	    
-	}
 
     [System.Serializable]
     public struct CityObject

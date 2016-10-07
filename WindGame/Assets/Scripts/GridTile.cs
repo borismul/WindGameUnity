@@ -9,12 +9,13 @@ public class GridTile{
     public int biome;
     public GridTileOccupant occupant;
     public bool underWater;
+    public bool isOutsideBorder;
     public List<Vector3> vert;
     public List<int> vertIndex;
     public Chunk chunk;
     public GridTileOccupant.OccupantType type;
 
-    public GridTile(Vector3 position, Chunk chunk, List<Vector3> vert, List<int> vertIndex, int biome, bool isUnderWater, GridTileOccupant.OccupantType OccupantType, GridTileOccupant occupant)
+    public GridTile(Vector3 position, Chunk chunk, List<Vector3> vert, List<int> vertIndex, int biome, bool isUnderWater, bool isOutsideBorder, GridTileOccupant.OccupantType OccupantType, GridTileOccupant occupant)
     {
         this.position = position;
         this.biome = biome;
@@ -24,6 +25,7 @@ public class GridTile{
         this.underWater = isUnderWater;
         this.chunk = chunk;
         this.vertIndex = vertIndex;
+        this.isOutsideBorder = isOutsideBorder;
     }
 
     public static GridTile FindClosestGridTile(Vector3 point)
@@ -48,7 +50,7 @@ public class GridTile{
     public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius)
     {
         List<GridTile> gridTiles = new List<GridTile>();
-        GridTile middleTile = FindClosestGridTile(point);
+        GridTile middleTile = FindClosestGridTile(point - new Vector3(TerrainController.thisTerrainController.tileSize, 0, TerrainController.thisTerrainController.tileSize));
         TerrainController terrain = TerrainController.thisTerrainController;
 
         float startTile = -circleRadius;

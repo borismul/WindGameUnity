@@ -47,6 +47,7 @@ public class WaterChunk : MonoBehaviour {
 
         terrain = TerrainController.thisTerrainController;
         terrain.waterChunks.Add(this);
+        GetComponent<Renderer>().material.renderQueue = 3100;
 
         size = terrain.waterChunkSize;
         tileSize = terrain.waterTileSize;

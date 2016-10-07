@@ -47,7 +47,7 @@ MonoBehaviour:
   maxLocX: 0.5
   minLocZ: 0.6
   maxLocZ: 0.6
-  startRadius: 100
+  startRadius: 200
   density: 0.21
 --- !u!1001 &100100000
 Prefab:

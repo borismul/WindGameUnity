@@ -30,7 +30,6 @@ public class TurbineController : MonoBehaviour {
     public float desiredHeight;
 
     public string turbineName;
-    public float diameter;
     public float price;
 
     public bool canRotateAtBuild;

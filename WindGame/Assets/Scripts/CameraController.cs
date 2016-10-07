@@ -91,17 +91,9 @@ public class CameraController : MonoBehaviour
         if (!haveControl)
             return;
 
+        UpdateCamHeight();
         GetInput();
         ProcessInput();
-    }
-
-    // Determine camera height wrt the ground
-    void FixedUpdate()
-    {
-        if (!terrain.levelLoaded)
-            return;
-
-        UpdateCamHeight();
     }
 
     // Update camera position and rotation
@@ -286,9 +278,11 @@ public class CameraController : MonoBehaviour
 
         // Set the targetHeight of the camera wrt the ground (with diffHeight)
         float targetHeight = targetPos.y - heightDiff + y;
+
         // If this is in between the set ranges set the camera target to the global axis system (without diffHeight)
         if (targetHeight < maxHeight && targetHeight > minHeight)
             targetY = targetPos.y + y;
+
         // Else if the targetHeight goes above the set maximum boundary
         else if (targetHeight >= maxHeight)
         {
@@ -418,8 +412,7 @@ public class CameraController : MonoBehaviour
         }
 
         // determine the camera height
-        camHeight = hit.distance;
-        
+        camHeight = hit.distance;        
 
         // Determine the difference in ground level wrt last iteration
         hitPointDiff = hit.point.y - prevHitPointY;

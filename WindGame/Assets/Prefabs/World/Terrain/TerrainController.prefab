@@ -45,7 +45,7 @@ MonoBehaviour:
   maxHeight: 200
   biomes:
   - biomeObjects:
-    - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
       occurance: 0.669
       minScale: 1
@@ -77,7 +77,7 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   - biomeObjects:
-    - prefab: {fileID: 122666, guid: 892c61dbf3d5fd645a3d0ec35c08563a, type: 2}
+    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
       occurance: 0.01
       minScale: 0.5
@@ -85,6 +85,7 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   seed: 1885953640
+  isFlatShaded: 1
   isIsland: 1
   radius: 700
   baseHeight: 50
@@ -101,7 +102,7 @@ MonoBehaviour:
   tileSlope: 2
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
-  waterUnderLayerPrefab: {fileID: 1000014261973276, guid: a0fcf61617646354cbc76d9822c772ce,
+  waterUnderLayerPrefab: {fileID: 1000013717212630, guid: a0fcf61617646354cbc76d9822c772ce,
     type: 2}
   waterChunkSize: 1000
   waterTileSize: 200

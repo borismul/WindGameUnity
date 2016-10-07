@@ -325,7 +325,7 @@ public class BuildMenuController : MonoBehaviour
 
             if (!curInstantiated.GetComponent<TurbineController>().canRotateAtBuild || (curInstantiated.GetComponent<TurbineController>().canRotateAtBuild && !Input.GetMouseButton(1)))
             {
-                if (world.CanBuild(plantPos, 50, true)) // If we can build here, make the color greenish
+                if (world.CanBuild(plantPos, curInstantiated.GetComponent<SizeController>().diameter * curInstantiated.GetComponent<TurbineController>().desiredScale, true)) // If we can build here, make the color greenish
                 {
                     foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
                     {

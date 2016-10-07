@@ -173,7 +173,7 @@ public class Chunk : MonoBehaviour {
         //Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
         Vector3 position = positions[0];
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
-        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, 0, null);
+        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, false, 0, null);
 
         terrain.world[startI + iPos, startK + jPos] = tile;
     }
@@ -198,7 +198,7 @@ public class Chunk : MonoBehaviour {
         AddTrisAndGridTiles(n, update);
         
         // Set the mesh the the MeshFilter of this GameOject
-        SetMesh();
+        SetMesh(terrain.isFlatShaded);
     }
 
     // Calculate vertices, uvs and normal and add them to their corresponding lists
@@ -314,18 +314,44 @@ public class Chunk : MonoBehaviour {
     }
 
     // Generate the mesh based on vertices, triangles, uvs, and normals
-    public void SetMesh()
+    public void SetMesh(bool isFlatShaded)
     {
         if (mesh == null)
             mesh = new Mesh();
         else
             mesh.Clear();
-        
-        // Set mesh
-        mesh.vertices = vert.ToArray();
-        mesh.triangles = tri.ToArray();
-        mesh.uv = uv.ToArray();
-        mesh.normals = norm.ToArray();
+
+        if (isFlatShaded)
+        {
+            List<Vector3> flatVert = new List<Vector3>();
+            List<Vector2> flatUV = new List<Vector2>();
+            List<int> flatTri = new List<int>();
+
+            for (int i = 0; i < tri.Count; i++)
+            {
+                flatVert.Add(vert[tri[i]]);
+                flatUV.Add(uv[tri[i]]);
+                flatTri.Add(i);
+            }
+
+
+            // Set mesh
+            mesh.vertices = flatVert.ToArray();
+            mesh.triangles = flatTri.ToArray();
+            mesh.uv = flatUV.ToArray();
+            //mesh.normals = norm.ToArray();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+        }
+        else
+        {
+            // Set mesh
+            mesh.vertices = vert.ToArray();
+            mesh.triangles = tri.ToArray();
+            mesh.uv = uv.ToArray();
+            mesh.normals = norm.ToArray();
+
+        }
 
         // Destroy previous mesh (So it will not fill up the ram)
         Destroy(GetComponent<MeshFilter>().mesh);

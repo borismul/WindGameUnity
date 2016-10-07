@@ -84,9 +84,9 @@ public class WorldController : MonoBehaviour
         t.transform.position = pos;
         t.transform.rotation = rotation;
         t.transform.SetParent(parent);
-        TurbineController controller = t.GetComponent<TurbineController>();
-        AddToGridTiles(t, pos, (controller.diameter * scale)  * 1.4f, type);
-        EqualTerrain(pos, (controller.diameter * scale) * 1.1f );
+        float diameter = t.GetComponent<SizeController>().diameter;
+        AddToGridTiles(t, pos, (diameter * scale) + 2 * TerrainController.thisTerrainController.tileSize, type);
+        EqualTerrain(pos, (diameter * scale));
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 
     }
@@ -103,6 +103,7 @@ public class WorldController : MonoBehaviour
         {
             for (int i = 0; i < tile.vert.Count; i++)
             {
+                Vector3 newPos = Vector3.zero;
                 Vector3 vertex = tile.vert[i];
                 Chunk[] chunks = Chunk.FindChunksWithVertex(vertex);
 
@@ -112,42 +113,40 @@ public class WorldController : MonoBehaviour
 
                     foreach (int[] index in vertexIndices)
                     {
-                        Vector3 newPos = new Vector3(chunk.map[index[0], index[1]].x, middleTile.position.y, chunk.map[index[0], index[1]].z);
+                        newPos = new Vector3(chunk.map[index[0], index[1]].x, middleTile.position.y, chunk.map[index[0], index[1]].z);
                         chunk.map[index[0], index[1]] = newPos;
-
                     }
-
                     if (!updateChunks.Contains(chunk))
                         updateChunks.Add(chunk);
                 }
-            }
-        }
+                tile.vert[i] = new Vector3(tile.vert[i].x, middleTile.position.y, tile.vert[i].z);
 
+            }
+            tile.position = tile.vert[0];
+        }
         foreach (Chunk chunk in updateChunks)
             chunk.GenerateTerrainMesh(true);
-
     }
 
     public void RemoveTurbine(TurbineController turbineController)
     {
-        RemoveFromGridTiles(turbineController.gameObject.transform.position, turbineController.diameter / 2);
+        RemoveFromGridTiles(turbineController.gameObject.transform.position, turbineController.GetComponent<SizeController>().diameter + TerrainController.thisTerrainController.tileSize * 3);
         Destroy(turbineController.gameObject);
     }
 
-    public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, float size, Transform parent)
+    public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
         GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
         t.transform.localScale = Vector3.one * scale;
-
-        EqualTerrain(pos, 30);
-
-        AddToGridTiles(something, pos, size / 2, type);
+        float diameter = t.GetComponent<SizeController>().diameter;
+        AddToGridTiles(something, pos, diameter * scale + 2 * TerrainController.thisTerrainController.tileSize, type);
+        EqualTerrain(pos, diameter * scale);
     }
 
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
     public bool CanBuild(Vector3 pos, float size, bool neglectTerrainObjects)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size/2);
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
 
         if (thisTile.underWater)
@@ -155,7 +154,9 @@ public class WorldController : MonoBehaviour
 
         foreach (GridTile tile in gridtiles)
         {
-            if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
+            if (tile.isOutsideBorder)
+                return false;
+            else if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
                 return false;
             else if (!neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City || tile.type == GridTileOccupant.OccupantType.TerrainGenerated))
                 return false;
@@ -198,13 +199,23 @@ public class WorldController : MonoBehaviour
             for (int i = 0; i < chunk.vert.Count; i++)
             {
                 if (Mathf.Abs(chunk.vert[i].x + chunk.transform.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
-                    Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.x) > length * TerrainController.thisTerrainController.tileSize)
+                    Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
                     chunk.uv[i] = new Vector2(chunk.uv[i].x, 3f / 8f);
                 else
                     chunk.uv[i] = new Vector2(chunk.uv[i].x, 1f / 8f);
             }
 
-            chunk.SetMesh();
+            chunk.SetMesh(TerrainController.thisTerrainController.isFlatShaded);
+        }
+
+        foreach (GridTile tile in TerrainController.thisTerrainController.world)
+        {
+
+            if (Mathf.Abs(tile.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
+                Mathf.Abs(tile.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
+                tile.isOutsideBorder = true;
+            else
+                tile.isOutsideBorder = false;
         }
 
     }
