@@ -95,7 +95,7 @@ MonoBehaviour:
   maxTranslationSpeed: 300
   minTranslationSpeed: 80
   camSpeedRot: 500
-  scrollSpeed: 1000
+  scrollSpeed: 10000
   baseZoomSpeed: 1
   maxZoomSpeed: 40
   translationFormulaPow: 0.8
@@ -109,10 +109,11 @@ MonoBehaviour:
   maxTiltHeight: 200
   tiltFormulaPow: 0.6
   camLerpScrollStart: 800
-  minX: 1400
-  maxX: 2600
-  minZ: 1400
-  maxZ: 2600
+  minX: 1000
+  maxX: 3000
+  minZ: 1000
+  maxZ: 3000
+  hasStarted: 0
   haveControl: 0
 --- !u!124 &12424946
 Behaviour:

@@ -44,6 +44,7 @@ public class CameraController : MonoBehaviour
     float prevHitPointY;
     float hitPointDiff;
     float camHeight;
+    float tiltDeg;
 
     float xInput;
     float zInput;
@@ -60,8 +61,8 @@ public class CameraController : MonoBehaviour
     TerrainController terrain;
     float camScrollLerpSet;
 
-    RaycastHit rotatePoint;
-
+    Vector3 rotatePoint;
+    float hitDistance;
     // Unity Methods //
 
     // Determine initial conditions
@@ -93,7 +94,7 @@ public class CameraController : MonoBehaviour
 
         UpdateCamHeight();
         GetInput();
-        ProcessInput();
+        targetPos = ProcessInput();
     }
 
     // Update camera position and rotation
@@ -102,13 +103,12 @@ public class CameraController : MonoBehaviour
         if (!terrain.levelLoaded)
             return;
 
+
+        if (haveControl)
+            transform.rotation = UpdateRotation();
+
         transform.position = UpdatePosition();
 
-        if (!haveControl)
-            return;
-
-        transform.rotation = UpdateRotation();
-        
     }
 
     // Own Methods //
@@ -171,17 +171,22 @@ public class CameraController : MonoBehaviour
         if (Input.GetMouseButtonDown(2))
         {
             RaycastHit hit;
-            Physics.Raycast(transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity);
-            rotatePoint = hit;
+            Physics.Raycast(targetPos, Camera.main.transform.forward, out hit, Mathf.Infinity);
+            rotatePoint = hit.point + ProcessInput() - targetPos;
+            hitDistance = Vector3.Distance(rotatePoint, transform.position);
+
+            // Set overrule to true so the camera is moved wrt mouse movement
+            overRuleCam = true;
         }
 
         // Only track the mouse movement if the middle mouse button is being clicked
         if (middleMouse)
         {
             xMouse = Input.GetAxis("Mouse X");
+            print(ProcessInput() - targetPos);
+            rotatePoint += ProcessInput() - targetPos;
 
-            // Set overrule to true so the camera is moved wrt mouse movement
-            overRuleCam = true;
+            //hitDistance += hitPointDiff * Mathf.Cos(Mathf.Deg2Rad * tiltDeg);
         }
         else
         {
@@ -191,7 +196,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Method the processes the camera inputs and sets the target position of the camera
-    void ProcessInput()
+    Vector3 ProcessInput()
     {
         // Determine a translation step for the vertical and horizontal input
         float dX = TranslationInputStrength() * xInput * Time.deltaTime;
@@ -230,8 +235,8 @@ public class CameraController : MonoBehaviour
         {
             targetPosTry.z = maxZ;
         }
-        // Add the horizontal movement and vertical movement to get the updated target position for the camera
-        targetPos = targetPosTry;
+
+        return targetPosTry;
     }
 
     // Method determines the strength of the input in horizontal plane. Bigger camHeight = faster movement, lower camHeight = lower movement
@@ -355,11 +360,11 @@ public class CameraController : MonoBehaviour
     Vector3 AutoTilt()
     {
         // Determine the tilt angle of the camera
-        float tiltDeg = Tilt();
+        tiltDeg = Tilt();
 
         // set it as the x euler angle (pitch) and keep the y eulerangle the same (yaw), while keeping the z eulerangle (roll) always 0
-        Vector3 targetRot = new Vector3(tiltDeg, transform.rotation.eulerAngles.y, 0f);
-        return targetRot;
+        Vector3 newTargetRot = new Vector3(tiltDeg, targetRot.y, 0f);
+        return newTargetRot;
     }
 
     // Method determine the tilt angle based on the camera height
@@ -385,13 +390,13 @@ public class CameraController : MonoBehaviour
     }
 
     // Method determines the rotation of the camera in x and y axis based on user mouse input
-    void ManualRot(RaycastHit hit)
+    void ManualRot(Vector3 hit)
     {
         float movement = xMouse * camSpeedRot * Time.deltaTime;
 
         targetRot += new Vector3(0, movement, 0);
-        targetPos = Quaternion.Euler(targetRot) * new Vector3(0, 0, -hit.distance) + hit.point;
-
+        targetPos = Quaternion.Euler(targetRot) * new Vector3(0, 0, -hitDistance) + hit;
+        targetPos.y += hitPointDiff;
         // Determine the camera rotation in x and y axis speed based on mouse user input
         targetPos = targetPos + Camera.main.transform.right * movement;
 

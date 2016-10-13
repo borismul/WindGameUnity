@@ -84,7 +84,7 @@ MonoBehaviour:
       maxScale: 2
       minRotation: 0
       maxRotation: 360
-  seed: 1885953640
+  seed: 2
   isFlatShaded: 1
   isIsland: 1
   radius: 700

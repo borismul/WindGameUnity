@@ -37,8 +37,8 @@ public class WaterChunk : MonoBehaviour {
         if (Vector3.Magnitude(transform.position - terrain.middlePoint) > terrain.length)
             return;
 
-        //UpdateWater();
-        //CreateMesh();
+        UpdateWater();
+        CreateMesh();
     }
 
     void Initialize()
@@ -47,7 +47,7 @@ public class WaterChunk : MonoBehaviour {
 
         terrain = TerrainController.thisTerrainController;
         terrain.waterChunks.Add(this);
-        GetComponent<Renderer>().material.renderQueue = 3100;
+        GetComponent<Renderer>().material.renderQueue = 3000;
 
         size = terrain.waterChunkSize;
         tileSize = terrain.waterTileSize;
@@ -95,6 +95,7 @@ public class WaterChunk : MonoBehaviour {
             for (int j = 1; j < n - 1; j++)
             {
                 vert.Add(map[i, j]);
+                uv.Add(new Vector2((float)i / (n - 1), (float)j / (n - 1)));
                 AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
             }
         }
@@ -146,6 +147,7 @@ public class WaterChunk : MonoBehaviour {
         mesh.Clear();
         mesh.vertices = vert.ToArray();
         mesh.triangles = tri.ToArray();
+        mesh.uv = uv.ToArray();
 
         mesh.RecalculateNormals();
         GetComponent<MeshFilter>().mesh = mesh;

@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 426286}
   - 114: {fileID: 11476966}
+  - 114: {fileID: 114000013793124418}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -41,6 +42,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
+  - prefab: {fileID: 1000014016233610, guid: 2daa658eaca059c49921ee87c3e932d2, type: 2}
+    scale: 1.5
   - prefab: {fileID: 1000010700443020, guid: 265779f7c9e5ffd45825de97a982705b, type: 2}
     scale: 1
   minLocX: 0.5
@@ -60,3 +63,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 192104}
   m_IsPrefabParent: 1
+--- !u!114 &114000013793124418
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 192104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe62095cc02642f44bcf2579e39aa139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  diameter: 30
