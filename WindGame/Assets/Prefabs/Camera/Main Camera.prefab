@@ -116,6 +116,9 @@ MonoBehaviour:
   maxZ: 3000
   hasStarted: 0
   haveControl: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!124 &12424946
 Behaviour:
   m_ObjectHideFlags: 1
@@ -145,7 +148,6 @@ GameObject:
   - 20: {fileID: 20000013788101030}
   - 124: {fileID: 124000013898501526}
   - 92: {fileID: 92000012898863588}
-  - 81: {fileID: 81000014196958084}
   m_Layer: 0
   m_Name: UICamera
   m_TagString: Untagged
@@ -160,7 +162,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013117760464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8645.913, y: -3624.4082, z: 2794.272}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -174,7 +176,7 @@ Camera:
   m_GameObject: {fileID: 1000013117760464}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 4
+  m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -200,13 +202,6 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
---- !u!81 &81000014196958084
-AudioListener:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013117760464}
-  m_Enabled: 1
 --- !u!92 &92000012898863588
 Behaviour:
   m_ObjectHideFlags: 1

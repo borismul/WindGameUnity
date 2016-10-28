@@ -49,6 +49,9 @@ public class WorldInteractionController : MonoBehaviour
         {
             highlighter.Clear();
             GridTile tile = GridTile.FindClosestGridTile(hit.point);
+            if (tile == null)
+                return;
+
             for (int i = 0; i < 4; i++)
                 vert[i] = tile.vert[i] + new Vector3(0, 0.3f, 0);
 

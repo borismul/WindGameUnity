@@ -64,14 +64,14 @@ MonoBehaviour:
   - biomeObjects:
     - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
       emptyPrefab: {fileID: 125940, guid: ec59005bb099fff46bca0ecd771b3126, type: 2}
-      occurance: 0.05
+      occurance: 0.06
       minScale: 0.5
       maxScale: 3
       minRotation: 0
       maxRotation: 0
     - prefab: {fileID: 169438, guid: c5568cd6755e4744ab453b5a2961cd2c, type: 2}
       emptyPrefab: {fileID: 163290, guid: 715434035e3089c4086aefcc9c474c91, type: 2}
-      occurance: 0.05
+      occurance: 0.105
       minScale: 0.1
       maxScale: 1
       minRotation: 0
@@ -85,7 +85,7 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   seed: 2
-  isFlatShaded: 1
+  isFlatShaded: 0
   isIsland: 1
   radius: 700
   baseHeight: 50

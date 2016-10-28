@@ -16,14 +16,16 @@ public class LayoutGroupResizer : MonoBehaviour {
         int childCount = transform.childCount;
         if (childCount == 0)
             return;
-
-        float childRectHeight = transform.GetChild(0).GetComponent<RectTransform>().rect.height;
         float paddingUp = GetComponent<VerticalLayoutGroup>().padding.top;
         float paddingDown = GetComponent<VerticalLayoutGroup>().padding.bottom;
         float spacing = GetComponent<VerticalLayoutGroup>().spacing;
+        float dy = paddingUp + paddingDown - spacing;
 
-        float dy = paddingUp + paddingDown + (childCount - 1) * spacing + childRectHeight * childCount;
-
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            float childRectHeight = transform.GetChild(i).GetComponent<RectTransform>().rect.height;
+            dy += spacing + childRectHeight;
+        }
 
         if (dy > startHeight && dy != GetComponent<RectTransform>().rect.height)
         {

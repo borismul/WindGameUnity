@@ -36,9 +36,12 @@ public class TurbineController : MonoBehaviour {
 
     float avgPowerCount = 0;
 
+    GridTile onGridtile;
+
     void Start()
     {
         health = 1;
+        onGridtile = GridTile.FindClosestGridTile(transform.position);
     }
 	// Update is called once per frame
 	void Update ()
@@ -87,28 +90,29 @@ public class TurbineController : MonoBehaviour {
         power = 1;
         foreach (FloatProperty prop in turbineProperties.floatProperty)
         {
-            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
-            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
+            power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
 
         foreach (IntProperty prop in turbineProperties.intProperty)
         {
-            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
-            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
-
+            power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
 
         foreach (BoolProperty prop in turbineProperties.boolProperty)
         {
-            power *= (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property });
-            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property }));
-
+            power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
+            //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
+        foreach (MinMaxFloatProperty prop in turbineProperties.minMaxProperty)
+        {
+            power = (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, this });
+            //print(prop.propertyName + ": " + (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, power }));
 
-        float magnitude = Mathf.Pow(WindController.getMaximumWind(), 3);
-        power *= magnitude;
-
-        efficiency = power / magnitude;
+            power = (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, this });
+            //print(prop.propertyName + ": " + (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, power }));
+        }
 
         avgPower = (avgPower * avgPowerCount + power) / (avgPowerCount + 1);
         avgPowerCount++;
@@ -168,12 +172,14 @@ public class TurbineProperties
     public List<FloatProperty> floatProperty;
     public List<IntProperty> intProperty;
     public List<BoolProperty> boolProperty;
+    public List<MinMaxFloatProperty> minMaxProperty;
 
     public TurbineProperties()
     {
         floatProperty = new List<FloatProperty>();
         intProperty = new List<IntProperty>();
         boolProperty = new List<BoolProperty>();
+        minMaxProperty = new List<MinMaxFloatProperty>();
     }
 }
 
@@ -188,6 +194,7 @@ public class FloatProperty
     public MethodInfo graphicsFunction;
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
+    public float lastSetting;
 
     public object callObject;
 
@@ -203,7 +210,54 @@ public class FloatProperty
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
         this.callObject = callObject;
+        this.lastSetting = property;
+    }
+}
 
+public class MinMaxFloatProperty
+{
+    public string propertyName;
+    public string unit;
+    public string minPropertyName;
+    public string maxPropertyName;
+    public float minProperty;
+    public float maxProperty;
+    public float minValue;
+    public float maxValue;
+    public MethodInfo minPowerFunction;
+    public MethodInfo minGraphicsFunction;
+    public MethodInfo minCostFunction;
+    public MethodInfo minDegenFunction;
+    public MethodInfo maxPowerFunction;
+    public MethodInfo maxGraphicsFunction;
+    public MethodInfo maxCostFunction;
+    public MethodInfo maxDegenFunction;
+    public float minLastSetting;
+    public float maxLastSetting;
+
+    public object callObject;
+
+    public MinMaxFloatProperty(string propertyName, string unit, string minPropertyName, string maxPropertyName, float minProperty, float maxProperty, float minValue, float maxValue, MethodInfo minPowerFunction, MethodInfo maxPowerFunction, MethodInfo minGraphicsFunction, MethodInfo maxGraphicsFunction, MethodInfo minCostFunction, MethodInfo maxCostFunction, MethodInfo minDegenFunction, MethodInfo maxDegenFunction, object callObject)
+    {
+        this.propertyName = propertyName;
+        this.unit = unit;
+        this.minPropertyName = minPropertyName;
+        this.maxPropertyName = maxPropertyName;
+        this.minProperty = minProperty;
+        this.maxProperty = maxProperty;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.minPowerFunction = minPowerFunction;
+        this.minGraphicsFunction = minGraphicsFunction;
+        this.minCostFunction = minCostFunction;
+        this.minDegenFunction = minDegenFunction;
+        this.maxPowerFunction = maxPowerFunction;
+        this.maxGraphicsFunction = maxGraphicsFunction;
+        this.maxCostFunction = maxCostFunction;
+        this.maxDegenFunction = maxDegenFunction;
+        this.callObject = callObject;
+        this.minLastSetting = minProperty;
+        this.maxLastSetting = maxProperty;
     }
 }
 
@@ -219,6 +273,7 @@ public class IntProperty
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
     public object callObject;
+    public int lastSetting;
 
     public IntProperty(string propertyName, string unit, int property, int minValue, int maxValue, MethodInfo powerFunction, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
@@ -232,6 +287,7 @@ public class IntProperty
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
         this.callObject = callObject;
+        this.lastSetting = property;
     }
 }
 
@@ -244,6 +300,7 @@ public class BoolProperty
     public MethodInfo costFunction;
     public MethodInfo degenFunction;
     public object callObject;
+    public bool lastSetting;
 
     public BoolProperty(string propertyName, bool property, MethodInfo powerFunction, MethodInfo graphicsFunction, MethodInfo costFunction, MethodInfo degenFunction, object callObject)
     {
@@ -254,6 +311,8 @@ public class BoolProperty
         this.costFunction = costFunction;
         this.degenFunction = degenFunction;
         this.callObject = callObject;
+        this.lastSetting = property;
+
     }
 
 }

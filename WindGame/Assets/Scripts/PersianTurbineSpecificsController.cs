@@ -23,8 +23,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public float areaStartValue = 10;
     public float areaMinValue = 5;
     public float areaMaxValue = 50;
-    public float areaOptimalValue = 50;
-    public float areaSpread = 35;
     public float areaCostMultiplier = 5;
     public float unitScaleArea = 9;
 
@@ -36,8 +34,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public float heightMinValue = 50;
     public float heightMaxValue = 50;
     public float heightCostMultiplier = 3;
-    public float heightOptimalValue = 50;
-    public float heightSpread = 20;
     public float baseStartScale = 15;
     // Property prefabs
     public GameObject turbineBasePrefab;
@@ -51,8 +47,13 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public int bladesMinValue = 0;
     public int bladesMaxValue = 20;
     public int costPerBlade = 20;
-    public int bladesOptimalValue = 7;
-    public int bladesSpread = 4;
+
+    [Tooltip("Power Function: a + (nBlades/maxBlades)^b * c")]
+    public float a = 0.15f;
+    [Tooltip("Power Function: a + (nBlades/maxBlades)^b * c")]
+    public float b = 0.1f;
+    [Tooltip("Power Function: a + (nBlades/maxBlades)^b * c")]
+    public float c = 0.1f;
     // Property prefabs
     public GameObject persianBlade;
 
@@ -62,32 +63,31 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public string wallPropertyName = "Use A Wall";
     public string wallUnit = "";
     public int wallCost = 1000;
-    public float wallPlusCurvedMultiplier = 1f;
-    public float wallMinCurvedMultiplier = .8f;
+    public float wallMultiplier = 1.3f;
     public bool wallIsOn = false;
 
     // Property prefabs
     public GameObject wall;
 
-    [Header("Curved Properties")]
+    [Header("Rated Power/Cutoff Power")]
     // Property variables
-    public string curvedPropertyName = "Use Curved Blades";
-    public string curvedUnit = "m";
-    public int curvedCost = 500;
-    public float curvedMinWallMultiplier = 0.6f;
-    public float noCurvedNoWallMultiplier = 0f;
-    public bool curvedIsOn = false;
-
-    // Property prefabs
-    public GameObject curvedBladePrefab;
-
+    public string RatedCutoffpropertyName = "Rated/Cuttoff Power";
+    public string ratedPropertyName = "Rated Power";
+    public string ratedCutoffUnit = "kW";
+    public float RatedCostMultiplier = 500;
+    public float CutoffCostMultiplier = 500;
+    public string cutoffPropertyName = "Cutoff Power";
+    public float ratedProperty = 5;
+    public float cutOffProperty = 10;
+    public float ratedCutoffMin = 1;
+    public float ratedCuroffMax = 30;
 
     // Properties, used for cross linking values to eachother
     FloatProperty areaProperty;
     FloatProperty heightProperty;
     IntProperty bladesProperty;
     BoolProperty wallProperty;
-    BoolProperty curvedProperty; 
+    MinMaxFloatProperty ratedCutoffProperty; 
     
     TurbineController controller;
 
@@ -121,26 +121,21 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         wallProperty = new BoolProperty(wallPropertyName, wallIsOn, GetType().GetMethod("WallPower"), GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this);
         controller.turbineProperties.boolProperty.Add(wallProperty);
 
-        // Curved Blades
-        curvedProperty = new BoolProperty(curvedPropertyName, curvedIsOn, GetType().GetMethod("CurvedPower"), GetType().GetMethod("CreateCurvedBlades"), GetType().GetMethod("CurvedCost"), null, this);
-        controller.turbineProperties.boolProperty.Add(curvedProperty);
+        // Rated/Cutoff Power
+        ratedCutoffProperty = new MinMaxFloatProperty(RatedCutoffpropertyName, ratedCutoffUnit, ratedPropertyName, cutoffPropertyName, ratedProperty, cutOffProperty, ratedCutoffMin, ratedCuroffMax, GetType().GetMethod("RatedPower"), GetType().GetMethod("CutoffPower"), null, null, GetType().GetMethod("RatedCost"), GetType().GetMethod("CutoffCost"), null, null, this);
+        controller.turbineProperties.minMaxProperty.Add(ratedCutoffProperty);
     }
 
     // Number of Blades //
     public void CreateBlades(int blades)
     {
-        if (curvedProperty.property)
-            CreateCurvedBlades(true);
-        else
-        {
-            for (int i = 0; i < currentBlades.Count; i++)
-                Destroy(currentBlades[i]);
+        for (int i = 0; i < currentBlades.Count; i++)
+            Destroy(currentBlades[i]);
 
-            currentBlades.Clear();
+        currentBlades.Clear();
 
-            for (int i = 0; i < blades; i++)
-                currentBlades.Add((GameObject)Instantiate(persianBlade, axis.transform.position, Quaternion.Euler(0, i * (360 / blades), 0), axis.transform));
-        }
+        for (int i = 0; i < blades; i++)
+            currentBlades.Add((GameObject)Instantiate(persianBlade, axis.transform.position, Quaternion.Euler(0, i * (360 / blades), 0), axis.transform));
     }
 
     public int BladesCost(int blades)
@@ -148,9 +143,11 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         return blades * costPerBlade;
     }
 
-    public float BladesPower(int blades)
+    public float BladesPower(int blades, TurbineController controller)
     {
-        return OptimumCalculator(bladesOptimalValue, bladesSpread, blades);
+        float curPower = controller.power;
+        float power = curPower * (a + Mathf.Pow((blades / bladesMaxValue), b) * c);
+        return power;
     }
 
     // Wall //
@@ -175,19 +172,16 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
             return 0;
     }
 
-    public float WallPower(bool isOn)
+    public float WallPower(bool isOn, TurbineController controller)
     {
-        if (curvedProperty.property && isOn)
-            return wallPlusCurvedMultiplier;
-
-        else if (!curvedProperty.property && isOn)
-            return wallMinCurvedMultiplier;
-
-        else if (curvedProperty.property && !isOn)
-            return curvedMinWallMultiplier;
-
+        float curPower = controller.power;
+        float power;
+        if (isOn)
+            power = curPower * wallMultiplier;
         else
-            return noCurvedNoWallMultiplier;
+            power = curPower;
+
+        return power;
     }
 
     // Height //
@@ -211,9 +205,9 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         return Mathf.RoundToInt(heightCostMultiplier * height * height);
     }
 
-    public float HeightPower(float height)
+    public float HeightPower(float height, TurbineController controller)
     {
-        return OptimumCalculator(heightOptimalValue, heightSpread, height);
+        return controller.power;
     }
 
     // Area //
@@ -233,44 +227,44 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
     }
 
-    public float AreaPower(float area)
+    public float AreaPower(float area, TurbineController controller)
     {
-        return OptimumCalculator(areaOptimalValue, areaSpread, area);
+        float curPower = controller.power;
+        float power = curPower * area;
+        return power;
     }
 
-    // Curved //
-    public void CreateCurvedBlades(bool isOn)
+    // Rated Power //
+    public int RatedCost(float ratedCost)
     {
-        int blades = bladesProperty.property;
-        
-        if (!isOn)
-            CreateBlades(blades);
-
-        else
-        {
-            for (int i = 0; i < currentBlades.Count; i++)
-                Destroy(currentBlades[i]);
-
-            currentBlades.Clear();
-
-            for (int i = 0; i < blades; i++)
-                currentBlades.Add((GameObject)Instantiate(curvedBladePrefab, axis.transform.position, Quaternion.Euler(0, i * (360 / blades), 0), axis.transform));
-        }
-
+        return Mathf.RoundToInt(RatedCostMultiplier * ratedCost);
     }
 
-    public int CurvedCost(bool isOn)
+    public float RatedPower(float rated, TurbineController controller)
     {
-        if (isOn)
-            return curvedCost;
+        float curPower = controller.power;
+        if (curPower > rated*1000)
+            return rated* 1000;
         else
+            return curPower;
+    }
+
+    // Cutoff Power //
+    public int CutoffCost(float cutoffCost)
+    {
+        return Mathf.RoundToInt(CutoffCostMultiplier * cutoffCost);
+    }
+
+    public float CutoffPower(float cutoff, TurbineController controller)
+    {
+        float curPower = controller.power;
+
+        if (curPower > cutoff*1000)
             return 0;
+        else
+            return curPower;
     }
 
-    public float CurvedPower(bool isOn)
-    {
-        return 1;
-    }
 
     // Function calculates a value between 0 and 1, when at == optimum it gives 1. Else it will 
     // give a value lower than 1, depending on the spread and how far at is from the optimum.

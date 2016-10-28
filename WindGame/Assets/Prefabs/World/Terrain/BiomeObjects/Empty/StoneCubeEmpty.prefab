@@ -108,4 +108,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectHeight: 0.5
-  objectDensity: 0.9
+  objectDensity: 0.1

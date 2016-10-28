@@ -54,6 +54,7 @@ public class BuildMenuController : MonoBehaviour
     public GameObject floatSliderPrefab;
     public GameObject intSliderPrefab;
     public GameObject boolPropertyPrefab;
+    public GameObject minMaxPropertyPrefab;
 
     public ScrollRect propertiesScroller;
 
@@ -65,6 +66,7 @@ public class BuildMenuController : MonoBehaviour
     List<FloatPropertyController> floatProperties = new List<FloatPropertyController>();
     List<IntPropertyController> intProperties = new List<IntPropertyController>();
     List<BoolPropertyController> boolProperties = new List<BoolPropertyController>();
+    List<MinMaxController> minMaxProperties = new List<MinMaxController>();
 
     // Used to check wheter a turbine is selected.
     bool isTurbine;
@@ -201,9 +203,14 @@ public class BuildMenuController : MonoBehaviour
         foreach (BoolPropertyController controller in boolProperties)
             Destroy(controller.gameObject);
 
+        foreach(MinMaxController controller in minMaxProperties)
+            Destroy(controller.gameObject);
+
+
         floatProperties.Clear();
         intProperties.Clear();
         boolProperties.Clear();
+        minMaxProperties.Clear();
     }
 
     void CreateProperties()
@@ -222,7 +229,14 @@ public class BuildMenuController : MonoBehaviour
             intSlider.transform.SetParent(turbineProperties.transform, false);
             intSlider.GetComponent<IntPropertyController>().intProperty = intProperty;
             intProperties.Add(intSlider.GetComponent<IntPropertyController>());
+        }
 
+        foreach (MinMaxFloatProperty minMaxProperty in curInstantiated.GetComponent<TurbineController>().turbineProperties.minMaxProperty)
+        {
+            GameObject minMaxSlider = (GameObject)Instantiate(minMaxPropertyPrefab);
+            minMaxSlider.transform.SetParent(turbineProperties.transform, false);
+            minMaxSlider.GetComponent<MinMaxController>().minMaxFloatProperty = minMaxProperty;
+            minMaxProperties.Add(minMaxSlider.GetComponent<MinMaxController>());
         }
 
         foreach (BoolProperty boolProperty in curInstantiated.GetComponent<TurbineController>().turbineProperties.boolProperty)
@@ -231,8 +245,9 @@ public class BuildMenuController : MonoBehaviour
             boolSlider.transform.SetParent(turbineProperties.transform, false);
             boolSlider.GetComponent<BoolPropertyController>().boolProperty = boolProperty;
             boolProperties.Add(boolSlider.GetComponent<BoolPropertyController>());
-
         }
+
+
     }
 
     void DeleteMenuButtons()
@@ -265,6 +280,11 @@ public class BuildMenuController : MonoBehaviour
 
             return;
         }
+        BuildMenu2BuildMode();
+    }
+
+    void BuildMenu2BuildMode()
+    {
         canCancel = false;
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
@@ -282,6 +302,26 @@ public class BuildMenuController : MonoBehaviour
         }
 
         curInstantiated.transform.SetParent(null);
+    }
+
+    void BuildMode2BuildMenu()
+    {
+        Destroy(curInstantiated);
+        canCancel = true;
+        GetComponentInChildren<CanvasGroup>().alpha = 1;
+        GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+        infoCamera.enabled = true;
+        UIScript.GetInstance().SetInBuildMode(false);
+        curInstantiated = (GameObject)Instantiate(curSelected);
+        curInstantiated.transform.position = instantHere.transform.position;
+        curInstantiated.transform.SetParent(instantHere.transform);
+        DestroyProperties();
+        CreateProperties();
+        Canvas.ForceUpdateCanvases();
+        propertiesScroller.verticalScrollbar.value = 1;
+        propertiesScroller.verticalNormalizedPosition = 1;
+        Canvas.ForceUpdateCanvases();
+
     }
 
     void BuildPriceColorUpdate()
@@ -368,6 +408,11 @@ public class BuildMenuController : MonoBehaviour
             UIScript.GetInstance().SetInBuildMode(false);
             instantHere.SetActive(false);
             gameObject.transform.parent.gameObject.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            BuildMode2BuildMenu();
         }
     }
 

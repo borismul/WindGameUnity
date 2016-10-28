@@ -732,7 +732,6 @@ public class TerrainController : MonoBehaviour {
         Destroy(curCity);
     }
 
-
     // Structs that are used to visualize the biome parameters in the editor
     [System.Serializable]
     public struct Biome

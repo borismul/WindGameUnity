@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class WindController : MonoBehaviour {
 
     public static float direction;          // Direction in which the wind is moving    (Uniform)
@@ -32,7 +32,7 @@ public class WindController : MonoBehaviour {
     float WindDirection(float gameSpeed)
     {
         time += Time.deltaTime * gameSpeed/200;
-        direction = 180 * Mathf.Sin(0.01f * Mathf.PI * time/10000f) + 180 * Mathf.Cos(0.012f * Mathf.PI * time/10000f);
+        direction = 180 * Mathf.Sin(0.1f * Mathf.PI * time) + 180 * Mathf.Cos(0.12f * Mathf.PI * time);
         return direction;
     }
 
@@ -48,43 +48,38 @@ public class WindController : MonoBehaviour {
     //Formula found on the wind gradient wikipedia page
     public static float GetWindAtTile(GridTile tile, float height)
     {
+
         //Calculates the base magnitude depending on the season
         float baseWind = magnitude * seasonvalues[seasons[GameResources.getDate().Month - 1]];
 
         //Gets the gridtiles up to 3 tiles around the target
-        GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 80);
+        GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 100);
         float blockedWind = 0;
-        float deltaHeight; float tileX;
-        float tileY; float length; float dot; TerrainObject terrainObj;
-        float testDirection = 0; float blockedTile;
+        float deltaHeight; float dot; TerrainObject terrainObj;
+        float blockedTile =  0;
 
         for(int i = 0; i < nearTiles.Length; i++)
         {
-            tileX = nearTiles[i].position.x - tile.position.x;
-            tileY = nearTiles[i].position.z - tile.position.z;
-            length = Mathf.Sqrt(Mathf.Pow(tileX, 2) + Mathf.Pow(tileY, 2));
-            tileX = tileX / length;
-            tileY = tileY / length;
-            dot = tileX * -Mathf.Sin(direction) + tileY * -Mathf.Cos(direction);
-
+            Vector3 diff = nearTiles[i].position - tile.position;
+            diff.y = 0;
+            dot = Vector3.Dot(Vector3.Normalize(diff), Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * direction), 0, Mathf.Cos(Mathf.Deg2Rad * direction))));
             if (dot > 0)
             {
                 blockedTile =  0;
                 deltaHeight = nearTiles[i].position.y - tile.position.y;
 
                 //Reduces the wind coefficient when the tiles around it are higher 
-                //  Tiles block a maximum of 10% each
-                if (deltaHeight > 5) blockedTile += Mathf.Min(deltaHeight * heightInfluence, 0.1f);
+                //  Tiles block a maximum of 100% divided by their distance to the desired point each
+                if (deltaHeight > 5) blockedTile += Mathf.Min(deltaHeight * heightInfluence, 1/diff.magnitude);
 
                 if (nearTiles[i].occupant != null)
                 {
-                    terrainObj = nearTiles[i].occupant.obj.GetComponent<TerrainObject>();
+                    terrainObj = nearTiles[i].occupant.terrainObject;
                     //Checks wether a tile contains a terrainobject and adds the wind it blocks to windBlocked if the object is heigh enough
                     if (terrainObj != null)
                     {
-                        WindEffectController controller = nearTiles[i].occupant.obj.GetComponent<WindEffectController>();
-                        if(deltaHeight + controller.objectHeight > height) blockedTile += controller.objectDensity;
-                        testDirection++;
+                        WindEffectController controller = nearTiles[i].occupant.windEffectController;
+                        if (deltaHeight + controller.objectHeight > height) blockedTile += controller.objectDensity;
                     }
                 }
                 blockedWind += blockedTile * dot;
@@ -94,11 +89,10 @@ public class WindController : MonoBehaviour {
         //print("Amount of tiles with terrainobjects in the direction of the wind: " + testDirection);
         //print("Coefficient of blocked wind: " + blockedWind);
         blockedWind = Mathf.Min(blockedWind, 0.9f);
-
         return 1f - blockedWind;
     }
 
-    public static float getMaximumWind()
+    public static float GetMaximumWind()
     {
         return magnitude;
     }

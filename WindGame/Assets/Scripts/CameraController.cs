@@ -63,6 +63,7 @@ public class CameraController : MonoBehaviour
 
     Vector3 rotatePoint;
     float hitDistance;
+    public LayerMask groundLayer;
     // Unity Methods //
 
     // Determine initial conditions
@@ -409,7 +410,7 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
 
         // TEMPORARY if the ground can't be hit set the camera back to the previous location (camera went of terrain) TEMPORARY //
-        if (!Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+        if (!Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, groundLayer))
         {
             //targetPos = previousPos;
             hitPointDiff = 0;

@@ -14,7 +14,7 @@ public class BoolPropertyController : MonoBehaviour {
     void Start()
     {
         nameText.text = boolProperty.propertyName;
-        toggle.isOn = boolProperty.property;
+        toggle.isOn = boolProperty.lastSetting;
         toggle.onValueChanged.AddListener(delegate { ToggleChange(toggle.isOn); });
     }
 
@@ -24,6 +24,8 @@ public class BoolPropertyController : MonoBehaviour {
 
         if (boolProperty.graphicsFunction != null)
             boolProperty.graphicsFunction.Invoke(boolProperty.callObject, new object[] { toggle.isOn });
+
+        boolProperty.lastSetting = isOn;
 
     }
 

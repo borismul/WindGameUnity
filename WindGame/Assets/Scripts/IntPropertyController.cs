@@ -19,7 +19,7 @@ public class IntPropertyController : MonoBehaviour {
         unitText.text = intProperty.unit;
         slider.minValue = intProperty.minValue;
         slider.maxValue = intProperty.maxValue;
-        slider.value = intProperty.property;
+        slider.value = intProperty.lastSetting;
         inputField.contentType = InputField.ContentType.IntegerNumber;
         inputField.text = slider.value.ToString();
         inputField.onValueChanged.AddListener(delegate { InputFieldChange(inputField.text); });
@@ -36,6 +36,8 @@ public class IntPropertyController : MonoBehaviour {
             if(intProperty.graphicsFunction != null)
                 intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
         }
+
+        intProperty.lastSetting = int.Parse(value);
     }
 
     void SliderChange(int value)
@@ -44,5 +46,8 @@ public class IntPropertyController : MonoBehaviour {
         intProperty.property = value;
         if (intProperty.graphicsFunction != null)
             intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
+
+        intProperty.lastSetting = value;
+
     }
 }

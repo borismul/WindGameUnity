@@ -12,8 +12,6 @@ public class FloatPropertyController : MonoBehaviour
 
     [HideInInspector]
     public FloatProperty floatProperty;
-    [HideInInspector]
-    public GameObject preview;
 
     // Use this for initialization
     void Start()
@@ -22,7 +20,7 @@ public class FloatPropertyController : MonoBehaviour
         unitText.text = floatProperty.unit;
         slider.minValue = floatProperty.minValue;
         slider.maxValue = floatProperty.maxValue;
-        slider.value = floatProperty.property;
+        slider.value = floatProperty.lastSetting;
         inputField.contentType = InputField.ContentType.DecimalNumber;
         inputField.text = slider.value.ToString();
         inputField.onValueChanged.AddListener(delegate { InputFieldChange(inputField.text); });
@@ -39,6 +37,7 @@ public class FloatPropertyController : MonoBehaviour
                 floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });
 
             floatProperty.property = float.Parse(value);
+            floatProperty.lastSetting = float.Parse(value);
         }
     }
 
@@ -50,6 +49,9 @@ public class FloatPropertyController : MonoBehaviour
             floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });
 
         floatProperty.property = value;
+        floatProperty.lastSetting = value;
 
     }
+
+
 }
