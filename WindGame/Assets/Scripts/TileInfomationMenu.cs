@@ -33,6 +33,8 @@ public class TileInfomationMenu : MonoBehaviour {
         terrain = TerrainController.thisTerrainController;
         if (terrain != null)
             WindVisualizer.instance.StopVisualizeWind();
+
+        toggle.isOn = false;
     }
 	
     void ChangeWindHeight(float value)

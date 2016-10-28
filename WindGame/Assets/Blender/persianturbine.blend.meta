@@ -13,6 +13,8 @@ ModelImporter:
     100010: Building
     100012: Cube
     100014: Cube_001
+    100016: BezierCurve
+    100018: curvedblade
     400000: //RootNode
     400002: Turbine
     400004: TurbineHolder
@@ -21,6 +23,8 @@ ModelImporter:
     400010: Building
     400012: Cube
     400014: Cube_001
+    400016: BezierCurve
+    400018: curvedblade
     2300000: Turbine
     2300002: TurbineHolder
     2300004: axis
@@ -28,6 +32,8 @@ ModelImporter:
     2300008: Building
     2300010: Cube
     2300012: Cube_001
+    2300014: BezierCurve
+    2300016: curvedblade
     3300000: Turbine
     3300002: TurbineHolder
     3300004: axis
@@ -35,6 +41,8 @@ ModelImporter:
     3300008: Building
     3300010: Cube
     3300012: Cube_001
+    3300014: BezierCurve
+    3300016: curvedblade
     4300000: Turbine
     4300002: TurbineHolder
     4300004: axis
@@ -42,6 +50,8 @@ ModelImporter:
     4300008: Cube_001
     4300010: Cube
     4300012: Building
+    4300014: BezierCurve
+    4300016: curvedblade
     7400000: Default Take
     9500000: //RootNode
   materials:
