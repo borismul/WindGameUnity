@@ -184,7 +184,6 @@ public class CameraController : MonoBehaviour
         if (middleMouse)
         {
             xMouse = Input.GetAxis("Mouse X");
-            print(ProcessInput() - targetPos);
             rotatePoint += ProcessInput() - targetPos;
 
             //hitDistance += hitPointDiff * Mathf.Cos(Mathf.Deg2Rad * tiltDeg);

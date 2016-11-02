@@ -6,8 +6,6 @@ using System.Linq;
 
 public class WindVisualizer : MonoBehaviour
 {
-    static bool isBusy;
-
     public List<ThreadVector2>[] uvs;
     List<List<ThreadVector2>> threadUvs = new List<List<ThreadVector2>>();
     List<List<ThreadVector3>> threadVerts = new List<List<ThreadVector3>>();
@@ -16,11 +14,14 @@ public class WindVisualizer : MonoBehaviour
     List<GameObject> windSpeedChunks = new List<GameObject>();
     public static WindVisualizer instance;
     Thread newThread;
-    Thread[] chunkThreads = new Thread[8];
+    Thread[] chunkThreads = new Thread[50];
 
     float absMax;
 
     public float height = 0;
+
+    //float averageTime;
+    //int timesUSed = 0;
 
     void Start()
     {
@@ -31,6 +32,14 @@ public class WindVisualizer : MonoBehaviour
     {
         terrain = TerrainController.thisTerrainController;
         StartCoroutine("_VisualizeWind");
+
+        foreach (Thread thread in chunkThreads)
+        {
+            if (thread != null && thread.IsAlive)
+            {
+                thread.Abort();
+            }
+        }
     }
 
     public void StopVisualizeWind()
@@ -38,14 +47,18 @@ public class WindVisualizer : MonoBehaviour
         StopCoroutine("_VisualizeWind");
 
         foreach (GameObject windSpeedChunk in windSpeedChunks)
-            Destroy(windSpeedChunk);
-
-        foreach (Thread thread in chunkThreads)
         {
-            if (thread != null)
-                thread.Abort();
+            if (windSpeedChunk != null)
+            {
+                Destroy(windSpeedChunk.GetComponent<MeshFilter>().mesh);
+                Destroy(windSpeedChunk);
+            }
         }
-        if (newThread != null)
+        windSpeedChunks.Clear();
+        threadUvs.Clear();
+        threadVerts.Clear();
+
+        if (newThread != null && newThread.IsAlive)
             newThread.Abort();
 
         windSpeedChunks.Clear();
@@ -57,11 +70,13 @@ public class WindVisualizer : MonoBehaviour
 
         while (true)
         {
-            isBusy = true;
-            newThread = new Thread(() => GetWindUVs());
-            newThread.Start();
+            if (newThread == null || !newThread.IsAlive)
+            {
+                newThread = new Thread(() => GetWindUVs());
+                newThread.Start();
+            }
 
-            while (isBusy)
+            while (newThread.IsAlive)
             {
                 yield return null;
             }
@@ -76,6 +91,7 @@ public class WindVisualizer : MonoBehaviour
     void CreateChunks()
     {
         Texture windTexture = (Texture)Resources.Load("windTexture");
+        List<ThreadVector3> threadVectors = new List<ThreadVector3>();
 
         for (int i = 0; i < terrain.chunks.Count; i++)
         {
@@ -83,11 +99,14 @@ public class WindVisualizer : MonoBehaviour
             GameObject newWindChunk = new GameObject("WindChunk");
             newWindChunk.transform.position = chunk.transform.position + Vector3.up * 0.5f;
             newWindChunk.AddComponent<MeshFilter>().mesh = chunk.GetComponent<MeshFilter>().mesh;
+            Mesh mesh = newWindChunk.GetComponent<MeshFilter>().mesh;
+
             newWindChunk.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
             newWindChunk.GetComponent<MeshRenderer>().material.mainTexture = windTexture;
             threadUvs.Add(ThreadVector2.ToThreadVectorList(newWindChunk.GetComponent<MeshFilter>().mesh.uv));
             Vector3[] meshverts = newWindChunk.GetComponent<MeshFilter>().mesh.vertices;
-            List<ThreadVector3> threadVectors = new List<ThreadVector3>();
+            threadVectors = new List<ThreadVector3>();
+
             for (int j = 0; j < meshverts.Length; j++)
             {
                 threadVectors.Add(new ThreadVector3(meshverts[j] + chunk.transform.position));
@@ -99,32 +118,15 @@ public class WindVisualizer : MonoBehaviour
 
     void GetWindUVs()
     {
+        int timeAtStart = System.DateTime.Now.Millisecond;
         uvs = new List<ThreadVector2>[terrain.chunks.Count];
         absMax = 0;
-        for (int i = 0; i < terrain.chunks.Count; i++)
+
+        for (int i = 0; i<chunkThreads.Length; i++)
         {
-            bool ranThread = false;
-            while (!ranThread)
-            {
-                bool canRunNewThread = false;
-                int pos = 0;
-                for (int j = 0; j < chunkThreads.Length; j++)
-                {
-                    if (chunkThreads[j] == null || !chunkThreads[j].IsAlive)
-                    {
-                        canRunNewThread = true;
-                        pos = j;
-                        break;
-                    }
-                }
-                if (canRunNewThread)
-                {
-                    System.Threading.ParameterizedThreadStart pts = new System.Threading.ParameterizedThreadStart(CalculateChunk);
-                    chunkThreads[pos] = new System.Threading.Thread(pts);
-                    chunkThreads[pos].Start(i);
-                    ranThread = true;
-                }
-            }
+            System.Threading.ParameterizedThreadStart pts = new System.Threading.ParameterizedThreadStart(CalculateChunk);
+            chunkThreads[i] = new System.Threading.Thread(pts);
+            chunkThreads[i].Start(i);       
         }
 
         bool canContinue = false;
@@ -133,7 +135,7 @@ public class WindVisualizer : MonoBehaviour
         {
             for (int j = 0; j < chunkThreads.Length; j++)
             {
-                if (chunkThreads[j] != null && chunkThreads[j].IsAlive)
+                if (chunkThreads[j].IsAlive)
                 {
                     canContinue = false;
                     break;
@@ -141,6 +143,7 @@ public class WindVisualizer : MonoBehaviour
                 canContinue = true;
             }
         }
+
 
         for (int i = 0; i < terrain.chunks.Count; i++)
         {
@@ -157,29 +160,43 @@ public class WindVisualizer : MonoBehaviour
             }
         }
 
-        isBusy = false;
+        //if (System.DateTime.Now.Millisecond - timeAtStart >= 0)
+        //{
+        //    timesUSed++;
+        //    averageTime = (averageTime * (timesUSed-1) + System.DateTime.Now.Millisecond - timeAtStart) / timesUSed;
+        //}
+        //print(averageTime);
+
     }
 
     void CalculateChunk(object i)
     {
-        List<ThreadVector2> uvsOfThisChunk = threadUvs[(int)i];
-        List<ThreadVector3> vert = threadVerts[(int)i];
-        List<ThreadVector2> CurChunkUVs = new List<ThreadVector2>();
+        int operationsPerThread = Mathf.CeilToInt(windSpeedChunks.Count/chunkThreads.Length);
 
-        for (int j = 0; j < vert.Count; j++)
+        for (int k = (int)i * operationsPerThread; k < ((int)i + 1) * operationsPerThread; k++)
         {
-            GridTile tile = GridTile.FindClosestGridTile(vert[j]);
-            if (tile == null || tile.isOutsideBorder)
-                CurChunkUVs.Add(new ThreadVector2(0, 1));
-            else
+            if (windSpeedChunks[k] == null)
+                break;
+
+            List<ThreadVector2> uvsOfThisChunk = threadUvs[(int)k];
+            List<ThreadVector3> vert = threadVerts[(int)k];
+            List<ThreadVector2> CurChunkUVs = new List<ThreadVector2>();
+            for (int j = 0; j < vert.Count; j++)
             {
-                float curWind = WindController.GetWindAtTile(tile, height);
-                if (curWind > absMax)
-                    absMax = curWind;
-                CurChunkUVs.Add(new ThreadVector2(curWind, curWind));
+                GridTile tile = GridTile.FindClosestGridTile(vert[j]);
+                if (tile == null || tile.isOutsideBorder)
+                    CurChunkUVs.Add(new ThreadVector2(0, 1));
+                else
+                {
+                    float curWind = WindController.GetWindAtTile(tile, height);
+                    if (curWind > absMax)
+                        absMax = curWind;
+                    CurChunkUVs.Add(new ThreadVector2(curWind, curWind));
+                }
             }
+
+            uvs[(int)k] = CurChunkUVs;
         }
-        uvs[(int)i] = CurChunkUVs;
     }
 
     void OnApplicationQuit()
@@ -192,10 +209,5 @@ public class WindVisualizer : MonoBehaviour
         if(newThread!= null)
             newThread.Abort();
         
-    }
-
-    private static List<T> CreateList<T>(int capacity)
-    {
-        return Enumerable.Repeat(default(T), capacity).ToList();
     }
 }

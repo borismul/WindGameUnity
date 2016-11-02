@@ -15,15 +15,20 @@ public class IntPropertyController : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        inputField.onValueChanged.AddListener(delegate { InputFieldChange(inputField.text); });
+        slider.onValueChanged.AddListener(delegate { SliderChange(Mathf.RoundToInt(slider.value)); });
         nameText.text = intProperty.propertyName;
         unitText.text = intProperty.unit;
         slider.minValue = intProperty.minValue;
         slider.maxValue = intProperty.maxValue;
-        slider.value = intProperty.lastSetting;
+        int savedValue;
+        if (SavedTurbineProperties.GetSavedValue(intProperty.propertyName, out savedValue))
+            slider.value = savedValue;
+        else
+            slider.value = intProperty.property;
         inputField.contentType = InputField.ContentType.IntegerNumber;
         inputField.text = slider.value.ToString();
-        inputField.onValueChanged.AddListener(delegate { InputFieldChange(inputField.text); });
-        slider.onValueChanged.AddListener(delegate { SliderChange(Mathf.RoundToInt(slider.value)); });
+
         InputFieldChange(inputField.text);
     }
 	
@@ -32,12 +37,10 @@ public class IntPropertyController : MonoBehaviour {
         if (value != string.Empty)
         {
             slider.value = int.Parse(value);
-            intProperty.property = int.Parse(value);
-            if(intProperty.graphicsFunction != null)
-                intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
+            //intProperty.property = int.Parse(value);
+            //if (intProperty.graphicsFunction != null)
+            //    intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
         }
-
-        intProperty.lastSetting = int.Parse(value);
     }
 
     void SliderChange(int value)
@@ -47,7 +50,6 @@ public class IntPropertyController : MonoBehaviour {
         if (intProperty.graphicsFunction != null)
             intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
 
-        intProperty.lastSetting = value;
-
+        SavedTurbineProperties.SaveValue(intProperty.propertyName, value);
     }
 }

@@ -80,7 +80,7 @@ public class WorldController : MonoBehaviour
         t.transform.SetParent(parent);
         float diameter = t.GetComponent<SizeController>().diameter;
         AddToGridTiles(t, pos, (diameter * scale) + 2 * TerrainController.thisTerrainController.tileSize, type);
-        EqualTerrain(pos, (diameter * scale));
+        EqualTerrain(pos, (diameter * scale)*1.5f);
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t); 
     }

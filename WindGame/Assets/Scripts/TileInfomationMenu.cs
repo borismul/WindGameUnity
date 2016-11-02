@@ -99,4 +99,15 @@ public class TileInfomationMenu : MonoBehaviour {
         UIScript.GetInstance().CloseTileMenu();
         WorldInteractionController.GetInstance().SetInInfoMode(false);
     }
+
+    public void OnMouseEnter()
+    {
+        PointerInfo.overUIElement = true;
+    }
+
+    public void OnMouseExit()
+    {
+        PointerInfo.overUIElement = false;
+
+    }
 }

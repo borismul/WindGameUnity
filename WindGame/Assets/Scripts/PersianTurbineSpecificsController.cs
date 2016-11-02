@@ -167,7 +167,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     public int WallCost(bool isOn)
     {
         if (isOn)
-            return wallCost;
+            return Mathf.RoundToInt(wallCost * areaProperty.property);
         else
             return 0;
     }
@@ -207,7 +207,8 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public float HeightPower(float height, TurbineController controller)
     {
-        return controller.power;
+        float windSpeed = WindController.GetWindAtTile(controller.onGridtile, height);
+        return controller.power * windSpeed * windSpeed * windSpeed;
     }
 
     // Area //

@@ -93,7 +93,7 @@ public class WorldInteractionController : MonoBehaviour
         if (inInfoMode)
             CheckSelectedTile();
 
-        if (!UIScript.GetInstance().GetInBuildMode())
+        if (!UIScript.GetInstance().GetInBuildMode() || PointerInfo.overUIElement)
         {
             CheckLeftClick();
             GetComponent<MeshFilter>().mesh = highlighter;

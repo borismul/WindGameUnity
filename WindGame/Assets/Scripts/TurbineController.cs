@@ -36,7 +36,7 @@ public class TurbineController : MonoBehaviour {
 
     float avgPowerCount = 0;
 
-    GridTile onGridtile;
+    public GridTile onGridtile;
 
     void Start()
     {
@@ -107,13 +107,14 @@ public class TurbineController : MonoBehaviour {
         }
         foreach (MinMaxFloatProperty prop in turbineProperties.minMaxProperty)
         {
-            power = (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, this });
-            //print(prop.propertyName + ": " + (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, power }));
-
             power = (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, this });
             //print(prop.propertyName + ": " + (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, power }));
+
+            power = (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, this });
+            //print(prop.propertyName + ": " + (float)prop.minPowerFunction.Invoke(prop.callObject, new object[] { prop.minProperty, power }));
         }
 
+        power *= (float)health;
         avgPower = (avgPower * avgPowerCount + power) / (avgPowerCount + 1);
         avgPowerCount++;
     }

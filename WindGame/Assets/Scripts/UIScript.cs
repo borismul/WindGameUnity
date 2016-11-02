@@ -27,6 +27,8 @@ public class UIScript : MonoBehaviour {
 
     int menuActive;
 
+    int activeUIElements = 1;
+
     bool startGiven;
 
     bool inBuildMode;
@@ -119,24 +121,28 @@ public class UIScript : MonoBehaviour {
             menuActive = -1;
             menus[1].SetActive(false);
             GameResources.unPause();
+            activeUIElements--;
             return true;
         } else
         {
             if (menuActive > -1) return true;
             menuActive = 1;
             menus[1].SetActive(true);
+            menus[1].GetComponentInChildren<Canvas>().sortingOrder = activeUIElements + 1;
             GameResources.pause();
+            activeUIElements++;
             return false;
         }
     }
 
     public void OpenTurbineMenu(TurbineController target)
     {
-        if (menuActive > -1) return;
-
         menuActive = 3;
         menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(target);
         menus[3].SetActive(true);
+        menus[3].GetComponentInChildren<Canvas>().sortingOrder = activeUIElements + 1;
+
+        activeUIElements++;
     }
 
     public void CloseTurbineMenu()
@@ -144,26 +150,16 @@ public class UIScript : MonoBehaviour {
         menuActive = -1;
         menus[3].SetActive(false);
         menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
-    }
-
-    public void setActiveTurbine(TurbineController tur)
-    {
-        menus[3].GetComponent<PanemoneInformationMenu>().SetTurbine(tur);
-    }
-
-    public void clearActiveTurbine()
-    {
-        menus[3].GetComponent<PanemoneInformationMenu>().ClearTurbine();
+        activeUIElements--;
     }
 
     public void OpenTileMenu()
     {
-        if (menuActive > -1) return;
-
         menuActive = 4;
         menus[4].SetActive(true);
-
+        menus[4].GetComponentInChildren<Canvas>().sortingOrder = activeUIElements + 1;
         WorldInteractionController.GetInstance().SetInInfoMode(true);
+        activeUIElements++;
     }
 
     public void SetActiveTile(GridTile til)
@@ -175,13 +171,21 @@ public class UIScript : MonoBehaviour {
     {
         menuActive = -1;
         menus[4].SetActive(false);
-
+        activeUIElements--;
     }
 
     public void BuildMenu()
     {
         menus[2].SetActive(true);
+        menus[2].GetComponentInChildren<Canvas>().sortingOrder = activeUIElements + 1;
         cameraController.SetHaveControl(false);
+        activeUIElements++;
+    }
+
+    public void CloseBuildMenu()
+    {
+        menus[2].SetActive(false);
+        activeUIElements--;
     }
 
     //Get to know if the camera has zoomed on the village

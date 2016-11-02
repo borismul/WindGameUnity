@@ -86,10 +86,10 @@ public class PanemoneInformationMenu : MonoBehaviour {
         infoElement.transform.GetChild(1).GetComponent<Text>().color = RYGInterpolation(1- turbine.efficiency);
         globalElements.Add(infoElement);
 
-        GameObject infoElement2 = CreateProperty("Current Power Production", turbine.power.ToString("F2"), "W");
+        GameObject infoElement2 = CreateProperty("Current Power Production", turbine.power.ToString("F0"), "W");
         globalElements.Add(infoElement2);
 
-        GameObject infoElement3 = CreateProperty("Average Power Production", turbine.power.ToString("F2"), "W");
+        GameObject infoElement3 = CreateProperty("Average Power Production", turbine.power.ToString("F0"), "W");
         globalElements.Add(infoElement3);
 
         GameObject infoElement4 = CreateProperty("Health", turbine.health.ToString("F2"), "");
@@ -103,10 +103,10 @@ public class PanemoneInformationMenu : MonoBehaviour {
         infoElement.transform.GetChild(1).GetComponent<Text>().color = RYGInterpolation(1 - turbine.efficiency);
 
         infoElement = globalElements[1];
-        infoElement.transform.GetChild(1).GetComponent<Text>().text = turbine.power.ToString("F2");
+        infoElement.transform.GetChild(1).GetComponent<Text>().text = turbine.power.ToString("F0");
 
         infoElement = globalElements[2];
-        infoElement.transform.GetChild(1).GetComponent<Text>().text = turbine.avgPower.ToString("F2");
+        infoElement.transform.GetChild(1).GetComponent<Text>().text = turbine.avgPower.ToString("F0");
 
         infoElement = globalElements[3];
         infoElement.transform.GetChild(1).GetComponent<Text>().text = turbine.health.ToString("F2");
@@ -118,7 +118,14 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
         foreach (FloatProperty prop in turbine.turbineProperties.floatProperty)
         {
-            GameObject infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F2"), prop.unit);
+            GameObject infoElement;
+            if (prop.property < 1)
+                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F2"), prop.unit);
+            else if (prop.property < 50)
+                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F1"), prop.unit);
+            else
+                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F0"), prop.unit);
+
             turbineSpecificElements.Add(infoElement);
         }
         foreach (IntProperty prop in turbine.turbineProperties.intProperty)
@@ -126,6 +133,29 @@ public class PanemoneInformationMenu : MonoBehaviour {
             GameObject infoElement = CreateProperty(prop.propertyName, prop.property.ToString("0"), prop.unit);
             turbineSpecificElements.Add(infoElement);
 
+        }
+        foreach (MinMaxFloatProperty prop in turbine.turbineProperties.minMaxProperty)
+        {
+
+            GameObject infoElement;
+            if (prop.minProperty < 1)
+                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F2"), prop.unit);
+            else if (prop.minProperty < 50)
+                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F1"), prop.unit);
+            else
+                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F0"), prop.unit);
+
+            turbineSpecificElements.Add(infoElement);
+
+
+            if (prop.maxProperty < 1)
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F2"), prop.unit);
+            else if (prop.maxProperty < 50)
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F1"), prop.unit);
+            else
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F0"), prop.unit);
+
+            turbineSpecificElements.Add(infoElement);
         }
         foreach (BoolProperty prop in turbine.turbineProperties.boolProperty)
         {
@@ -166,7 +196,13 @@ public class PanemoneInformationMenu : MonoBehaviour {
         foreach (FloatProperty prop in turbine.turbineProperties.floatProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
-            infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F2");
+
+            if (prop.property < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F2");
+            else if (prop.property < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F1");
+            else
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F0");
             count++;
         }
         foreach (IntProperty prop in turbine.turbineProperties.intProperty)
@@ -174,7 +210,32 @@ public class PanemoneInformationMenu : MonoBehaviour {
             GameObject infoElement = turbineSpecificElements[count];
             infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("0");
             count++;
+        }
+        foreach (MinMaxFloatProperty prop in turbine.turbineProperties.minMaxProperty)
+        {
 
+            GameObject infoElement = turbineSpecificElements[count];
+            if (prop.minProperty < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F2");
+            else if (prop.minProperty < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F1");
+            else
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F0");
+
+            turbineSpecificElements.Add(infoElement);
+
+            count++;
+            infoElement = turbineSpecificElements[count];
+
+            if (prop.maxProperty < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F2");
+            else if (prop.maxProperty < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F1");
+            else
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F0");
+
+            turbineSpecificElements.Add(infoElement);
+            count++;
         }
         foreach (BoolProperty prop in turbine.turbineProperties.boolProperty)
         {
@@ -226,11 +287,15 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     public void OnMouseOver()
     {
+        PointerInfo.overUIElement = true;
         PointerInfo.inScrollableArea = true;
+
     }
 
     public void OnMouseExit()
     {
+        PointerInfo.overUIElement = false;
         PointerInfo.inScrollableArea = false;
+
     }
 }

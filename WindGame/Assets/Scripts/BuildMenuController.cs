@@ -141,8 +141,7 @@ public class BuildMenuController : MonoBehaviour
             UIScript.GetInstance().SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
             instantHere.SetActive(false);
-            gameObject.transform.parent.gameObject.SetActive(false);
-
+            UIScript.GetInstance().CloseBuildMenu();
         }
     }
 
@@ -438,5 +437,17 @@ public class BuildMenuController : MonoBehaviour
             world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<TurbineController>().desiredScale, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
             curInstantiated = null;
         }
+    }
+
+    public void OnMouseEnter()
+    {
+        PointerInfo.inScrollableArea = true;
+        PointerInfo.overUIElement = true;
+    }
+
+    public void OnMouseExit()
+    {
+        PointerInfo.inScrollableArea = false;
+        PointerInfo.overUIElement = false;
     }
 }
