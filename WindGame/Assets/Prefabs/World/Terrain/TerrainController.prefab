@@ -85,7 +85,7 @@ MonoBehaviour:
       minRotation: 0
       maxRotation: 360
   seed: 2
-  isFlatShaded: 0
+  isFlatShaded: 1
   isIsland: 1
   radius: 700
   baseHeight: 50

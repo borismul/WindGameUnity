@@ -202,7 +202,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Calculate vertices, uvs and normal and add them to their corresponding lists
-    void AddVertsAndUVAndNorm(int n, bool update)
+    public void AddVertsAndUVAndNorm(int n, bool update)
     {
         // Loop through each of the vertices in map except for first and last one. (Those are the overlapping vertices with the chunk next to it)
         for (int i = 1; i < n - 1; i++)

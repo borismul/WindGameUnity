@@ -461,8 +461,6 @@ MonoBehaviour:
   areaStartValue: 10
   areaMinValue: 5
   areaMaxValue: 25
-  areaOptimalValue: 25
-  areaSpread: 35
   areaCostMultiplier: 5
   unitScaleArea: 7.5
   heightPropertyName: Height
@@ -471,8 +469,6 @@ MonoBehaviour:
   heightMinValue: 0
   heightMaxValue: 50
   heightCostMultiplier: 3
-  heightOptimalValue: 50
-  heightSpread: 1000000
   baseStartScale: 1
   turbineBasePrefab: {fileID: 1000012828979096, guid: b040fb47daf574943910023a0edd4460,
     type: 2}
@@ -482,25 +478,27 @@ MonoBehaviour:
   bladesMinValue: 0
   bladesMaxValue: 20
   costPerBlade: 20
-  bladesOptimalValue: 7
-  bladesSpread: 8
+  a: 0.15
+  b: 0.1
+  c: 0.1
   persianBlade: {fileID: 1000014047877730, guid: 1e982e288293a7f4789eff61058f9e59,
     type: 2}
   wallPropertyName: Use A Wall
   wallUnit: 
   wallCost: 1000
-  wallPlusCurvedMultiplier: 1
-  wallMinCurvedMultiplier: 0.8
+  wallMultiplier: 1.3
   wallIsOn: 0
   wall: {fileID: 1000013120947920, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
-  curvedPropertyName: Use Curved Blades
-  curvedUnit: m
-  curvedCost: 500
-  curvedMinWallMultiplier: 0.6
-  noCurvedNoWallMultiplier: 0
-  curvedIsOn: 0
-  curvedBladePrefab: {fileID: 1000014047877730, guid: 5817b2227e06e944690fa65319bb24d0,
-    type: 2}
+  RatedCutoffpropertyName: Rated/Cuttoff Power
+  ratedPropertyName: Rated Power
+  ratedCutoffUnit: kW
+  RatedCostMultiplier: 500
+  CutoffCostMultiplier: 500
+  cutoffPropertyName: Cutoff Power
+  ratedProperty: 5
+  cutOffProperty: 10
+  ratedCutoffMin: 1
+  ratedCuroffMax: 30
 --- !u!114 &114000012748795752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -534,4 +532,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe62095cc02642f44bcf2579e39aa139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diameter: 17.5
+  diameter: 16
