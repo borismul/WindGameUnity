@@ -29,6 +29,6 @@ public class CompassController : MonoBehaviour {
         north.transform.position = new Vector3(r * Mathf.Cos((rotation + 90) * Mathf.Deg2Rad), r * Mathf.Sin((rotation + 90) * Mathf.Deg2Rad)) + background.transform.position;
         west.transform.position = new Vector3(r * Mathf.Cos((rotation + 180) * Mathf.Deg2Rad), r * Mathf.Sin((rotation + 180) * Mathf.Deg2Rad)) + background.transform.position;
         south.transform.position = new Vector3(r * Mathf.Cos((rotation + 270) * Mathf.Deg2Rad), r * Mathf.Sin((rotation + 270) * Mathf.Deg2Rad)) + background.transform.position;
-        windPointer.transform.rotation = Quaternion.Euler(background.transform.rotation.eulerAngles + new Vector3(0, 0, WindController.direction));
+        windPointer.transform.rotation = Quaternion.Euler(background.transform.rotation.eulerAngles + new Vector3(0, 0, 180 - WindController.direction));
     }
 }

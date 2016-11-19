@@ -10,6 +10,7 @@ public class GridTile{
     public GridTileOccupant occupant;
     public bool underWater;
     public bool isOutsideBorder;
+    public bool canSeeWind;
     public List<Vector3> vert;
     public List<int> vertIndex;
     public Chunk chunk;

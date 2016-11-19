@@ -64717,6 +64717,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ace2f8c549f860419812021927c05a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  others:
+  - {fileID: 1000013798268936, guid: 7c386ee92ead31f4b954ce13f63edc44, type: 2}
+  othersText:
+  - {fileID: 11481988, guid: 5f1ce0d351f51274a9e276c78ad68d5c, type: 2}
   turbineButton: {fileID: 11460628, guid: 15d856f3b00c63d4db57e4020d226238, type: 2}
   cancelButton: {fileID: 114000014026907942}
   buildButton: {fileID: 114000011032568456}

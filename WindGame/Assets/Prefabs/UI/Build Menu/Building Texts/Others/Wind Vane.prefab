@@ -11,7 +11,7 @@ GameObject:
   - 222: {fileID: 22262744}
   - 114: {fileID: 11481988}
   m_Layer: 5
-  m_Name: House
+  m_Name: Wind Vane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,8 +49,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: House for people to live in. In this game it has no meaning other than decoration
-    of the landscape.
+  m_Text: The main purpose of the wind vane is to obtain a wind rose, which indicates
+    the amount of time the wind is flowing in a certian direction. This can be used
+    to rotate the persian windmill with wall in the right way. The wind vane also
+    allows for viewing the current windspeeds around it, in a certain radius.
 --- !u!222 &22262744
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -55,9 +55,11 @@ public class PanemoneInformationMenu : MonoBehaviour {
     {
         if (turbine == null) return;
 
+        float price = turbine.GetComponent<PriceController>().price;
+
         turbineName.text = turbine.turbineName;
-        repairCosts.text = ((1 - turbine.health) * turbine.price).ToString("0");
-        destroyRefund.text = (turbine.price/2 - (1 - turbine.health) * turbine.price/2).ToString("0");
+        repairCosts.text = ((1 - turbine.health) * price).ToString("0");
+        destroyRefund.text = (price/2 - (1 - turbine.health) * price/2).ToString("0");
 
         UpdateInfoElements();
         UpdateGlobalInfo();
@@ -115,8 +117,8 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public void GenerateInfoElements()
     {
         separators.Add(CreateSeparator("User Variables:"));
-
-        foreach (FloatProperty prop in turbine.turbineProperties.floatProperty)
+        ObjectProperties properties = turbine.GetComponent<PropertiesContainer>().properties;
+        foreach (FloatProperty prop in properties.floatProperty)
         {
             GameObject infoElement;
             if (prop.property < 1)
@@ -128,13 +130,13 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
             turbineSpecificElements.Add(infoElement);
         }
-        foreach (IntProperty prop in turbine.turbineProperties.intProperty)
+        foreach (IntProperty prop in properties.intProperty)
         {
             GameObject infoElement = CreateProperty(prop.propertyName, prop.property.ToString("0"), prop.unit);
             turbineSpecificElements.Add(infoElement);
 
         }
-        foreach (MinMaxFloatProperty prop in turbine.turbineProperties.minMaxProperty)
+        foreach (MinMaxFloatProperty prop in properties.minMaxProperty)
         {
 
             GameObject infoElement;
@@ -157,7 +159,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
             turbineSpecificElements.Add(infoElement);
         }
-        foreach (BoolProperty prop in turbine.turbineProperties.boolProperty)
+        foreach (BoolProperty prop in properties.boolProperty)
         {
             GameObject infoElement;
             if (prop.property)
@@ -193,7 +195,8 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public void UpdateInfoElements()
     {
         int count = 0;
-        foreach (FloatProperty prop in turbine.turbineProperties.floatProperty)
+        ObjectProperties properties = turbine.GetComponent<PropertiesContainer>().properties;
+        foreach (FloatProperty prop in properties.floatProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
 
@@ -205,13 +208,13 @@ public class PanemoneInformationMenu : MonoBehaviour {
                 infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F0");
             count++;
         }
-        foreach (IntProperty prop in turbine.turbineProperties.intProperty)
+        foreach (IntProperty prop in properties.intProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
             infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("0");
             count++;
         }
-        foreach (MinMaxFloatProperty prop in turbine.turbineProperties.minMaxProperty)
+        foreach (MinMaxFloatProperty prop in properties.minMaxProperty)
         {
 
             GameObject infoElement = turbineSpecificElements[count];
@@ -237,7 +240,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
             turbineSpecificElements.Add(infoElement);
             count++;
         }
-        foreach (BoolProperty prop in turbine.turbineProperties.boolProperty)
+        foreach (BoolProperty prop in properties.boolProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
 
@@ -270,12 +273,13 @@ public class PanemoneInformationMenu : MonoBehaviour {
     void RepairTurbine()
     {
         turbine.health = 1;
-        GameResources.removeWealth((float)turbine.health * turbine.price);
+        GameResources.removeWealth((float)turbine.health * turbine.GetComponent<PriceController>().price);
     }
 
     void DestroyTurbine()
     {
-        GameResources.removeWealth(-(turbine.price - (1 - (float)turbine.health) * turbine.price/2));
+        float price = GetComponent<PriceController>().price;
+        GameResources.removeWealth(-(price - (1 - (float)turbine.health) * price/2));
         TurbineManager.GetInstance().RemoveTurbine(turbine.gameObject);
         CloseMenu();
     }

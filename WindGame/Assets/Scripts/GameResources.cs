@@ -99,7 +99,7 @@ public class GameResources : MonoBehaviour
         }
     }
 
-	public static bool BuyTurbine(float cost)
+	public static bool Buy(float cost)
 	{
 		if(wealth < cost)
 		{

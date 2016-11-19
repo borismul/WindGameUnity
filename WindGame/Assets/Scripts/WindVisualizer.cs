@@ -11,7 +11,7 @@ public class WindVisualizer : MonoBehaviour
     List<List<ThreadVector3>> threadVerts = new List<List<ThreadVector3>>();
     TerrainController terrain;
 
-    List<GameObject> windSpeedChunks = new List<GameObject>();
+    public List<GameObject> windSpeedChunks = new List<GameObject>();
     public static WindVisualizer instance;
     Thread newThread;
     Thread[] chunkThreads = new Thread[50];
@@ -98,11 +98,13 @@ public class WindVisualizer : MonoBehaviour
             GameObject chunk = terrain.chunks[i].gameObject;
             GameObject newWindChunk = new GameObject("WindChunk");
             newWindChunk.transform.position = chunk.transform.position + Vector3.up * 0.5f;
-            newWindChunk.AddComponent<MeshFilter>().mesh = chunk.GetComponent<MeshFilter>().mesh;
-            Mesh mesh = newWindChunk.GetComponent<MeshFilter>().mesh;
 
             newWindChunk.AddComponent<MeshRenderer>().material = new Material(Shader.Find("Diffuse"));
             newWindChunk.GetComponent<MeshRenderer>().material.mainTexture = windTexture;
+            Mesh mesh = chunk.GetComponent<MeshFilter>().mesh;
+            
+            newWindChunk.AddComponent<MeshFilter>().mesh = mesh;
+
             threadUvs.Add(ThreadVector2.ToThreadVectorList(newWindChunk.GetComponent<MeshFilter>().mesh.uv));
             Vector3[] meshverts = newWindChunk.GetComponent<MeshFilter>().mesh.vertices;
             threadVectors = new List<ThreadVector3>();
@@ -113,6 +115,16 @@ public class WindVisualizer : MonoBehaviour
             }
             threadVerts.Add(threadVectors);
             windSpeedChunks.Add(newWindChunk);
+        }
+    }
+
+    public void UpdateChunks()
+    {
+        for(int i = 0; i < windSpeedChunks.Count; i++)
+        {
+            Mesh mesh = windSpeedChunks[i].GetComponent<MeshFilter>().mesh;
+            mesh.vertices = terrain.chunks[i].GetComponent<MeshFilter>().mesh.vertices;
+            mesh.normals = terrain.chunks[i].GetComponent<MeshFilter>().mesh.normals;
         }
     }
 
@@ -151,7 +163,7 @@ public class WindVisualizer : MonoBehaviour
             for (int j = 0; j < uvs[i].Count; j++)
             {
                 GridTile tile = GridTile.FindClosestGridTile(vert[j]);
-                if (tile == null || tile.isOutsideBorder)
+                if (tile == null || tile.isOutsideBorder || !tile.canSeeWind)
                     continue;
                 else
                 {
@@ -186,6 +198,8 @@ public class WindVisualizer : MonoBehaviour
                 GridTile tile = GridTile.FindClosestGridTile(vert[j]);
                 if (tile == null || tile.isOutsideBorder)
                     CurChunkUVs.Add(new ThreadVector2(0, 1));
+                else if(!tile.canSeeWind)
+                    CurChunkUVs.Add(new ThreadVector2(0.125f, 0.875f));
                 else
                 {
                     float curWind = WindController.GetWindAtTile(tile, height);

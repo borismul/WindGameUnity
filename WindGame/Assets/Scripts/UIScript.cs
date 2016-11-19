@@ -20,6 +20,7 @@ public class UIScript : MonoBehaviour {
     public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
     public GameObject loadingMenuPrefab;
+    public GameObject weatherMenuPrefab;
     CameraController cameraController;
 
     GameObject managerObj;
@@ -106,6 +107,11 @@ public class UIScript : MonoBehaviour {
         GameObject obj7 = Instantiate(loadingMenuPrefab);
         obj7.transform.SetParent(transform);
         menus.Add(obj7);
+
+        GameObject obj8 = Instantiate(weatherMenuPrefab);
+        obj8.transform.SetParent(transform);
+        obj8.SetActive(false);
+        menus.Add(obj8);
     }
 
     // Get the singleton instance
@@ -186,6 +192,14 @@ public class UIScript : MonoBehaviour {
     {
         menus[2].SetActive(false);
         activeUIElements--;
+    }
+
+    public void OpenWindVaneMenu(WindVaneController windVaneController)
+    {
+        menus[6].SetActive(true);
+        menus[6].GetComponentInChildren<Canvas>().sortingOrder = activeUIElements + 1;
+        activeUIElements++;
+
     }
 
     //Get to know if the camera has zoomed on the village

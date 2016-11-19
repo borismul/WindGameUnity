@@ -87,9 +87,9 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     FloatProperty heightProperty;
     IntProperty bladesProperty;
     BoolProperty wallProperty;
-    MinMaxFloatProperty ratedCutoffProperty; 
-    
-    TurbineController controller;
+    MinMaxFloatProperty ratedCutoffProperty;
+
+    PropertiesContainer controller;
 
     float height;                                               // Current height of the turbine
     List<GameObject> currentBlades = new List<GameObject>();    // The instantiated blades, if there is at least one
@@ -103,27 +103,27 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     // Generate the properties for the persian turbine
     void GenerateProperties()
     {
-        controller = GetComponent<TurbineController>();
+        controller = GetComponent<PropertiesContainer>();
 
         // Number of blades
         bladesProperty = new IntProperty(bladesPropertyName, bladesUnit, bladesStartValue, bladesMinValue, bladesMaxValue, GetType().GetMethod("BladesPower"), GetType().GetMethod("CreateBlades"), GetType().GetMethod("BladesCost"), null, this);
-        controller.turbineProperties.intProperty.Add(bladesProperty);
+        controller.properties.intProperty.Add(bladesProperty);
 
         // Frontal area
         areaProperty = new FloatProperty(areaPropertyName, areaUnit, areaStartValue, areaMinValue, areaMaxValue, GetType().GetMethod("AreaPower"), GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this);
-        controller.turbineProperties.floatProperty.Add(areaProperty);
+        controller.properties.floatProperty.Add(areaProperty);
 
         // Height
         heightProperty = new FloatProperty(heightPropertyName, heightUnit, heightStartValue, heightMinValue, heightMaxValue, GetType().GetMethod("HeightPower"), GetType().GetMethod("SetUpHeight"), GetType().GetMethod("HeightCost"), null, this);
-        controller.turbineProperties.floatProperty.Add(heightProperty);
+        controller.properties.floatProperty.Add(heightProperty);
 
         // Wall
         wallProperty = new BoolProperty(wallPropertyName, wallIsOn, GetType().GetMethod("WallPower"), GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this);
-        controller.turbineProperties.boolProperty.Add(wallProperty);
+        controller.properties.boolProperty.Add(wallProperty);
 
         // Rated/Cutoff Power
         ratedCutoffProperty = new MinMaxFloatProperty(RatedCutoffpropertyName, ratedCutoffUnit, ratedPropertyName, cutoffPropertyName, ratedProperty, cutOffProperty, ratedCutoffMin, ratedCuroffMax, GetType().GetMethod("RatedPower"), GetType().GetMethod("CutoffPower"), null, null, GetType().GetMethod("RatedCost"), GetType().GetMethod("CutoffCost"), null, null, this);
-        controller.turbineProperties.minMaxProperty.Add(ratedCutoffProperty);
+        controller.properties.minMaxProperty.Add(ratedCutoffProperty);
     }
 
     // Number of Blades //
@@ -225,7 +225,7 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
         turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up * baseStartScale;
         baseTurbineObject.transform.localScale = Vector3.one * areaProperty.property / unitScaleArea * baseStartScale;
 
-        GetComponent<TurbineController>().desiredScale = area/unitScaleArea;
+        GetComponent<SizeController>().desiredScale = area/unitScaleArea;
     }
 
     public float AreaPower(float area, TurbineController controller)

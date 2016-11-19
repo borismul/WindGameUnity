@@ -14,8 +14,6 @@ public class TurbineController : MonoBehaviour {
     float rotationSpeed;    // The current rotational speed of the blades
     float direction;        // Direction in which the turbine is pointed
 
-    public TurbineProperties turbineProperties = new TurbineProperties();
-
     [HideInInspector]
     public float power;
     [HideInInspector]
@@ -30,9 +28,6 @@ public class TurbineController : MonoBehaviour {
     public float desiredHeight;
 
     public string turbineName;
-    public float price;
-
-    public bool canRotateAtBuild;
 
     float avgPowerCount = 0;
 
@@ -72,7 +67,7 @@ public class TurbineController : MonoBehaviour {
 
         blades.transform.rotation = Quaternion.Euler(new Vector3(bladesRotX, bladesRotY, bladesRotZ));
 
-        if (!canRotateAtBuild)
+        if (GetComponent<BuildAttributes>().canRotateAtBuild)
         {
             // Set the nacelle rotations in the three components depending on the wind direction (only the y rotation changes)
             float nacelleRotX = nacelle.transform.rotation.eulerAngles.x;
@@ -88,24 +83,25 @@ public class TurbineController : MonoBehaviour {
     void UpdatePower(float gameDeltaTime)
     {
         power = 1;
-        foreach (FloatProperty prop in turbineProperties.floatProperty)
+        ObjectProperties properties = GetComponent<PropertiesContainer>().properties;
+        foreach (FloatProperty prop in properties.floatProperty)
         {
             power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
             //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
 
-        foreach (IntProperty prop in turbineProperties.intProperty)
+        foreach (IntProperty prop in properties.intProperty)
         {
             power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
             //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
 
-        foreach (BoolProperty prop in turbineProperties.boolProperty)
+        foreach (BoolProperty prop in properties.boolProperty)
         {
             power = (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, this });
             //print(prop.propertyName + ": " + (float)prop.powerFunction.Invoke(prop.callObject, new object[] { prop.property, power }));
         }
-        foreach (MinMaxFloatProperty prop in turbineProperties.minMaxProperty)
+        foreach (MinMaxFloatProperty prop in properties.minMaxProperty)
         {
             power = (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, this });
             //print(prop.propertyName + ": " + (float)prop.maxPowerFunction.Invoke(prop.callObject, new object[] { prop.maxProperty, power }));
@@ -136,46 +132,17 @@ public class TurbineController : MonoBehaviour {
 
     }
 
-    public float CalculateCost()
-    {
-        float cost = 0;
-
-        foreach (FloatProperty prop in turbineProperties.floatProperty)
-        {
-            if (prop.costFunction != null)
-            {
-                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
-            }
-        }
-        foreach (IntProperty prop in turbineProperties.intProperty)
-        {
-            if (prop.costFunction != null)
-            {
-                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
-            }
-        }
-        foreach (BoolProperty prop in turbineProperties.boolProperty)
-        {
-            if (prop.costFunction != null)
-            {
-                cost += (int)prop.costFunction.Invoke(prop.callObject, new object[] { prop.property });
-            }
-        }
-
-        return cost;
-    }
-
 
 }
 
-public class TurbineProperties
+public class ObjectProperties
 {
     public List<FloatProperty> floatProperty;
     public List<IntProperty> intProperty;
     public List<BoolProperty> boolProperty;
     public List<MinMaxFloatProperty> minMaxProperty;
 
-    public TurbineProperties()
+    public ObjectProperties()
     {
         floatProperty = new List<FloatProperty>();
         intProperty = new List<IntProperty>();

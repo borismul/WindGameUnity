@@ -59,7 +59,7 @@ public class CityController : MonoBehaviour {
         {
             cityPointTimer = 0;
             cityPoints += GameResources.getProduction();
-            print(cityPoints);
+
         } else
         {
             cityPointTimer += Time.deltaTime;

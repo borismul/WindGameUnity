@@ -19,12 +19,16 @@ public class TileInfomationMenu : MonoBehaviour {
 
     TerrainController terrain;
 
+    public static TileInfomationMenu instance;
+
     // Use this for initialization
     void Start ()
     {
         closeMenu.onClick.AddListener(CloseMenu);
         slider.onValueChanged.AddListener(delegate { ChangeWindHeight(slider.value); });
         toggle.onValueChanged.AddListener(delegate { ChangeSeeWind(toggle.isOn); });
+
+        instance = this;
     }
 
 

@@ -26,7 +26,7 @@ public class GridTileOccupant
         this.windEffectController = obj.GetComponent<WindEffectController>();
     }
 
-    public enum OccupantType { Empty, TerrainGenerated, Turbine, City };
+    public enum OccupantType { Empty, TerrainGenerated, Turbine, City, Other};
 
 }
 

@@ -69,3 +69,5 @@ MonoBehaviour:
     type: 2}
   loadingMenuPrefab: {fileID: 1000010360985060, guid: 90a7cf7ac90cf7043ab060a38fe62910,
     type: 2}
+  weatherMenuPrefab: {fileID: 1000012432964068, guid: 152f5c6ae7356734a89ab3826a012cc2,
+    type: 2}

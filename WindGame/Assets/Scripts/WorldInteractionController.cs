@@ -78,11 +78,16 @@ public class WorldInteractionController : MonoBehaviour
         {
             GameObject hitObject = hit.collider.gameObject;
 
-            TurbineController controller = hit.transform.GetComponentInParent<TurbineController>();
-            if (controller != null)
-                UIScript.GetInstance().OpenTurbineMenu(controller);
+            TurbineController tubineController = hit.transform.GetComponentInParent<TurbineController>();
+            if (tubineController != null)
+                UIScript.GetInstance().OpenTurbineMenu(tubineController);
+
+            WindVaneController windVaneController = hit.transform.GetComponentInParent<WindVaneController>();
+
+            if (windVaneController != null)
+                UIScript.GetInstance().OpenWindVaneMenu(windVaneController);
         }
-        
+
     }
 
     void Update()

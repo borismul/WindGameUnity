@@ -82,7 +82,12 @@ public class WorldController : MonoBehaviour
         AddToGridTiles(t, pos, (diameter * scale) + 2 * TerrainController.thisTerrainController.tileSize, type);
         EqualTerrain(pos, (diameter * scale)*1.5f);
         TurbineManager turbManager = TurbineManager.GetInstance();
-        turbManager.AddTurbine(t); 
+        turbManager.AddTurbine(t);
+
+        if (TileInfomationMenu.instance.toggle.isOn)
+        {
+            WindVisualizer.instance.UpdateChunks();
+        }
     }
 
     // Set the terrain height around a position to the tile closest to the entered position
@@ -135,6 +140,11 @@ public class WorldController : MonoBehaviour
         float diameter = t.GetComponent<SizeController>().diameter;
         AddToGridTiles(something, pos, diameter * scale + 2 * TerrainController.thisTerrainController.tileSize, type);
         EqualTerrain(pos, diameter * scale);
+
+        if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
+        {
+            WindVisualizer.instance.UpdateChunks();
+        }
     }
 
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
