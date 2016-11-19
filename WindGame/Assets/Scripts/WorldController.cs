@@ -112,8 +112,12 @@ public class WorldController : MonoBehaviour
 
                     foreach (int[] index in vertexIndices)
                     {
-                        newPos = new Vector3(chunk.map[index[0], index[1]].x, middleTile.position.y, chunk.map[index[0], index[1]].z);
+                        float diffx = chunk.gameObject.transform.position.x + chunk.map[index[0], index[1]].x - middleTile.position.x;
+                        float diffz = chunk.gameObject.transform.position.z + chunk.map[index[0], index[1]].z- middleTile.position.z;
+                        
+                        newPos = new Vector3(chunk.map[index[0], index[1]].x - 0.25f * diffx, middleTile.position.y, chunk.map[index[0], index[1]].z - 0.25f * diffz);
                         chunk.map[index[0], index[1]] = newPos;
+                        chunk.AddVertsAndUVAndNorm(chunk.map.GetLength(0), true);
                     }
                     if (!updateChunks.Contains(chunk))
                         updateChunks.Add(chunk);
