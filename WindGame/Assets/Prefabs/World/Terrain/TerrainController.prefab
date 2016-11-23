@@ -52,7 +52,6 @@ MonoBehaviour:
       maxScale: 3
       minRotation: 0
       maxRotation: 360
-    objectPerTile: 0
   - biomeObjects:
     - prefab: {fileID: 1000012505856870, guid: 017d6e2b7ae549e47868afec18589797, type: 2}
       emptyPrefab: {fileID: 1000013884488210, guid: 01e335b3cebd49542b8def54dee4bafd,
@@ -62,7 +61,6 @@ MonoBehaviour:
       maxScale: 2
       minRotation: 0
       maxRotation: 360
-    objectPerTile: 0
   - biomeObjects:
     - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
       emptyPrefab: {fileID: 125940, guid: ec59005bb099fff46bca0ecd771b3126, type: 2}
@@ -78,7 +76,6 @@ MonoBehaviour:
       maxScale: 1
       minRotation: 0
       maxRotation: 360
-    objectPerTile: 0
   - biomeObjects:
     - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
       emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
@@ -87,7 +84,7 @@ MonoBehaviour:
       maxScale: 2
       minRotation: 0
       maxRotation: 360
-    objectPerTile: 0
+  objectPerTile: 5
   seed: 2
   isFlatShaded: 0
   isIsland: 1
