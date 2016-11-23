@@ -264,10 +264,10 @@ public class ThreadVector2
     public static Vector2[] ToVectorArray(ThreadVector2[] vector2Array)
     {
         Vector2[] threadVector2Array = new Vector2[vector2Array.Length];
-
+        ThreadVector2 vec2;
         for (int i = 0; i < vector2Array.Length; i++)
         {
-            ThreadVector2 vec2 = vector2Array[i];
+            vec2 = vector2Array[i];
             threadVector2Array[i] = new Vector2(vec2.x, vec2.y);
         }
 

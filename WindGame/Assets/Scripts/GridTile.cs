@@ -7,26 +7,35 @@ public class GridTile{
 
     public Vector3 position;
     public int biome;
-    public GridTileOccupant occupant;
+    public List<GridTileOccupant> occupants;
     public bool underWater;
     public bool isOutsideBorder;
     public bool canSeeWind;
+    public bool heightIsFixed;
     public List<Vector3> vert;
     public List<int> vertIndex;
     public Chunk chunk;
-    public GridTileOccupant.OccupantType type;
 
-    public GridTile(Vector3 position, Chunk chunk, List<Vector3> vert, List<int> vertIndex, int biome, bool isUnderWater, bool isOutsideBorder, GridTileOccupant.OccupantType OccupantType, GridTileOccupant occupant)
+    public GridTile(Vector3 position, Chunk chunk, List<Vector3> vert, List<int> vertIndex, int biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
     {
         this.position = position;
         this.biome = biome;
-        this.type = OccupantType;
-        this.occupant = occupant;
+        this.occupants = occupants;
         this.vert = vert;
         this.underWater = isUnderWater;
         this.chunk = chunk;
         this.vertIndex = vertIndex;
         this.isOutsideBorder = isOutsideBorder;
+    }
+
+    public void AddOccupant(GridTileOccupant occupant)
+    {
+        occupants.Add(occupant);
+    }
+    
+    public void RemoveOccupant(GridTileOccupant occupant)
+    {
+        occupants.Remove(occupant);
     }
 
     public static GridTile FindClosestGridTile(Vector3 point)
@@ -35,8 +44,10 @@ public class GridTile{
         GridTile[,] world = TerrainController.thisTerrainController.world;
         int tileSize = TerrainController.thisTerrainController.tileSize;
 
-        int x = Mathf.FloorToInt((point.x +tileSize/2) / tileSize);
+        int x = Mathf.FloorToInt((point.x + tileSize / 2) / tileSize);
         int z = Mathf.FloorToInt((point.z + tileSize / 2) / tileSize);
+        if (world == null)
+            return null;
 
         if (x >= world.GetLength(0) || x < 0)
             return null;
@@ -69,7 +80,7 @@ public class GridTile{
     public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius)
     {
         List<GridTile> gridTiles = new List<GridTile>();
-        GridTile middleTile = FindClosestGridTile(point - new Vector3(TerrainController.thisTerrainController.tileSize, 0, TerrainController.thisTerrainController.tileSize));
+        GridTile middleTile = FindClosestGridTile(point);
         TerrainController terrain = TerrainController.thisTerrainController;
 
         float startTile = -circleRadius;

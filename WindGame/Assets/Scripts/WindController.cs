@@ -71,13 +71,14 @@ public class WindController : MonoBehaviour {
                 //  Tiles block a maximum of 100% divided by their distance to the desired point each
                 if (deltaHeight > 5) blockedTile += Mathf.Min(deltaHeight * heightInfluence, 1/diff.magnitude);
 
-                if (nearTiles[i].occupant != null)
+                for(int j = 0; j< nearTiles[i].occupants.Count; j++)
+                if (nearTiles[i].occupants[j] != null)
                 {
-                    terrainObj = nearTiles[i].occupant.terrainObject;
+                    terrainObj = nearTiles[i].occupants[j].terrainObject;
                     //Checks wether a tile contains a terrainobject and adds the wind it blocks to windBlocked if the object is heigh enough
                     if (terrainObj != null)
                     {
-                        WindEffectController controller = nearTiles[i].occupant.windEffectController;
+                        WindEffectController controller = nearTiles[i].occupants[j].windEffectController;
                         if (deltaHeight + controller.objectHeight > height) blockedTile += controller.objectDensity;
                     }
                 }

@@ -31,7 +31,6 @@ public class TileInfomationMenu : MonoBehaviour {
         instance = this;
     }
 
-
     void OnDisable()
     {
         terrain = TerrainController.thisTerrainController;
@@ -65,32 +64,32 @@ public class TileInfomationMenu : MonoBehaviour {
 
         WindController.GetWindAtTile(til, 0);
         biome.text = biomes[tile.biome];
-        if (tile.occupant == null)
+        if (true/*tile.occupant == null*/)
         {
             occupant.text = "None";
         }
-        else
-        {
-            if (tile.occupant.obj.name.Equals("RockEmpty(Clone)") || tile.occupant.obj.name.Equals("StoneCubeEmpty(Clone)"))
-            {
-                occupant.text = "A rock";
-            } else if (tile.occupant.obj.name.Equals("House Colored"))
-            {
-                occupant.text = "A house";
-            } else if(tile.occupant.obj.name.Equals("NewTreeEmpty(Clone)"))
-            {
-                occupant.text = "A tree";
+        //else
+        //{
+        //    if (tile.occupant.obj.name.Equals("RockEmpty(Clone)") || tile.occupant.obj.name.Equals("StoneCubeEmpty(Clone)"))
+        //    {
+        //        occupant.text = "A rock";
+        //    } else if (tile.occupant.obj.name.Equals("House Colored"))
+        //    {
+        //        occupant.text = "A house";
+        //    } else if(tile.occupant.obj.name.Equals("NewTreeEmpty(Clone)"))
+        //    {
+        //        occupant.text = "A tree";
             
-            } else if (tile.occupant.obj.name.Equals("CactusEmpty(Clone)"))
-            {
-                occupant.text = "A cactus";
-            }
-            else
-            {
-                occupant.text = "Wind Turbine";
-            }
-        }
-        position.text = tile.position.ToString("F0");
+        //    } else if (tile.occupant.obj.name.Equals("CactusEmpty(Clone)"))
+        //    {
+        //        occupant.text = "A cactus";
+        //    }
+        //    else
+        //    {
+        //        occupant.text = "Wind Turbine";
+        //    }
+        //}
+        //position.text = tile.position.ToString("F0");
     }
 
     public void clearTile()

@@ -67,21 +67,21 @@ public class WindVisualizer : MonoBehaviour
     IEnumerator _VisualizeWind()
     {
         CreateChunks();
-
         while (true)
         {
+
             if (newThread == null || !newThread.IsAlive)
             {
                 newThread = new Thread(() => GetWindUVs());
                 newThread.Start();
             }
 
+            yield return null;
             while (newThread.IsAlive)
             {
                 yield return null;
             }
-
-            for(int i = 0; i<windSpeedChunks.Count; i++)
+            for (int i = 0; i<windSpeedChunks.Count; i++)
             {
                 windSpeedChunks[i].GetComponent<MeshFilter>().mesh.uv = ThreadVector2.ToVectorArray(uvs[i]);
             }
@@ -130,7 +130,6 @@ public class WindVisualizer : MonoBehaviour
 
     void GetWindUVs()
     {
-        int timeAtStart = System.DateTime.Now.Millisecond;
         uvs = new List<ThreadVector2>[terrain.chunks.Count];
         absMax = 0;
 
@@ -171,13 +170,6 @@ public class WindVisualizer : MonoBehaviour
                 }
             }
         }
-
-        //if (System.DateTime.Now.Millisecond - timeAtStart >= 0)
-        //{
-        //    timesUSed++;
-        //    averageTime = (averageTime * (timesUSed-1) + System.DateTime.Now.Millisecond - timeAtStart) / timesUSed;
-        //}
-        //print(averageTime);
 
     }
 

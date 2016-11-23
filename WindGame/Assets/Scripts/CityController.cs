@@ -81,7 +81,10 @@ public class CityController : MonoBehaviour {
         {
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
-            if (rand.NextDouble() < density && world.CanBuild(tile.position, buildObject.prefab.GetComponent<SizeController>().diameter, true))
+            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
+            Quaternion rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+
+            if (/*rand.NextDouble() < density &&*/ world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
                 world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
                 return;
@@ -104,10 +107,18 @@ public class CityController : MonoBehaviour {
         {
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
-            if (rand.NextDouble() < density && world.CanBuild(tile.position, buildObject.prefab.GetComponent<SizeController>().diameter, true))
+            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
+            Quaternion rotation;
+            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
+                rotation = Quaternion.identity;
+            else
+                rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+
+            if (/*rand.NextDouble() < density &&*/ world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
-                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x,0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
+                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
             }
+
         }
     }
 

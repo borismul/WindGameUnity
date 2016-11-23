@@ -16,6 +16,7 @@ public class TerrainController : MonoBehaviour {
     //[HideInInspector]
     public int maxHeight;
     public Biome[] biomes;
+    public int objectPerTile;
     //[HideInInspector]
     public int seed;
     public bool isFlatShaded;
@@ -106,7 +107,6 @@ public class TerrainController : MonoBehaviour {
 
     public Vector3 middlePoint;
 
-
     void Awake()
     {
         // Set this to the terraincontroller
@@ -183,7 +183,7 @@ public class TerrainController : MonoBehaviour {
                 float maxRot = biomes[i].biomeObjects[j].maxRotation;
 
                 // Add a mesh to the current biome adding also its details
-                biomeMesh.AddMesh(GetSubmeshes(obj), occurance, minScale, maxScale, minRot, maxRot);
+                biomeMesh.AddMesh(GetSubmeshes(obj), occurance, objectPerTile, minScale, maxScale, minRot, maxRot);
                 
                 // Add to the worldObjects list a new list of GameObjects that holds on the first place the prefab mesh. (Is used to instantiate new ones from)
                 worldObjects[i].Add(new List<GameObject>());
@@ -260,40 +260,45 @@ public class TerrainController : MonoBehaviour {
                 // Get all Meshes with paramters of the biome
                 BiomeMesh curBiomeMesh = biomeMeshes[world[i,k].biome];
                 List<float> occurances = curBiomeMesh.occurance;
+                int objectsPerTile = curBiomeMesh.objectsPerTile;
                 List<float> minScale = curBiomeMesh.minScale;
                 List<float> maxScale = curBiomeMesh.maxScale;
                 List<float> minRot = curBiomeMesh.minRot;
                 List<float> maxRot = curBiomeMesh.maxRot;
 
-                // create a random variable between 0 and 1
-                float choice = (float)rand.NextDouble();
-
-                // Create a lower and upper limit
-                float lower = 0;
-                float upper = 0;
-
-                for (int j = 0; j < occurances.Count; j++)
+                for (int l = 0; l < objectsPerTile; l++)
                 {
-                    // Add the occurance of the current object to the upper limit
-                    upper += occurances[j];
+                    // create a random variable between 0 and 1
+                    float choice = (float)rand.NextDouble();
 
-                    // If the random variable is between upper and lower limit generate that object
-                    if (choice < upper && choice > lower)
+                    // Create a lower and upper limit
+                    float lower = 0;
+                    float upper = 0;
+                    for (int j = 0; j < occurances.Count; j++)
                     {
+                    
+                        // Add the occurance of the current object to the upper limit
+                        upper += occurances[j];
 
-                        // Determine a random scale and rotation, based on the min and max set by the user
-                        float scale = minScale[j] + (float)rand.NextDouble() * (maxScale[j] - minScale[j]);
-                        float rot = minRot[j] + (float)rand.NextDouble() * (maxRot[j] - minRot[j]);
-                        
-                        // Generate the object
-                        GenerateObject((world[i,k].position), Quaternion.Euler(0, rot, 0), Vector3.one * scale, world[i,k].biome, j, world[i,k]);
+                        // If the random variable is between upper and lower limit generate that object
+                        if (choice < upper && choice > lower)
+                        {
+                            // Determine a random scale and rotation, based on the min and max set by the user
+                            float scale = minScale[j] + (float)rand.NextDouble() * (maxScale[j] - minScale[j]);
+                            float rot = minRot[j] + (float)rand.NextDouble() * (maxRot[j] - minRot[j]);
 
-                        // Break the loop for this grid tile
-                        break;
+                            Vector3 pos = world[i, k].position + Vector3.right * tileSize * ((float)rand.NextDouble() -0.5f) + Vector3.forward * tileSize * ((float)rand.NextDouble() - 0.5f);
+                            
+                            // Generate the object
+                            GenerateObject(pos, Quaternion.Euler(0, rot, 0), Vector3.one * scale, world[i, k].biome, j, world[i, k]);
+
+                            // Break the loop for this grid tile
+                            break;
+                        }
+
+                        // Set the current upper to the lower limit
+                        lower = upper;
                     }
-
-                    // Set the current upper to the lower limit
-                    lower = upper;
                 }
 
 
@@ -409,11 +414,8 @@ public class TerrainController : MonoBehaviour {
         }
 
         // Set the occupant on the gridtile to this generated object
-        GridTileOccupant gridOccupant = new GridTileOccupant(curterrainObject.gameObject, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale);
-        gridTile.occupant = gridOccupant;
-
-        // set the gridtile type to 1 which means there is a terrain object on it
-        gridTile.type = GridTileOccupant.OccupantType.TerrainGenerated;
+        GridTileOccupant gridOccupant = new GridTileOccupant(curterrainObject.gameObject, position, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale, GridTileOccupant.OccupantType.TerrainGenerated);
+        gridTile.AddOccupant(gridOccupant);
 
     }
 
@@ -553,31 +555,41 @@ public class TerrainController : MonoBehaviour {
     // Method that removes an occupant from a grid tile
     public void RemoveTerrainTileOccupant(GridTile tile)
     {
-        // if type is Terrain Generated
-        if (tile.type == GridTileOccupant.OccupantType.TerrainGenerated)
+        for (int i = 0; i < tile.occupants.Count; i++)
         {
-            // Get the terrainObject script from the occupant
-            TerrainObject terrainObj = tile.occupant.obj.GetComponent<TerrainObject>();
-
-            // Get the submeshes that should be in this particular terrain object from the biomemeshes
-            Mesh[] objMeshes = thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
-
-            // create an array of meshes that should be removed
-            Mesh[] removeMesh = new Mesh[objMeshes.Length];
-
-            // for each of these meshes
-            for (int k = 0; k < objMeshes.Length; k++)
+            // if type is Terrain Generated
+            if (tile.occupants[i].type == GridTileOccupant.OccupantType.TerrainGenerated)
             {
-                // Add a copy of the mesh that should be removed. Move, rotate and scale it as it is in the game.
-                removeMesh[k] = MoveMesh(objMeshes[k], tile.position - terrainObj.transform.position, tile.occupant.rotation, tile.occupant.scale);
+                // Get the terrainObject script from the occupant
+                TerrainObject terrainObj = tile.occupants[i].obj.GetComponent<TerrainObject>();
+
+                // Get the submeshes that should be in this particular terrain object from the biomemeshes
+                Mesh[] objMeshes = thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
+
+                // create an array of meshes that should be removed
+                Mesh[] removeMesh = new Mesh[objMeshes.Length];
+
+                // for each of these meshes
+                for (int k = 0; k < objMeshes.Length; k++)
+                {
+                    // Add a copy of the mesh that should be removed. Move, rotate and scale it as it is in the game.
+                    removeMesh[k] = MoveMesh(objMeshes[k], tile.occupants[i].position - terrainObj.transform.position, tile.occupants[i].rotation, tile.occupants[i].scale);
+                }
+
+                // remove the meshes
+                terrainObj.RemoveMesh(removeMesh);
+                
             }
+        }
 
-            // remove the meshes
-            terrainObj.RemoveMesh(removeMesh);
-
-            // set the tile occupant to null
-            tile.occupant = null;
-            tile.type = 0;
+        for (int i = 0; i < tile.occupants.Count; i++)
+        {
+            // if type is Terrain Generated
+            if (tile.occupants[i].type == GridTileOccupant.OccupantType.TerrainGenerated)
+            {
+                // set the tile occupant to null
+                tile.occupants.RemoveAt(i);
+            }
         }
     }
 

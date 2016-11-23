@@ -59,3 +59,7 @@ MonoBehaviour:
     type: 2}
   worldInteractionManagerPrefab: {fileID: 1000010514723762, guid: 81e892464337d974c8b53b6b96f23b75,
     type: 2}
+  notTerrain:
+    serializedVersion: 2
+    m_Bits: 4294967039
+  debugThing: {fileID: 1000011867720504, guid: 5d6494b1c6c3c0547ab7dd9d4f43c7a4, type: 2}

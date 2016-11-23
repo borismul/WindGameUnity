@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012401952572}
   - 33: {fileID: 33000013105171208}
-  - 65: {fileID: 65000013758493878}
   - 23: {fileID: 23000013097368128}
   m_Layer: 0
   m_Name: Debug point
@@ -78,15 +77,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011867720504}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &65000013758493878
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011867720504}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

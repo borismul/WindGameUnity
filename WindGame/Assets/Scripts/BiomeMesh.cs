@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class BiomeMesh
 {
+    public int objectsPerTile;
     public List<Mesh[]> mesh;
     public List<float> occurance;
     public List<float> minScale;
@@ -23,7 +24,7 @@ public class BiomeMesh
 
     }
 
-    public void AddMesh(Mesh[] mesh, float occurance, float minScale, float maxScale, float minRot, float maxRot)
+    public void AddMesh(Mesh[] mesh, float occurance, int objectsPerTile, float minScale, float maxScale, float minRot, float maxRot)
     {
         this.mesh.Add(mesh);
         this.occurance.Add(occurance);
@@ -31,6 +32,7 @@ public class BiomeMesh
         this.maxScale.Add(maxScale);
         this.minRot.Add(minRot);
         this.maxRot.Add(maxRot);
+        this.objectsPerTile = objectsPerTile;
 
     }
 }

@@ -21,6 +21,11 @@ public class WorldController : MonoBehaviour
     public GameObject buildingsManagerPrefab;
     public GameObject worldInteractionManagerPrefab;
 
+    [Header("Collision Info")]
+    public LayerMask notTerrain;
+
+    public GameObject debugThing;
+
     // Use this for initialization
     void Awake()
     {
@@ -32,7 +37,6 @@ public class WorldController : MonoBehaviour
     {
 
     }
-
 
     void Update()
     {
@@ -75,16 +79,18 @@ public class WorldController : MonoBehaviour
     // Builder function, some class wants the world to add an object
     public void AddTurbine(GameObject t, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
+        float diameter = t.GetComponent<SizeController>().diameter;
+
+        pos.y = BuildingHeight(pos, diameter * scale);
         t.transform.position = pos;
         t.transform.rotation = rotation;
         t.transform.SetParent(parent);
-        float diameter = t.GetComponent<SizeController>().diameter;
-        AddToGridTiles(t, pos, (diameter * scale) + 2 * TerrainController.thisTerrainController.tileSize, type);
-        EqualTerrain(pos, (diameter * scale)*1.5f);
+        AddToGridTiles(t, pos, diameter * scale, type);
+        EqualTerrain(pos, (diameter * scale));
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t);
 
-        if (TileInfomationMenu.instance.toggle.isOn)
+        if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
         {
             WindVisualizer.instance.UpdateChunks();
         }
@@ -97,35 +103,38 @@ public class WorldController : MonoBehaviour
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
 
         List<Chunk> updateChunks = new List<Chunk>();
-                      
+        bool isFirst = true;
         foreach(GridTile tile in gridtiles)
         {
             for (int i = 0; i < tile.vert.Count; i++)
             {
+                if (!isFirst && i > 1)
+                    break;
+
                 Vector3 newPos = Vector3.zero;
                 Vector3 vertex = tile.vert[i];
                 Chunk[] chunks = Chunk.FindChunksWithVertex(vertex);
-
                 foreach (Chunk chunk in chunks)
                 {
-                    List<int[]> vertexIndices = Chunk.FindClosestVertices(vertex, chunk);
+                    int[] index = Chunk.FindClosestVertices(vertex, chunk);
+                    
+                    float diffx = chunk.gameObject.transform.position.x + chunk.map[index[0], index[1]].x - middleTile.position.x;
+                    float diffz = chunk.gameObject.transform.position.z + chunk.map[index[0], index[1]].z- middleTile.position.z;
 
-                    foreach (int[] index in vertexIndices)
-                    {
-                        float diffx = chunk.gameObject.transform.position.x + chunk.map[index[0], index[1]].x - middleTile.position.x;
-                        float diffz = chunk.gameObject.transform.position.z + chunk.map[index[0], index[1]].z- middleTile.position.z;
-                        
-                        newPos = new Vector3(chunk.map[index[0], index[1]].x - 0.25f * diffx, middleTile.position.y, chunk.map[index[0], index[1]].z - 0.25f * diffz);
-                        chunk.map[index[0], index[1]] = newPos;
-                        chunk.AddVertsAndUVAndNorm(chunk.map.GetLength(0), true);
-                    }
+                    newPos = new Vector3(chunk.map[index[0], index[1]].x /*- 0.25f * diffx*/, pos.y, chunk.map[index[0], index[1]].z /*- 0.25f * diffz*/);
+                    chunk.map[index[0], index[1]] = newPos;
+                    chunk.AddVertsAndUVAndNorm(chunk.map.GetLength(0), true);
+                    
                     if (!updateChunks.Contains(chunk))
                         updateChunks.Add(chunk);
                 }
-                tile.vert[i] = new Vector3(tile.vert[i].x, middleTile.position.y, tile.vert[i].z);
+                tile.vert[i] = new Vector3(tile.vert[i].x, pos.y, tile.vert[i].z);
 
             }
+            isFirst = false;
             tile.position = tile.vert[0];
+            tile.heightIsFixed = true;
+
         }
         foreach (Chunk chunk in updateChunks)
             chunk.GenerateTerrainMesh(true);
@@ -139,10 +148,12 @@ public class WorldController : MonoBehaviour
 
     public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
-        GameObject t = (GameObject)Instantiate(something, pos, rotation, parent);
+        float diameter = something.GetComponent<SizeController>().diameter;
+        pos.y = BuildingHeight(pos, diameter * scale);
+        GameObject t = (GameObject)Instantiate(something,pos,rotation,transform);
         t.transform.localScale = Vector3.one * scale;
-        float diameter = t.GetComponent<SizeController>().diameter;
-        AddToGridTiles(something, pos, diameter * scale + 2 * TerrainController.thisTerrainController.tileSize, type);
+
+        AddToGridTiles(something, pos, diameter * scale + 1 * TerrainController.thisTerrainController.tileSize, type);
         EqualTerrain(pos, diameter * scale);
 
         if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
@@ -151,12 +162,50 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    public float BuildingHeight(Vector3 pos, float diameter)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, diameter);
+        int count = 0;
+        float curHeight = -1;
+        foreach (GridTile tile in gridtiles)
+        {
+            if (tile.heightIsFixed)
+            {
+                count++;
+                if(count > 1 && tile.position.y != curHeight)
+                    return -1;
+
+                curHeight = tile.vert[0].y;
+            }
+        }
+
+        if (count == 0)
+            return pos.y;
+
+        else
+            return curHeight;
+    }
+
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
-    public bool CanBuild(Vector3 pos, float size, bool neglectTerrainObjects)
+    public bool CanBuild(Vector3 pos, float size, GameObject buildObj, float scale, Quaternion rotation, bool neglectTerrainObjects)
     {
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
+        Collider[] colliders = Physics.OverlapBox(buildObj.GetComponent<BoxCollider>().center * scale + pos, buildObj.GetComponent<BoxCollider>().size / 2 * scale, rotation, notTerrain);
 
+        //Vector3 Start1 = buildObj.GetComponent<BoxCollider>().center * scale - buildObj.GetComponent<BoxCollider>().size / 2 * scale + pos;
+        //Vector3 End1 = pos + buildObj.GetComponent<BoxCollider>().center * scale;
+
+        //Vector3 Start2 = buildObj.GetComponent<BoxCollider>().center * scale + buildObj.GetComponent<BoxCollider>().size / 2 * scale + pos;
+        //Vector3 End2 = pos + buildObj.GetComponent<BoxCollider>().center * scale;
+
+        //Debug.DrawLine(Start1, End1 , Color.red, Mathf.Infinity);
+        //Debug.DrawLine(Start2, End2, Color.green, Mathf.Infinity);
+        if (colliders.Length > 1)
+            return false;
+        else if (colliders.Length == 1 && colliders[0].gameObject.GetInstanceID() != buildObj.GetInstanceID())
+            return false;
+        
         if (thisTile.underWater)
             return false;
 
@@ -164,11 +213,15 @@ public class WorldController : MonoBehaviour
         {
             if (tile.isOutsideBorder)
                 return false;
-            else if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
-                return false;
-            else if (!neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City || tile.type == GridTileOccupant.OccupantType.TerrainGenerated))
-                return false;
+            //else if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
+            //    return false;
+            //else if (!neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City || tile.type == GridTileOccupant.OccupantType.TerrainGenerated))
+            //    return false;
         }
+
+        if (BuildingHeight(pos, size * scale) == -1)
+            return false;
+
         return true;
     }
 
@@ -176,17 +229,13 @@ public class WorldController : MonoBehaviour
     void AddToGridTiles(GameObject something, Vector3 point, float circleRadius, GridTileOccupant.OccupantType type)
     {
         GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
-
         foreach (GridTile tile in gridtiles)
         {
-            if (tile.type == GridTileOccupant.OccupantType.TerrainGenerated)
-            {
-                TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
-            }
+            TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
+            //tile.occupants.Add(new GridTileOccupant(something));
 
-            tile.occupant = new GridTileOccupant(something);
-            tile.type = type;
         }
+        //tile.type = type;
     }
 
     void RemoveFromGridTiles(Vector3 point, float circleRadius)
@@ -195,8 +244,8 @@ public class WorldController : MonoBehaviour
 
         foreach (GridTile tile in gridtiles)
         {
-            tile.occupant = null;
-            tile.type = GridTileOccupant.OccupantType.Empty;
+            tile.occupants.Clear();
+            //tile.type = GridTileOccupant.OccupantType.Empty;
         }
     }
     

@@ -173,7 +173,7 @@ public class Chunk : MonoBehaviour {
         //Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
         Vector3 position = positions[0];
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
-        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, false, 0, null);
+        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, false, new List<GridTileOccupant>());
 
         terrain.world[startI + iPos, startK + jPos] = tile;
     }
@@ -376,9 +376,9 @@ public class Chunk : MonoBehaviour {
     }
 
     // Finds index of a vertex in the map 2d array, also gives the indices of the vertices that are only used for normal calculation if the vertex is on a boundary of a chunk
-    public static List<int[]> FindClosestVertices(Vector3 pos, Chunk chunk)
+    public static int[] FindClosestVertices(Vector3 pos, Chunk chunk)
     {
-        List<int[]> vertices = new List<int[]>();
+        int[] vertices;
         TerrainController terrain = TerrainController.thisTerrainController;
 
         Vector3 localPos = pos - chunk.transform.position;
@@ -389,7 +389,7 @@ public class Chunk : MonoBehaviour {
         int vertX = Mathf.RoundToInt(posX);
         int vertZ = Mathf.RoundToInt(posZ);
 
-        vertices.Add(new int[2] { vertX, vertZ });
+        vertices = new int[2] { vertX, vertZ };
 
         return vertices;
     }

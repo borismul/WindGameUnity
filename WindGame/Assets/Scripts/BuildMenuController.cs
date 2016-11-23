@@ -392,9 +392,9 @@ public class BuildMenuController : MonoBehaviour
         Camera.main.GetComponent<CameraController>().SetHaveControl(true);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildMask))
         {
-            plantGrid = GridTile.FindClosestGridTile(hit.point); // Grab the grid where we're hitting
-            plantPos = plantGrid.position; // What is the x,y,z coords?
-
+            //plantGrid = GridTile.FindClosestGridTile(hit.point + new Vector3(TerrainController.thisTerrainController.tileSize / 2, 0, TerrainController.thisTerrainController.tileSize / 2)); // Grab the grid where we're hitting
+            //plantPos = plantGrid.position; // What is the x,y,z coords?
+            plantPos = hit.point;
             if((!curInstantiated.GetComponent<BuildAttributes>().canRotateAtBuild || (curInstantiated.GetComponent<BuildAttributes>().canRotateAtBuild && !Input.GetMouseButton(1))))
                 curInstantiated.transform.position = plantPos; // We already have a preview turbine, just update it's position to follow the mouse
 
@@ -407,7 +407,7 @@ public class BuildMenuController : MonoBehaviour
 
             if ((!curInstantiated.GetComponent<BuildAttributes>().canRotateAtBuild || (curInstantiated.GetComponent<BuildAttributes>().canRotateAtBuild && !Input.GetMouseButton(1))))
             {
-                if (world.CanBuild(plantPos, curInstantiated.GetComponent<SizeController>().diameter * curInstantiated.GetComponent<SizeController>().desiredScale, true)) // If we can build here, make the color greenish
+                if (world.CanBuild(plantPos, curInstantiated.GetComponent<SizeController>().diameter, curInstantiated, curInstantiated.GetComponent<SizeController>().desiredScale, curInstantiated.transform.rotation, true)) // If we can build here, make the color greenish
                 {
                     foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
                     {
@@ -464,13 +464,7 @@ public class BuildMenuController : MonoBehaviour
         {
             curInstantiated.GetComponent<TurbineController>().enabled = true;
             world.AddTurbine(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<SizeController>().desiredScale, GridTileOccupant.OccupantType.Turbine, TurbineManager.GetInstance().transform); // Let the world controller know we want to build this thing
-        }
-        else
-        {
-            world.AddOther(curInstantiated, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<SizeController>().desiredScale, GridTileOccupant.OccupantType.Other, TerrainController.thisTerrainController.transform);
-        }
-        GameResources.Buy(curInstantiated.GetComponent<PriceController>().price);
-        Renderer[] rens = curInstantiated.GetComponentsInChildren<Renderer>();
+            Renderer[] rens = curInstantiated.GetComponentsInChildren<Renderer>();
             Renderer[] rensPrefab = curSelected.GetComponentsInChildren<Renderer>();
             int count = 0;
             foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
@@ -480,11 +474,17 @@ public class BuildMenuController : MonoBehaviour
                     mat.shader = Shader.Find("Standard");
                     mat.color = originalMaterial[count];
                     count++;
-
                 }
             }
-            curInstantiated = null;
-        
+        }
+        else
+        {
+            world.AddOther(curSelected, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<SizeController>().desiredScale, GridTileOccupant.OccupantType.Other, TerrainController.thisTerrainController.transform);
+            Destroy(curInstantiated);
+        }
+        GameResources.Buy(curInstantiated.GetComponent<PriceController>().price);
+        curInstantiated = null;
+
     }
 
     public void OnMouseEnter()
