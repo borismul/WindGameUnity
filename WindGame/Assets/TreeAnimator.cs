@@ -9,7 +9,7 @@ public class TreeAnimator : MonoBehaviour {
     bool wasFull = false;
     List<List<int>> vertPosPerObject;
     List<float> lowestVertPerObject;
-    Vector3[] vertices;
+    public Vector3[] vertices;
     List<float> randomValues;
     int totalObjects;
     Mesh objectMesh;
@@ -35,9 +35,8 @@ public class TreeAnimator : MonoBehaviour {
 
     void Animate()
     {
-        Vector3[] animationVert = new Vector3[vertices.Length];
+        Vector3[] animationVert = objectMesh.vertices;
         Vector3 windVector = -Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * WindController.direction), 0, Mathf.Cos(Mathf.Deg2Rad * WindController.direction)));
-
         for (int i = 0; i < vertPosPerObject.Count; i++)
         { 
             Vector3 move =  windVector * shakeSpeed * (1 + Mathf.Sin(Time.realtimeSinceStartup * 1f + 2*randomValues[i]));

@@ -36,7 +36,7 @@ public class TerrainObject : MonoBehaviour {
 
     void Start()
     {
-        StartCoroutine("RemoveObject");
+        InvokeRepeating("RemoveObject", 0, 1f / 60);
     }
 	
     public void Reload()
@@ -158,7 +158,12 @@ public class TerrainObject : MonoBehaviour {
         for (int k = 0; k < subMeshes.Length; k++)
         {
             // Vertices
-            List<Vector3> currentVertices = GetComponent<MeshFilter>().mesh.vertices.ToList();
+            List<Vector3> currentVertices;
+            if (GetComponent<TreeAnimator>() != null)
+                currentVertices = GetComponent<TreeAnimator>().vertices.ToList();
+            else
+                currentVertices = GetComponent<MeshFilter>().mesh.vertices.ToList();
+
             List<Vector3> verticesToRemove = mesh[k].vertices.ToList();
 
             Vector3 firstVert = mesh[k].vertices[0];
@@ -179,22 +184,25 @@ public class TerrainObject : MonoBehaviour {
                 currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
             }
 
-            GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
+            if (GetComponent<TreeAnimator>() != null)
+                GetComponent<TreeAnimator>().vertices = currentVertices.ToArray();
+            //GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
         }
     }
 
-    public IEnumerator RemoveObject()
+    public void RemoveObject()
     {
-        while (true)
-        {
+        //while (true)
+        //{
+
             if(removeList.Count != 0)
             {
                 MoveMesh(removeList[0]);
                 removeList.RemoveAt(0);
             }
 
-            yield return null;
-        }
+            //yield return null;
+        //}
     }
     
 }
