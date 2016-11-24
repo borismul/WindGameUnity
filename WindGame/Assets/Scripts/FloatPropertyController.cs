@@ -48,13 +48,13 @@ public class FloatPropertyController : MonoBehaviour
     void SliderChange(float value)
     {
         inputField.text = value.ToString();
+        floatProperty.property = value;
+
         if (floatProperty.graphicsFunction != null)
             floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });
 
-        floatProperty.property = value;
 
         SavedTurbineProperties.SaveValue(floatProperty.propertyName, value);
-
     }
 
 

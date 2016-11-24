@@ -12,6 +12,7 @@ public class TerrainObject : MonoBehaviour {
     public int verticesNow;
     public bool isFull;
     public bool hasReloaded;
+    public List<int> numVerticesPerObject;
 
     List<Mesh> nonCombinedMesh = new List<Mesh>();
     Mesh result;

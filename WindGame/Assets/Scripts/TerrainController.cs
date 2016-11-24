@@ -182,11 +182,18 @@ public class TerrainController : MonoBehaviour {
                 float minRot = biomes[i].biomeObjects[j].minRotation;
                 float maxRot = biomes[i].biomeObjects[j].maxRotation;
 
+                Mesh[] subMeshes = GetSubmeshes(obj);
                 // Add a mesh to the current biome adding also its details
                 biomeMesh.AddMesh(GetSubmeshes(obj), occurance, objectPerTile, minScale, maxScale, minRot, maxRot);
                 
                 // Add to the worldObjects list a new list of GameObjects that holds on the first place the prefab mesh. (Is used to instantiate new ones from)
                 worldObjects[i].Add(new List<GameObject>());
+                biomes[i].biomeObjects[j].emptyPrefab.GetComponent<TerrainObject>().numVerticesPerObject = new List<int>();
+
+                for (int k = 0; k < subMeshes.Length; k++)
+                {
+                    biomes[i].biomeObjects[j].emptyPrefab.GetComponent<TerrainObject>().numVerticesPerObject.Add(subMeshes[k].vertexCount);
+                }
                 worldObjects[i][j].Add(biomes[i].biomeObjects[j].emptyPrefab);
             }
 
@@ -331,6 +338,7 @@ public class TerrainController : MonoBehaviour {
                     if (!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
                     {
                         curObject.GetComponent<TerrainObject>().Reload();
+                        curObject.GetComponent<TerrainObject>().isFull = true;
                     }
 
                     index++;

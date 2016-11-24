@@ -187,16 +187,14 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     // Height //
     public void SetUpHeight(float height)
     {
-
         float dh = height - this.height;
         this.height = height;
         transform.GetChild(0).position += Vector3.up * dh;
-        if (height <= 0)
+        if (height < 0)
             return;
-
         turbineBase.transform.localScale = (Vector3.right + Vector3.up) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.forward * (heightProperty.property + 1);
-        turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up;
-        transform.parent.position -= Vector3.up * dh *0.5f;
+        //turbineHouse.transform.localScale = (Vector3.right + Vector3.forward) * areaProperty.property / unitScaleArea * baseStartScale + Vector3.up;
+        transform.parent.position -= Vector3.up * dh * 0.5f;
         transform.parent.position = GetComponentInParent<Camera>().transform.position - Vector3.up * (areaProperty.property / 2 + heightProperty.property) + (GetComponentInParent<Camera>().transform.forward) * 2 * (areaProperty.property / Mathf.Tan(30 * Mathf.Deg2Rad));
     }
 
