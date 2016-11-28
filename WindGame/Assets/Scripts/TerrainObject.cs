@@ -13,6 +13,7 @@ public class TerrainObject : MonoBehaviour {
     public bool isFull;
     public bool hasReloaded;
     public List<int> numVerticesPerObject;
+    public int animationNumber;
 
     List<Mesh> nonCombinedMesh = new List<Mesh>();
     Mesh result;
@@ -36,7 +37,7 @@ public class TerrainObject : MonoBehaviour {
 
     void Start()
     {
-        InvokeRepeating("RemoveObject", 0, 1f / 60);
+        StartCoroutine("RemoveObject");
     }
 	
     public void Reload()
@@ -79,6 +80,9 @@ public class TerrainObject : MonoBehaviour {
         newComponents.Clear();
         if (result.vertexCount > vertexMax)
         {
+            if (GetComponent<AnimationParameters>() != null)
+                GetComponent<AnimationParameters>().DetermineAnimationParameters();
+
             isFull = true;
         }
     }
@@ -159,8 +163,11 @@ public class TerrainObject : MonoBehaviour {
         {
             // Vertices
             List<Vector3> currentVertices;
-            if (GetComponent<TreeAnimator>() != null)
-                currentVertices = GetComponent<TreeAnimator>().vertices.ToList();
+            if (GetComponent<AnimationParameters>() != null)
+            {
+                currentVertices = TreeAnimationController.instance.meshVertices[animationNumber].ToList();
+            }
+
             else
                 currentVertices = GetComponent<MeshFilter>().mesh.vertices.ToList();
 
@@ -178,31 +185,35 @@ public class TerrainObject : MonoBehaviour {
                     break;
                 }
             }
-            
-            for (int i = 0; i<verticesToRemove.Count; i++)
+
+            for (int i = 0; i < verticesToRemove.Count; i++)
             {
                 currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
             }
 
-            if (GetComponent<TreeAnimator>() != null)
-                GetComponent<TreeAnimator>().vertices = currentVertices.ToArray();
-            //GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
+            if (GetComponent<AnimationParameters>() != null)
+            {
+                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices.ToArray();
+            }
+            else
+                GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
+
         }
     }
 
-    public void RemoveObject()
+    public IEnumerator RemoveObject()
     {
-        //while (true)
-        //{
+        while (true)
+        {
 
-            if(removeList.Count != 0)
+            if (removeList.Count != 0)
             {
                 MoveMesh(removeList[0]);
                 removeList.RemoveAt(0);
             }
 
-            //yield return null;
-        //}
+            yield return null;
+        }
     }
     
 }

@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 455218}
   - 114: {fileID: 11490118}
   - 114: {fileID: 114000010339187704}
+  - 114: {fileID: 114000013617754438}
   m_Layer: 0
   m_Name: WeatherManager
   m_TagString: Untagged
@@ -61,5 +62,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 442915591be10bc4c84c3b6eac2cd969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windSpeedChunks: []
+  height: 0
+--- !u!114 &114000013617754438
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 162066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1938bfda08867b14cbe98cd6a19153ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

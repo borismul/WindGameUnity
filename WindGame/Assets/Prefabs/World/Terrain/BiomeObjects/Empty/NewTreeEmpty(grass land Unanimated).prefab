@@ -83,12 +83,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biome: 0
   objectNR: 0
-  vertexMax: 10000
+  vertexMax: 5000
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
   numVerticesPerObject: 1800000008000000
-  animationNumber: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

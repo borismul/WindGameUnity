@@ -107,6 +107,8 @@ public class TerrainController : MonoBehaviour {
 
     public Vector3 middlePoint;
 
+    int treeCounter = -1;
+
     void Awake()
     {
         // Set this to the terraincontroller
@@ -339,20 +341,23 @@ public class TerrainController : MonoBehaviour {
                     {
                         curObject.GetComponent<TerrainObject>().Reload();
                         curObject.GetComponent<TerrainObject>().isFull = true;
-                    }
 
+                        if (curObject.GetComponent<AnimationParameters>() != null)
+                            curObject.GetComponent<AnimationParameters>().DetermineAnimationParameters();
+                    }
                     index++;
                 }
             }
         }
 
         // Initiate the city
-        InitiateCity();
+        StartCoroutine("InitiateCity");
     }
 
     // Initiate the city
-    void InitiateCity()
+    IEnumerator InitiateCity()
     {
+        yield return null;
         // instantiate the city
         curCity = Instantiate(city);
         curCity.transform.SetParent(transform);
@@ -370,7 +375,7 @@ public class TerrainController : MonoBehaviour {
     {
         // create a TerrainObject
         TerrainObject curterrainObject;
-        
+
         // Get the gameobjectList of this terrain object
         List<GameObject> curGameObjectList = worldObjects[biome][objIndex];
 
@@ -392,6 +397,13 @@ public class TerrainController : MonoBehaviour {
             // Get the terrainobject component
             curterrainObject = curGameObjectList[count - 1].GetComponent<TerrainObject>();
 
+            if (curterrainObject.GetComponent<AnimationParameters>() != null)
+            {
+                treeCounter++;
+                TreeAnimationController.instance.treeObjects.Add(curterrainObject);
+                TreeAnimationController.instance.lowestVertPerObject.Add(new List<float>());
+            }
+
             // Add the biome and object index to this
             curterrainObject.biome = biome;
             curterrainObject.objectNR = objIndex;
@@ -399,6 +411,12 @@ public class TerrainController : MonoBehaviour {
 
         // Get the terrainobject component of the last gameobject in the list
         curterrainObject = curGameObjectList[count - 1].GetComponent<TerrainObject>();
+
+        if (curterrainObject.GetComponent<AnimationParameters>() != null)
+        {
+            List<List<float>> lowestVertPerObject = TreeAnimationController.instance.lowestVertPerObject;
+            TreeAnimationController.instance.lowestVertPerObject[treeCounter].Add(position.y);
+        }
 
         // Get the submeshes of the object that needs to be placed
         Mesh[] subMeshes = biomeMeshes[biome].mesh[objIndex];

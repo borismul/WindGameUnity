@@ -38,6 +38,11 @@ public class ThreadVector3 {
         return dot;
     }
 
+    public static ThreadVector3 Normalize(ThreadVector3 a)
+    {
+        return a / Mathf.Sqrt((Dot(a, a)));
+    }
+
     public static float Magnitude(ThreadVector3 a)
     {
         return Mathf.Sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
@@ -161,6 +166,33 @@ public class ThreadVector3 {
         return temp;
     }
 
+    public static ThreadVector3 operator +(ThreadVector3 a, Vector3 b)
+    {
+        float x = a.x + b.x;
+        float y = a.y + b.y;
+        float z = a.z + b.z;
+        ThreadVector3 temp = new ThreadVector3(x, y, z);
+        return temp;
+    }
+
+    public static ThreadVector3 operator +(Vector3 a, ThreadVector3 b)
+    {
+        float x = a.x + b.x;
+        float y = a.y + b.y;
+        float z = a.z + b.z;
+        ThreadVector3 temp = new ThreadVector3(x, y, z);
+        return temp;
+    }
+
+    public static ThreadVector3 operator -(ThreadVector3 a)
+    {
+        a.x = -a.x;
+        a.y = -a.y;
+        a.z = -a.z;
+
+        return a;
+    }
+
     public static ThreadVector3 operator -(ThreadVector3 a, ThreadVector3 b)
     {
         float x = a.x - b.x;
@@ -169,6 +201,43 @@ public class ThreadVector3 {
         ThreadVector3 temp = new ThreadVector3(x, y, z);
         return temp;
     }
+
+    public static ThreadVector3 operator /(ThreadVector3 a, float b)
+    {
+        a.x /= b;
+        a.y /= b;
+        a.z /= b;
+
+        return a;
+    }
+
+    public static ThreadVector3 operator /(float b, ThreadVector3 a)
+    {
+        a.x /= b;
+        a.y /= b;
+        a.z /= b;
+
+        return a;
+    }
+
+    public static ThreadVector3 operator *(ThreadVector3 a, float b)
+    {
+        a.x *= b;
+        a.y *= b;
+        a.z *= b;
+
+        return a;
+    }
+
+    public static ThreadVector3 operator *(float b, ThreadVector3 a)
+    {
+        a.x *= b;
+        a.y *= b;
+        a.z *= b;
+
+        return a;
+    }
+
 
     public override string ToString()
     {

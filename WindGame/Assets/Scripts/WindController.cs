@@ -32,7 +32,7 @@ public class WindController : MonoBehaviour {
     float WindDirection(float gameSpeed)
     {
         time += Time.deltaTime * gameSpeed/200;
-        direction = 180 * Mathf.Sin(0.1f * Mathf.PI * time) + 180 * Mathf.Cos(0.12f * Mathf.PI * time);
+        direction = 180 * Mathf.Sin(0.041f * Mathf.PI * time) + 180 * Mathf.Cos(0.193f * Mathf.PI * time);
         return direction;
     }
 
@@ -40,7 +40,7 @@ public class WindController : MonoBehaviour {
     // SHOULD BE UPDATED!
     float WindMagnitude()
     {
-        magnitude = 6 * Mathf.Abs(Mathf.Sin(0.0023f * Mathf.PI * Time.timeSinceLevelLoad)) + 6 * Mathf.Abs(Mathf.Cos(0.0013f * Mathf.PI * Time.timeSinceLevelLoad));
+        magnitude = 6 * Mathf.Abs(Mathf.Sin(0.2313f * Mathf.PI * Time.timeSinceLevelLoad)) + 6 * Mathf.Abs(Mathf.Cos(0.132f * Mathf.PI * Time.timeSinceLevelLoad));
         return magnitude;
     }
 

@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5bddaa023aea65488737594c4402dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windRadius: 100
+  windRadius: 10000
   flag: {fileID: 1000013949041820}
 --- !u!114 &114000011727219260
 MonoBehaviour:
