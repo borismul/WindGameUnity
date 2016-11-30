@@ -153,13 +153,28 @@ public class WorldController : MonoBehaviour
         GameObject t = (GameObject)Instantiate(something,pos,rotation,transform);
         t.transform.localScale = Vector3.one * scale;
 
-        AddToGridTiles(something, pos, diameter * scale + 1 * TerrainController.thisTerrainController.tileSize, type);
+        AddToGridTiles(something, pos, diameter * scale + 2 * TerrainController.thisTerrainController.tileSize, type);
         EqualTerrain(pos, diameter * scale);
 
         if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
         {
             WindVisualizer.instance.UpdateChunks();
         }
+    }
+
+    public bool BuildingNearby(Vector3 pos, float diameter)
+    {
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, diameter);
+
+        foreach (GridTile tile in gridtiles)
+        {
+            if (tile.heightIsFixed)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public float BuildingHeight(Vector3 pos, float diameter)

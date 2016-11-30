@@ -2,6 +2,8 @@
 using System.Collections;
 using Rand = System.Random;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 public class CityController : MonoBehaviour {
 
@@ -46,8 +48,8 @@ public class CityController : MonoBehaviour {
         centerTile = GridTile.FindClosestGridTile(centerPos);
         cityPointTimer = 0;
         cityPoints = 0;
-        requiredCityPoints = 1000;
-        maximumRadius = 500;
+        requiredCityPoints = 8000;
+        maximumRadius = 100000;
 
         BuildStartCity();
     }
@@ -55,12 +57,12 @@ public class CityController : MonoBehaviour {
     void Update()
     {
         //Update city points every second
-        if(cityPointTimer + Time.deltaTime >= 1)
+        if (cityPointTimer + Time.deltaTime >= 1)
         {
             cityPointTimer = 0;
             cityPoints += GameResources.getProduction();
-
-        } else
+        }
+        else
         {
             cityPointTimer += Time.deltaTime;
         }
@@ -68,31 +70,62 @@ public class CityController : MonoBehaviour {
         //If city points higher than threshold, increase radius and threshold and reset points
         if (cityPoints > requiredCityPoints)
         {
-            density += 0.05f;
-            cityPoints = 0;
+            cityPoints -= requiredCityPoints;
             updateRadius();
         }
     }
 
     void updateRadius()
     {
-        GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1);
-        foreach (GridTile tile in gridTiles)
+        List<GridTile> gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
+
+        while (true)
         {
+            int currentTile = Random.Range(0, gridTiles.Count);
+            GridTile tile = gridTiles[currentTile];
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
             float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
             Quaternion rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
 
-            if (/*rand.NextDouble() < density &&*/ world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
+            if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true) && !world.BuildingNearby(tile.position, diameter))
             {
                 world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
                 return;
             }
+
+            gridTiles.RemoveAt(currentTile);
+
+            if (gridTiles.Count == 0)
+            {
+                gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
+
+                while (true)
+                {
+                    currentTile = Random.Range(0, gridTiles.Count);
+                    tile = gridTiles[currentTile];
+                    buildObject = buildings[rand.Next(0, buildings.Length)];
+
+                    diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
+                    rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+                    if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
+                    {
+                        world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
+                        return;
+                    }
+
+                    gridTiles.RemoveAt(currentTile);
+
+                    if (gridTiles.Count == 0)
+                        break;
+                }
+                break;
+            }
+
         }
         if (!(currentRadius + 30 > maximumRadius))
         {
-            currentRadius += 30;
+            currentRadius += 80;
         }
     }
 
@@ -114,7 +147,25 @@ public class CityController : MonoBehaviour {
             else
                 rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
 
-            if (/*rand.NextDouble() < density &&*/ world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
+            if (!world.BuildingNearby(tile.position, diameter) && world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
+            {
+                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
+            }
+
+        }
+
+        foreach (GridTile tile in gridTiles)
+        {
+            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
+
+            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
+            Quaternion rotation;
+            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
+                rotation = Quaternion.identity;
+            else
+                rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+
+            if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
                 world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
             }

@@ -111,6 +111,8 @@ public class TerrainController : MonoBehaviour {
 
     void Awake()
     {
+        MyThreadPool.StartThreadPool();
+
         // Set this to the terraincontroller
         thisTerrainController = this;
     }

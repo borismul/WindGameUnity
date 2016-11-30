@@ -32,7 +32,7 @@ public class WindController : MonoBehaviour {
     float WindDirection(float gameSpeed)
     {
         time += Time.deltaTime * gameSpeed/200;
-        direction = 180 * Mathf.Sin(0.041f * Mathf.PI * time) + 180 * Mathf.Cos(0.193f * Mathf.PI * time);
+        direction = 180 * Mathf.Sin(0.021f * Mathf.PI * time) + 180 * Mathf.Cos(0.0133f * Mathf.PI * time);
         return direction;
     }
 
@@ -53,7 +53,7 @@ public class WindController : MonoBehaviour {
         float baseWind = magnitude * seasonvalues[seasons[GameResources.getDate().Month - 1]];
 
         //Gets the gridtiles up to 3 tiles around the target
-        GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 80);
+        GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 120);
         float blockedWind = 0;
         float deltaHeight; float dot; TerrainObject terrainObj;
         float blockedTile =  0;

@@ -14,16 +14,12 @@ public class TreeAnimationController : MonoBehaviour
     public List<List<float>> randomValues;
 
     Thread[] threads = new Thread[4];
-    Thread mainThread;
-    List<ManualResetEvent> events = new List<ManualResetEvent>();
+    List<bool> isThreadDone = new List<bool>();
 
     public static TreeAnimationController instance;
     bool initialized = false;
 
     public float shakeSpeed = 0.6f;
-    bool stopThread = false;
-
-    readonly object lockUpdatedMeshVertices = new object();
     void Start()
     {
         treeObjects = new List<TerrainObject>();
@@ -52,18 +48,19 @@ public class TreeAnimationController : MonoBehaviour
                 initialized = true;
             }
 
-            events.Clear();
+            isThreadDone.Clear();
             for (int i = 0; i < threads.Length; i++)
             {
                 //System.Threading.ParameterizedThreadStart pts = new System.Threading.ParameterizedThreadStart(CalculateChunk);
-                ManualResetEvent mre = new ManualResetEvent(false);
-                ThreadPool.SetMaxThreads(4, 1);
-                ThreadPool.QueueUserWorkItem(AnimatePart, i);
-                mre.Set();
-                events.Add(mre);
+                //ThreadPool.SetMaxThreads(2, 1);
+                //print(i);
+                MyThreadPool.AddActionToQueue(AnimatePart, i);
+                isThreadDone.Add(false);
             }
-            yield return new WaitForSeconds(0.05f);
-            yield return WaitHandle.WaitAll(events.ToArray());
+            while (!AllThreadsDone())
+                yield return null;
+            //yield return new WaitForSeconds(0.05f);
+            //yield return WaitHandle.WaitAll(events.ToArray());
 
             //print("____________________________");
             //for (int i = 0; i < meshVertices.Count; i++)
@@ -76,8 +73,7 @@ public class TreeAnimationController : MonoBehaviour
 
             for (int i = 0; i < meshVertices.Count; i++)
             {
-                lock (lockUpdatedMeshVertices)
-                    treeObjects[i].GetComponent<MeshFilter>().mesh.vertices = updatedMeshVertices[i];
+                treeObjects[i].GetComponent<MeshFilter>().mesh.vertices = updatedMeshVertices[i];
             }
         }
     }
@@ -107,7 +103,7 @@ public class TreeAnimationController : MonoBehaviour
                 // for each tree in this object
                 for (int k = 0; k < vertPosPerObject[j].Count; k++)
                 {
-                    Vector3 move = windVector * shakeSpeed * (1 + (0.5f * Mathf.Sin(System.DateTime.Now.Second + System.DateTime.Now.Millisecond / 1000f * 1f) + 0.5f * Mathf.Sin((System.DateTime.Now.Second + System.DateTime.Now.Millisecond / 1000f) * randomValues[j][k])));
+                    Vector3 move = windVector * shakeSpeed * (1.5f + (1f * Mathf.Sin((System.DateTime.Now.Second + System.DateTime.Now.Millisecond / 1000f) * randomValues[j][k]) + randomValues[j][k]));
                     // for each vertex in this tree
                     for (int l = 0; l < vertPosPerObject[j][k].Count; l++)
                     {
@@ -118,12 +114,11 @@ public class TreeAnimationController : MonoBehaviour
 
 
                     }
-                }
-                lock (lockUpdatedMeshVertices)
-                {
-                    updatedMeshVertices[j] = newVertPos;
-                }
+                }                
+                updatedMeshVertices[j] = newVertPos;
+                
             }
+            isThreadDone[(int)i] = true;
         }
         catch(System.Exception e)
         {
@@ -131,12 +126,19 @@ public class TreeAnimationController : MonoBehaviour
         }
     }
 
+    bool AllThreadsDone()
+    {
+        foreach(bool threadDone in isThreadDone)
+        {
+            if (!threadDone)
+                return false;
+        }
+
+        return true;
+    }
+
     void OnApplicationQuit()
     {
-        stopThread = true;
-
-        if (mainThread != null)
-            mainThread.Abort();
 
         foreach (Thread thread in threads)
         {

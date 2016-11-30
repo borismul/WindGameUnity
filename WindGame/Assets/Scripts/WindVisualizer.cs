@@ -14,14 +14,10 @@ public class WindVisualizer : MonoBehaviour
     public List<GameObject> windSpeedChunks = new List<GameObject>();
     public static WindVisualizer instance;
     Thread newThread;
-    Thread[] chunkThreads = new Thread[20];
-    List<ManualResetEvent> events = new List<ManualResetEvent>();
+    Thread[] chunkThreads = new Thread[4];
+    List<bool> isThreadDone = new List<bool>();
 
     readonly static object lockUVS = new object();
-
-    float absMax;
-
-    bool stopThread = false;
 
     public float height = 0;
 
@@ -62,29 +58,25 @@ public class WindVisualizer : MonoBehaviour
             newThread.Abort();
 
         windSpeedChunks.Clear();
-        stopThread = true;
         newThread = null;
     }
 
     IEnumerator _VisualizeWind()
     {
-        stopThread = false;
         CreateChunks();
-
-
         while (true)
         {
-            events.Clear();
+            isThreadDone.Clear();
             for (int i = 0; i < chunkThreads.Length; i++)
             {
                 //System.Threading.ParameterizedThreadStart pts = new System.Threading.ParameterizedThreadStart(CalculateChunk);
-                ManualResetEvent mre = new ManualResetEvent(false);
-                ThreadPool.QueueUserWorkItem(CalculateChunk, i);
-                mre.Set();
-                events.Add(mre);
+                MyThreadPool.AddActionToQueue(CalculateChunk, i);
+                isThreadDone.Add(false);
             }
-            yield return null;
-            yield return WaitHandle.WaitAll(events.ToArray());
+
+            while (!AllThreadsDone())
+                yield return null;
+            
             for (int i = 0; i < windSpeedChunks.Count; i++)
             {
                 if (uvs[i] == null)
@@ -97,6 +89,17 @@ public class WindVisualizer : MonoBehaviour
             }
             //}
         }
+    }
+
+    bool AllThreadsDone()
+    {
+        foreach (bool threadDone in isThreadDone)
+        {
+            if (!threadDone)
+                return false;
+        }
+
+        return true;
     }
 
     void CreateChunks()
@@ -174,11 +177,12 @@ public class WindVisualizer : MonoBehaviour
             }
         }
 
+        isThreadDone[(int)i] = true;
+
     }
 
     void OnApplicationQuit()
     {
-        stopThread = true;
         foreach(Thread thread in chunkThreads)
         {
             if(thread != null)

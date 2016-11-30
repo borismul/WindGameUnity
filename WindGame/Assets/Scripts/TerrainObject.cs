@@ -162,22 +162,22 @@ public class TerrainObject : MonoBehaviour {
         for (int k = 0; k < subMeshes.Length; k++)
         {
             // Vertices
-            List<Vector3> currentVertices;
+            Vector3[] currentVertices;
             if (GetComponent<AnimationParameters>() != null)
             {
-                currentVertices = TreeAnimationController.instance.meshVertices[animationNumber].ToList();
+                currentVertices = TreeAnimationController.instance.meshVertices[animationNumber];
             }
 
             else
-                currentVertices = GetComponent<MeshFilter>().mesh.vertices.ToList();
+                currentVertices = GetComponent<MeshFilter>().mesh.vertices;
 
-            List<Vector3> verticesToRemove = mesh[k].vertices.ToList();
+            Vector3[] verticesToRemove = mesh[k].vertices;
 
             Vector3 firstVert = mesh[k].vertices[0];
 
             int minVertPos = 0;
 
-            for (int i = 0; i < currentVertices.Count; i++)
+            for (int i = 0; i < currentVertices.Length; i++)
             {
                 if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
                 {
@@ -186,17 +186,17 @@ public class TerrainObject : MonoBehaviour {
                 }
             }
 
-            for (int i = 0; i < verticesToRemove.Count; i++)
+            for (int i = 0; i < verticesToRemove.Length; i++)
             {
                 currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
             }
 
             if (GetComponent<AnimationParameters>() != null)
             {
-                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices.ToArray();
+                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
             }
             else
-                GetComponent<MeshFilter>().mesh.vertices = currentVertices.ToArray();
+                GetComponent<MeshFilter>().mesh.vertices = currentVertices;
 
         }
     }
