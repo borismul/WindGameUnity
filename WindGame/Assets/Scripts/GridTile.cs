@@ -11,20 +11,17 @@ public class GridTile{
     public bool underWater;
     public bool isOutsideBorder;
     public bool canSeeWind;
-    public bool heightIsFixed;
-    public List<Vector3> vert;
-    public List<int> vertIndex;
+    public List<GridNode> gridNodes;
     public Chunk chunk;
 
-    public GridTile(Vector3 position, Chunk chunk, List<Vector3> vert, List<int> vertIndex, int biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
+    public GridTile(Vector3 position, Chunk chunk, List<GridNode> gridNodes, int biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
     {
         this.position = position;
         this.biome = biome;
         this.occupants = occupants;
-        this.vert = vert;
+        this.gridNodes = gridNodes;
         this.underWater = isUnderWater;
         this.chunk = chunk;
-        this.vertIndex = vertIndex;
         this.isOutsideBorder = isOutsideBorder;
     }
 

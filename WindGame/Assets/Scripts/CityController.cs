@@ -49,13 +49,14 @@ public class CityController : MonoBehaviour {
         cityPointTimer = 0;
         cityPoints = 0;
         requiredCityPoints = 8000;
-        maximumRadius = 100000;
+        maximumRadius = 400;
 
         BuildStartCity();
     }
 
     void Update()
     {
+        updateRadius();
         //Update city points every second
         if (cityPointTimer + Time.deltaTime >= 1)
         {
@@ -86,7 +87,11 @@ public class CityController : MonoBehaviour {
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
             float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-            Quaternion rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+            Quaternion rotation;
+            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
+                rotation = Quaternion.identity;
+            else
+             rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
 
             if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true) && !world.BuildingNearby(tile.position, diameter))
             {
@@ -107,13 +112,15 @@ public class CityController : MonoBehaviour {
                     buildObject = buildings[rand.Next(0, buildings.Length)];
 
                     diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-                    rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+                    if(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
+                        rotation = Quaternion.identity;
+                    else
+                        rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
                     if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
                     {
                         world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
                         return;
                     }
-
                     gridTiles.RemoveAt(currentTile);
 
                     if (gridTiles.Count == 0)

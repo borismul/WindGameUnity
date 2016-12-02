@@ -83,6 +83,7 @@ public class TerrainController : MonoBehaviour {
 
     // The world, containing all gridtiles in matrix
     public GridTile[,] world;
+    public GridNode[,] worldNodes;
 
     // List of chunks and waterChunks to be able to destroy them
     [HideInInspector]
@@ -139,6 +140,8 @@ public class TerrainController : MonoBehaviour {
     {
         // Create a new world
         world = new GridTile[length / tileSize, width / tileSize];
+        worldNodes = new GridNode[length / tileSize + 1, width / tileSize + 1];
+
         // Set the seed to a random value if set seed is 0, else keep it
         if (seed == 0)
             seed = Random.Range(0, int.MaxValue);
@@ -342,7 +345,7 @@ public class TerrainController : MonoBehaviour {
                     if (!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
                     {
                         curObject.GetComponent<TerrainObject>().Reload();
-                        curObject.GetComponent<TerrainObject>().isFull = true;
+                        curObject.GetComponent<TerrainObject>().FinalizeObject();
 
                         if (curObject.GetComponent<AnimationParameters>() != null)
                             curObject.GetComponent<AnimationParameters>().DetermineAnimationParameters();

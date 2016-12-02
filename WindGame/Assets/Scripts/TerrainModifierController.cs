@@ -130,7 +130,7 @@ public class TerrainModifierController : MonoBehaviour {
                     if (curGridTile == null || Vector3.Distance(hit.point, curGridTile.position) > currentSize * tileSize)
                         continue;
 
-                    CreatePlane(curGridTile.vert.ToArray());
+                    CreatePlane(curGridTile.gridNodes.ToArray());
                 }
             }
 
@@ -138,7 +138,7 @@ public class TerrainModifierController : MonoBehaviour {
         }
     }
 
-    void CreatePlane(Vector3[] vertPos)
+    void CreatePlane(GridNode[] vertPos)
     {
         int index = vertices.Count;
         Vector3 offset = new Vector3(0, 2f, 0);
@@ -150,10 +150,10 @@ public class TerrainModifierController : MonoBehaviour {
         triangles.Add(index + 3);
         triangles.Add(index + 2);
 
-        vertices.Add(vertPos[0] + offset);
-        vertices.Add(vertPos[1] + offset);
-        vertices.Add(vertPos[2] + offset);
-        vertices.Add(vertPos[3] + offset);
+        vertices.Add(vertPos[0].position + offset);
+        vertices.Add(vertPos[1].position + offset);
+        vertices.Add(vertPos[2].position + offset);
+        vertices.Add(vertPos[3].position + offset);
     }
 
     void SetMesh()

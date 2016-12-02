@@ -14,8 +14,8 @@ public class WindVisualizer : MonoBehaviour
     public List<GameObject> windSpeedChunks = new List<GameObject>();
     public static WindVisualizer instance;
     Thread newThread;
-    Thread[] chunkThreads = new Thread[4];
-    List<bool> isThreadDone = new List<bool>();
+    Thread[] chunkThreads = new Thread[20];
+    Task[] tasks;
 
     readonly static object lockUVS = new object();
 
@@ -64,19 +64,19 @@ public class WindVisualizer : MonoBehaviour
     IEnumerator _VisualizeWind()
     {
         CreateChunks();
+        tasks = new Task[chunkThreads.Length];
         while (true)
         {
-            isThreadDone.Clear();
             for (int i = 0; i < chunkThreads.Length; i++)
             {
-                //System.Threading.ParameterizedThreadStart pts = new System.Threading.ParameterizedThreadStart(CalculateChunk);
-                MyThreadPool.AddActionToQueue(CalculateChunk, i);
-                isThreadDone.Add(false);
+
+                if (tasks[i] == null || tasks[i].isDone)
+                    tasks[i] = MyThreadPool.AddActionToQueue(CalculateChunk, i);
             }
 
-            while (!AllThreadsDone())
-                yield return null;
-            
+
+            yield return null;
+
             for (int i = 0; i < windSpeedChunks.Count; i++)
             {
                 if (uvs[i] == null)
@@ -87,20 +87,11 @@ public class WindVisualizer : MonoBehaviour
                     windSpeedChunks[i].GetComponent<MeshFilter>().mesh.uv = uvs[i].ToArray();
                 }
             }
+
             //}
         }
     }
 
-    bool AllThreadsDone()
-    {
-        foreach (bool threadDone in isThreadDone)
-        {
-            if (!threadDone)
-                return false;
-        }
-
-        return true;
-    }
 
     void CreateChunks()
     {
@@ -171,14 +162,10 @@ public class WindVisualizer : MonoBehaviour
                     CurChunkUVs.Add(new Vector2(1 - curWind / WindController.magnitude, 1 - curWind / WindController.magnitude));
                 }
             }
-            lock (lockUVS)
-            {
+
                 uvs[k] = CurChunkUVs;
-            }
+            
         }
-
-        isThreadDone[(int)i] = true;
-
     }
 
     void OnApplicationQuit()

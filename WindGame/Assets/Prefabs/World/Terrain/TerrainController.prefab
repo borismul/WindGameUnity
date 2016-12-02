@@ -78,7 +78,7 @@ MonoBehaviour:
       maxRotation: 360
   - biomeObjects: []
   objectPerTile: 5
-  seed: 6
+  seed: 2
   isFlatShaded: 0
   isIsland: 1
   radius: 700

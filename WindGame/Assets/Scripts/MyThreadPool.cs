@@ -9,17 +9,11 @@ public class MyThreadPool {
 
     static int numThreads;
     static PoolThread[] workers;
-    static ManualResetEvent[] threadIsDone;
-    static ManualResetEvent[] threadCanStart;
 
     static Task[] threadTasks;
-    static List<Task> taskQueue = new List<Task>();
-    static List<Task> finishedTaskQueue = new List<Task>();
+    public static List<Task> taskQueue = new List<Task>();
 
-    static Thread schedulerThread;
-    static ManualResetEvent schedulerEvent;
-
-    static readonly object queueLocker = new object();
+    public static readonly object queueLocker = new object();
 
     public static void StartThreadPool()
     {
@@ -27,93 +21,40 @@ public class MyThreadPool {
         Run();
     }
 
-    public static void AddActionToQueue(WaitCallback callback, object args)
+    public static Task AddActionToQueue(WaitCallback callback, object args)
     {
 
+        Task task = new Task(callback, args);
         lock (queueLocker)
-            taskQueue.Add(new Task(callback, args, 0));
+            taskQueue.Add(task);
 
-        schedulerEvent.Set();
+        for(int i = 0; i < workers.Length; i++)
+        {
+            lock (workers[i].eventLocker)
+            {
+                workers[i].threadCanStart.Set();
+            }
+        }
+        return task;
     }
 
     static void Initialize()
     {
-        numThreads = Math.Max(4, 1);
-        threadIsDone = new ManualResetEvent[numThreads];
-        threadCanStart = new ManualResetEvent[numThreads];
+        numThreads = SystemInfo.processorCount-1;
         workers = new PoolThread[numThreads];
         threadTasks = new Task[numThreads];
-
-        schedulerEvent = new ManualResetEvent(false);
     }
 
     static void Run()
     {
-        schedulerThread = new Thread(delegate () { Scheduler(); });
-        schedulerThread.Start();
+
         for (int i = 0; i < numThreads; i++)
         {
             int threadNum = i;
-            threadIsDone[i] = new ManualResetEvent(true);
-            threadCanStart[i] = new ManualResetEvent(false);
             workers[i] = new PoolThread();
         }
 
     }
-
-    static void Scheduler()
-    {
-        try
-        {
-
-            while (true)
-            {
-                // Wait for an action
-
-                schedulerEvent.WaitOne();
-                //Debug.Log(taskQueue.Count);
-
-                // Wait for free thread
-                //int freeThread = WaitHandle.WaitAny(threadIsDone);
-
-                // Add action to thread and start it
-                for (int i = 0; i < workers.Length; i++)
-                {
-                    if (workers[i].isRunning)
-                        continue;
-                    lock (queueLocker)
-                    {
-                        for (int j = 0; j < taskQueue.Count || j < 0; j++)
-                        {
-                            workers[i].GiveTask(taskQueue[j]);
-                            taskQueue.RemoveAt(j);
-                            break;
-                            //Debug.Log(finishedTaskQueue[finishedTaskQueue.Count - 1]);
-                            j--;
-                        }
-                    }
-                }
-
-
-                // If no free actions, deactivate scheduler
-                //if (taskQueue.Count == 0)
-                //    schedulerEvent.Reset();
-            }
-        }
-        catch (System.Exception e)
-        {
-
-            Debug.Log(e);
-        }
-    }
-
-    public static void AddToFinishedQueue(Task task)
-    {
-
-        finishedTaskQueue.Remove(task);
-        
-    }
-
 }
 
 
@@ -122,9 +63,9 @@ public class Task
     WaitCallback callback;
     object args;
     public bool isRunning = false;
-    public int taskNum;
+    public bool isDone = false;
 
-    public Task(WaitCallback callback, object args, int taskNum)
+    public Task(WaitCallback callback, object args)
     {
         this.callback = callback;
         this.args = args;
@@ -146,25 +87,39 @@ public class Task
 
 public class PoolThread
 {
-    public bool isRunning;
     public Task task;
     Thread thread;
     int threadNum;
-    ManualResetEvent threadCanStart;
+    public ManualResetEvent threadCanStart;
+
+    public readonly object eventLocker = new object();
 
     public PoolThread()
     {
-        threadCanStart = new ManualResetEvent(false);
+        threadCanStart = new ManualResetEvent(true);
         thread = new Thread(delegate () { Worker(); });
+        thread.Priority = System.Threading.ThreadPriority.Lowest;
         thread.IsBackground = true;
+
         thread.Start();
     }
 
-    public void GiveTask(Task task)
+    public void GetTask()
     {
-        this.task = task;
-        isRunning = true;
-        threadCanStart.Set();
+        if (MyThreadPool.taskQueue.Count > 0)
+        {
+            lock (MyThreadPool.queueLocker)
+            {
+                task = MyThreadPool.taskQueue[0];
+                MyThreadPool.taskQueue.RemoveAt(0);
+            }
+        }
+        else
+        {
+            task = null;
+            lock (eventLocker)
+                threadCanStart.Reset();
+        }
     }
 
     void Worker()
@@ -172,10 +127,12 @@ public class PoolThread
         while (true)
         {
             threadCanStart.WaitOne();
-            threadCanStart.Reset();
-            task.RunTask();
-
-            isRunning = false;
+            GetTask();
+            if (task != null)
+            {
+                task.RunTask();
+                task.isDone = true;
+            }
         }
     }
 }

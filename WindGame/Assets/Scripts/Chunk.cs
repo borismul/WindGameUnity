@@ -150,7 +150,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Function generates a grid tile in the world 2d Array in TerrainController
-    void GenerateGridTile(List<Vector3> positions, List<int> vertIndex, int biome, int iPos, int jPos)
+    void GenerateGridTile(List<Vector3> positions, int biome, int iPos, int jPos)
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
@@ -159,21 +159,30 @@ public class Chunk : MonoBehaviour {
         float yAvg = 0;
         float zAvg = 0;
 
-        List<Vector3> worldPositions = new List<Vector3>();
+        List<GridNode> worldPositions = new List<GridNode>();
         for (int i = 0; i < positions.Count; i++)
         {
             xAvg += positions[i].x;
             yAvg += positions[i].y;
             zAvg += positions[i].z;
 
-            worldPositions.Add(positions[i] + transform.position);
+            GridNode existingNode = GridNode.FindGridNode(positions[i] + transform.position);
+            if (existingNode == null)
+                existingNode = new GridNode(positions[i] + transform.position);
+           
+            worldPositions.Add(existingNode);
         }
 
 
         //Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
         Vector3 position = positions[0];
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
-        GridTile tile = new GridTile(position + transform.position, this, worldPositions, vertIndex, biome, isUnderWater, false, new List<GridTileOccupant>());
+        GridTile tile = new GridTile(position + transform.position, this, worldPositions, biome, isUnderWater, false, new List<GridTileOccupant>());
+
+        terrain.worldNodes[startI + iPos, startK + jPos] = worldPositions[0];
+        terrain.worldNodes[startI + iPos + 1, startK + jPos] = worldPositions[1];
+        terrain.worldNodes[startI + iPos, startK + jPos  + 1] = worldPositions[3];
+        terrain.worldNodes[startI + iPos + 1, startK + jPos + 1] = worldPositions[2];
 
         terrain.world[startI + iPos, startK + jPos] = tile;
     }
@@ -267,14 +276,9 @@ public class Chunk : MonoBehaviour {
             positions.Add(vert[UR]);
             positions.Add(vert[BR]);
 
-            vertIndex.Add(BL);
-            vertIndex.Add(UL);
-            vertIndex.Add(UR);
-            vertIndex.Add(BR);
-
             if (!update)
                 // Generate the grid tile
-                GenerateGridTile(positions, vertIndex, biomeMap[rowL, col], rowL, col);
+                GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
         }
     }
 
