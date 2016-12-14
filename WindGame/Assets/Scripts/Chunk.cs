@@ -43,6 +43,7 @@ public class Chunk : MonoBehaviour {
 
     // Map terrain and biome of this chunk
     public Vector3[,] map;
+    public Vector3[,] tempMap;
     public int[,] biomeMap;
 
     // Mesh of this chunk
@@ -58,7 +59,7 @@ public class Chunk : MonoBehaviour {
         {
             GenerateTerrain();
         }
-        GenerateTerrainMesh(false);
+        GenerateTerrainMesh(false, false);
     }
 
     // Initialization of important attributes
@@ -120,14 +121,17 @@ public class Chunk : MonoBehaviour {
                 float r = Vector3.Magnitude(pos + transform.position - terrain.middlePoint);
 
                 // Generate the height and biome of the vertex, depending on its horizontal position.
-                map[i,k] = GenerateTerrainMap(i, k, pos);
-                
-                if(terrain.isIsland)
+                Vector3 terrainMapVert = GenerateTerrainMap(i, k, pos);
+                map[i, k] = terrainMapVert;
+
+                if (terrain.isIsland)
                     map[i, k] += new Vector3(0, -terrain.islandSteepness * r * r + terrain.baseHeight + terrain.waterLevel, 0);
 
                 biomeMap[i,k] = GenerateBiomes(i, k, pos);
             }
         }
+
+        tempMap = (Vector3[,])map.Clone();
     }
 
     // Generate noise in y direction at a horizonal plane position, return the vector3 including the noise on the y component.
@@ -188,7 +192,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Generate the mesh of this chunk
-    public void GenerateTerrainMesh(bool update)
+    public void GenerateTerrainMesh(bool update, bool isTemp)
     {
         // Clear all lists of vertices, triangles, normals and uvs
         vert.Clear();
@@ -201,7 +205,10 @@ public class Chunk : MonoBehaviour {
         int n = map.GetLength(0);
 
         // Calculate vertices uvs and normals and add them to the lists
-        AddVertsAndUVAndNorm(n, update);
+        AddVertsAndUVAndNorm(n, update, isTemp);
+
+        if(isTemp)
+            tempMap = (Vector3[,])map.Clone();
 
         // calculate the triangles and grid tiles
         AddTrisAndGridTiles(n, update);
@@ -211,15 +218,18 @@ public class Chunk : MonoBehaviour {
     }
 
     // Calculate vertices, uvs and normal and add them to their corresponding lists
-    public void AddVertsAndUVAndNorm(int n, bool update)
+    public void AddVertsAndUVAndNorm(int n, bool update, bool isTemp)
     {
         // Loop through each of the vertices in map except for first and last one. (Those are the overlapping vertices with the chunk next to it)
         for (int i = 1; i < n - 1; i++)
         {
             for (int j = 1; j < n - 1; j++)
             {
-                // Add this vertex to the vert list
-                vert.Add(map[i, j]);
+                if (!isTemp)
+                    // Add this vertex to the vert list
+                    vert.Add(map[i, j]);
+                else
+                    vert.Add(tempMap[i, j]);
 
                 if (!update)
                 {
@@ -227,8 +237,11 @@ public class Chunk : MonoBehaviour {
                     uv.Add(DetermineUV(biomeMap[i-1, j-1]));
                 }
 
-                // Add the normal of the vertex. (Takes into account the overlapping vertices)
-                AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
+                if(!isTemp)
+                    // Add the normal of the vertex. (Takes into account the overlapping vertices)
+                    AddNormal(map[i, j], map[i - 1, j], map[i, j + 1], map[i + 1, j], map[i, j - 1]);
+                else
+                    AddNormal(tempMap[i, j], tempMap[i - 1, j], tempMap[i, j + 1], tempMap[i + 1, j], tempMap[i, j - 1]);
             }
         }
     }

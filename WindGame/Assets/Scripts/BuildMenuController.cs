@@ -384,6 +384,8 @@ public class BuildMenuController : MonoBehaviour
     // Updates the turbine to the mouse cursor until placement is confirmed
     void UpdateSelectedPosition()
     {
+        world.ResetTempChunks();
+
         Vector3 plantPos = Vector3.zero; // Get zero vector
         GridTile plantGrid = null;  
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast to find where the mouse is pointing at
@@ -417,6 +419,9 @@ public class BuildMenuController : MonoBehaviour
                             mat.color = blueBuildMaterial.color;
                         }
                     }
+                    plantPos = world.TempEqualTerrain(plantPos, curInstantiated.GetComponent<SizeController>().diameter,  curInstantiated.GetComponent<SizeController>().desiredScale);
+                    curInstantiated.transform.position = plantPos;
+
                     canBuild = true;
                 }
                 else // We can't build here, make the color reddish

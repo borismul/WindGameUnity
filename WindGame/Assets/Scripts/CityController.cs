@@ -56,7 +56,7 @@ public class CityController : MonoBehaviour {
 
     void Update()
     {
-        updateRadius();
+        //updateRadius();
         //Update city points every second
         if (cityPointTimer + Time.deltaTime >= 1)
         {

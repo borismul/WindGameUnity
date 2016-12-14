@@ -26,6 +26,8 @@ public class WorldController : MonoBehaviour
 
     public GameObject debugThing;
 
+    List<Chunk> tempChunks = new List<Chunk>();
+
     // Use this for initialization
     void Awake()
     {
@@ -86,7 +88,7 @@ public class WorldController : MonoBehaviour
         t.transform.rotation = rotation;
         t.transform.SetParent(parent);
         AddToGridTiles(t, pos, diameter * scale, type);
-        EqualTerrain(pos, (diameter * scale));
+        EqualTerrain(pos, (diameter * scale), false);
         TurbineManager turbManager = TurbineManager.GetInstance();
         turbManager.AddTurbine(t);
 
@@ -96,8 +98,24 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    public void ResetTempChunks()
+    {
+        foreach (Chunk chunk in tempChunks)
+            chunk.GenerateTerrainMesh(true, true);
+
+        tempChunks.Clear();
+    }
+
+    public Vector3 TempEqualTerrain(Vector3 pos, float diameter, float scale)
+    {
+        pos.y = BuildingHeight(pos, diameter * scale);
+        EqualTerrain(pos, (diameter * scale), true);
+
+        return pos;
+    }
+
     // Set the terrain height around a position to the tile closest to the entered position
-    void EqualTerrain(Vector3 pos, float circleRadius)
+    void EqualTerrain(Vector3 pos, float circleRadius, bool isTemp)
     {
         GridTile middleTile = GridTile.FindClosestGridTile(pos);
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
@@ -121,22 +139,34 @@ public class WorldController : MonoBehaviour
                     float diffz = chunk.gameObject.transform.position.z + chunk.map[index[0], index[1]].z- middleTile.position.z;
 
                     newPos = new Vector3(chunk.map[index[0], index[1]].x, pos.y, chunk.map[index[0], index[1]].z);
-                    chunk.map[index[0], index[1]] = newPos;
-                    chunk.AddVertsAndUVAndNorm(chunk.map.GetLength(0), true);
+
+                    if(!isTemp)
+                        chunk.map[index[0], index[1]] = newPos;
+                    else
+                        chunk.tempMap[index[0], index[1]] = newPos;
+
+                    //chunk.AddVertsAndUVAndNorm(chunk.map.GetLength(0), true);
 
                     if (!updateChunks.Contains(chunk))
                         updateChunks.Add(chunk);
                 }
-                tile.gridNodes[i].position = new Vector3(tile.gridNodes[i].position.x, pos.y, tile.gridNodes[i].position.z);
 
-                tile.gridNodes[i].heighIsSet = true;
+                if (!isTemp)
+                {
+                    tile.gridNodes[i].position = new Vector3(tile.gridNodes[i].position.x, pos.y, tile.gridNodes[i].position.z);
+                    tile.gridNodes[i].heighIsSet = true;
+                }
 
             }
-            tile.position = tile.gridNodes[0].position;
+            if (!isTemp)
+                tile.position = tile.gridNodes[0].position;
 
         }
         foreach (Chunk chunk in updateChunks)
-            chunk.GenerateTerrainMesh(true);
+        {
+            chunk.GenerateTerrainMesh(true, isTemp);
+            tempChunks.Add(chunk);
+        }
     }
 
     public void RemoveTurbine(TurbineController turbineController)
@@ -153,7 +183,7 @@ public class WorldController : MonoBehaviour
         t.transform.localScale = Vector3.one * scale;
 
         AddToGridTiles(something, pos, diameter * scale, type);
-        EqualTerrain(pos, diameter * scale);
+        EqualTerrain(pos, diameter * scale, false);
 
         if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
         {
