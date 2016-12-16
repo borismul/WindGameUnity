@@ -12,7 +12,6 @@ GameObject:
   - 23: {fileID: 2398004}
   - 114: {fileID: 11410176}
   - 114: {fileID: 114000013330650598}
-  - 114: {fileID: 114000011887870062}
   m_Layer: 0
   m_Name: NewTreeEmpty
   m_TagString: Untagged
@@ -88,6 +87,7 @@ MonoBehaviour:
   isFull: 0
   hasReloaded: 0
   numVerticesPerObject: 1800000008000000
+  animationNumber: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -99,18 +99,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151212}
   m_IsPrefabParent: 1
---- !u!114 &114000011887870062
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8858cdc8f89255f40b19eea6e24161fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vertices: []
 --- !u!114 &114000013330650598
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,4 +111,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectHeight: 10
-  objectDensity: 0.2
+  objectDensity: 0.025

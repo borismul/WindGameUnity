@@ -374,6 +374,8 @@ public class Chunk : MonoBehaviour {
         Destroy(GetComponent<MeshFilter>().mesh);
 
         // Set the mesh to the mesh filter and mesh collider
+        mesh.Optimize();
+        mesh.RecalculateBounds();
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshCollider>().sharedMesh = mesh;
     }

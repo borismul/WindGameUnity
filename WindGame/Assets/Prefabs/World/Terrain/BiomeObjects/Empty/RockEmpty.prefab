@@ -103,6 +103,8 @@ MonoBehaviour:
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
+  numVerticesPerObject: 62000000
+  animationNumber: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -126,4 +128,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectHeight: 0.2
-  objectDensity: 0.05
+  objectDensity: 0.005

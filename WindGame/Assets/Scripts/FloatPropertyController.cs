@@ -25,7 +25,7 @@ public class FloatPropertyController : MonoBehaviour
             SliderChange(savedValue);
         }
         else
-            slider.value = floatProperty.property;
+            slider.value = floatProperty.propertyValue;
 
         nameText.text = floatProperty.propertyName;
         unitText.text = floatProperty.unit;
@@ -48,7 +48,7 @@ public class FloatPropertyController : MonoBehaviour
     void SliderChange(float value)
     {
         inputField.text = value.ToString();
-        floatProperty.property = value;
+        floatProperty.propertyValue = value;
 
         if (floatProperty.graphicsFunction != null)
             floatProperty.graphicsFunction.Invoke(floatProperty.callObject, new object[] { slider.value });

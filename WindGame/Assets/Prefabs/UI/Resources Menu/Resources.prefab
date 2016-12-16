@@ -161,7 +161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000010555618492
 GameObject:
   m_ObjectHideFlags: 1
@@ -346,7 +346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000011542139246
 GameObject:
   m_ObjectHideFlags: 1
@@ -381,7 +381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000011771402052
 GameObject:
   m_ObjectHideFlags: 1
@@ -569,7 +569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000012626901150
 GameObject:
   m_ObjectHideFlags: 1
@@ -1934,9 +1934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuButton: {fileID: 114000011715713046}
   capitalText: {fileID: 114000013640503058}
-  publicAcceptanceText: {fileID: 114000010852065946}
   powerText: {fileID: 114000010292162088}
-  scoreText: {fileID: 114000011933509236}
   dateText: {fileID: 114000010908233718}
   pauseButton: {fileID: 114000013537911576}
   speedButton1x: {fileID: 114000013664218176}

@@ -22,7 +22,6 @@ public class PanemoneInformationMenu : MonoBehaviour {
     List<GameObject> globalElements = new List<GameObject>();
     List<GameObject> separators = new List<GameObject>();
 
-
     void Start()
     {
         repairButton.onClick.AddListener(RepairTurbine);
@@ -117,22 +116,30 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public void GenerateInfoElements()
     {
         separators.Add(CreateSeparator("User Variables:"));
-        ObjectProperties properties = turbine.GetComponent<PropertiesContainer>().properties;
+        ObjectProperties properties = turbine.GetComponent<PropertiesController>().uniProperties;
+        GenerateElements(properties);
+        properties = turbine.GetComponent<PropertiesController>().specificProperties;
+        GenerateElements(properties);
+
+    }
+
+    void GenerateElements(ObjectProperties properties)
+    {
         foreach (FloatProperty prop in properties.floatProperty)
         {
             GameObject infoElement;
-            if (prop.property < 1)
-                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F2"), prop.unit);
-            else if (prop.property < 50)
-                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F1"), prop.unit);
+            if (prop.propertyValue < 1)
+                infoElement = CreateProperty(prop.propertyName, prop.propertyValue.ToString("F2"), prop.unit);
+            else if (prop.propertyValue < 50)
+                infoElement = CreateProperty(prop.propertyName, prop.propertyValue.ToString("F1"), prop.unit);
             else
-                infoElement = CreateProperty(prop.propertyName, prop.property.ToString("F0"), prop.unit);
+                infoElement = CreateProperty(prop.propertyName, prop.propertyValue.ToString("F0"), prop.unit);
 
             turbineSpecificElements.Add(infoElement);
         }
         foreach (IntProperty prop in properties.intProperty)
         {
-            GameObject infoElement = CreateProperty(prop.propertyName, prop.property.ToString("0"), prop.unit);
+            GameObject infoElement = CreateProperty(prop.propertyName, prop.propertyValue.ToString("0"), prop.unit);
             turbineSpecificElements.Add(infoElement);
 
         }
@@ -140,29 +147,29 @@ public class PanemoneInformationMenu : MonoBehaviour {
         {
 
             GameObject infoElement;
-            if (prop.minProperty < 1)
-                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F2"), prop.unit);
-            else if (prop.minProperty < 50)
-                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F1"), prop.unit);
+            if (prop.minPropertyValue < 1)
+                infoElement = CreateProperty(prop.minPropertyName, prop.minPropertyValue.ToString("F2"), prop.unit);
+            else if (prop.minPropertyValue < 50)
+                infoElement = CreateProperty(prop.minPropertyName, prop.minPropertyValue.ToString("F1"), prop.unit);
             else
-                infoElement = CreateProperty(prop.minPropertyName, prop.minProperty.ToString("F0"), prop.unit);
+                infoElement = CreateProperty(prop.minPropertyName, prop.minPropertyValue.ToString("F0"), prop.unit);
 
             turbineSpecificElements.Add(infoElement);
 
 
-            if (prop.maxProperty < 1)
-                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F2"), prop.unit);
-            else if (prop.maxProperty < 50)
-                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F1"), prop.unit);
+            if (prop.maxPropertyValue < 1)
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxPropertyValue.ToString("F2"), prop.unit);
+            else if (prop.maxPropertyValue < 50)
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxPropertyValue.ToString("F1"), prop.unit);
             else
-                infoElement = CreateProperty(prop.maxPropertyName, prop.maxProperty.ToString("F0"), prop.unit);
+                infoElement = CreateProperty(prop.maxPropertyName, prop.maxPropertyValue.ToString("F0"), prop.unit);
 
             turbineSpecificElements.Add(infoElement);
         }
         foreach (BoolProperty prop in properties.boolProperty)
         {
             GameObject infoElement;
-            if (prop.property)
+            if (prop.propertyValue)
                 infoElement = CreateProperty(prop.propertyName, "Yes", "");
             else
             {
@@ -195,47 +202,55 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public void UpdateInfoElements()
     {
         int count = 0;
-        ObjectProperties properties = turbine.GetComponent<PropertiesContainer>().properties;
+        ObjectProperties properties = turbine.GetComponent<PropertiesController>().uniProperties;
+        UpdateElements(properties, count, out count);
+        properties = turbine.GetComponent<PropertiesController>().specificProperties;
+        UpdateElements(properties, count, out count);
+
+    }
+
+    void UpdateElements(ObjectProperties properties, int count, out int updateCount)
+    {
         foreach (FloatProperty prop in properties.floatProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
 
-            if (prop.property < 1)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F2");
-            else if (prop.property < 50)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F1");
+            if (prop.propertyValue < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.propertyValue.ToString("F2");
+            else if (prop.propertyValue < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.propertyValue.ToString("F1");
             else
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("F0");
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.propertyValue.ToString("F0");
             count++;
         }
         foreach (IntProperty prop in properties.intProperty)
         {
             GameObject infoElement = turbineSpecificElements[count];
-            infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.property.ToString("0");
+            infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.propertyValue.ToString("0");
             count++;
         }
         foreach (MinMaxFloatProperty prop in properties.minMaxProperty)
         {
 
             GameObject infoElement = turbineSpecificElements[count];
-            if (prop.minProperty < 1)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F2");
-            else if (prop.minProperty < 50)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F1");
+            if (prop.minPropertyValue < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minPropertyValue.ToString("F2");
+            else if (prop.minPropertyValue < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minPropertyValue.ToString("F1");
             else
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minProperty.ToString("F0");
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.minPropertyValue.ToString("F0");
 
             turbineSpecificElements.Add(infoElement);
 
             count++;
             infoElement = turbineSpecificElements[count];
 
-            if (prop.maxProperty < 1)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F2");
-            else if (prop.maxProperty < 50)
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F1");
+            if (prop.maxPropertyValue < 1)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxPropertyValue.ToString("F2");
+            else if (prop.maxPropertyValue < 50)
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxPropertyValue.ToString("F1");
             else
-                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxProperty.ToString("F0");
+                infoElement.transform.GetChild(1).GetComponent<Text>().text = prop.maxPropertyValue.ToString("F0");
 
             turbineSpecificElements.Add(infoElement);
             count++;
@@ -244,7 +259,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
         {
             GameObject infoElement = turbineSpecificElements[count];
 
-            if (prop.property)
+            if (prop.propertyValue)
                 infoElement.transform.GetChild(1).GetComponent<Text>().text = "Yes";
             else
             {
@@ -252,8 +267,10 @@ public class PanemoneInformationMenu : MonoBehaviour {
             }
             count++;
         }
-    }
 
+        updateCount = count;
+
+    }
     Color RYGInterpolation(float efficiency)
     {
         Color myColor = new Color(2.0f * efficiency, 2.0f * (1 - efficiency), 0);
@@ -278,8 +295,8 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     void DestroyTurbine()
     {
-        float price = GetComponent<PriceController>().price;
-        GameResources.removeWealth(-(price - (1 - (float)turbine.health) * price/2));
+        //float price = GetComponent<PriceController>().price;
+        //GameResources.removeWealth(-(price - (1 - (float)turbine.health) * price/2));
         TurbineManager.GetInstance().RemoveTurbine(turbine.gameObject);
         CloseMenu();
     }

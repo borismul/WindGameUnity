@@ -258,7 +258,8 @@ public class BuildMenuController : MonoBehaviour
 
     void CreateProperties()
     {
-        foreach (FloatProperty floatProperty in curInstantiated.GetComponent<PropertiesContainer>().properties.floatProperty)
+        if (curInstantiated.GetComponent<PropertiesController>() == null) return;
+        foreach (FloatProperty floatProperty in curInstantiated.GetComponent<PropertiesController>().uniProperties.floatProperty)
         {
             GameObject floatSlider = (GameObject)Instantiate(floatSliderPrefab);
             floatSlider.transform.SetParent(turbineProperties.transform, false);
@@ -266,7 +267,7 @@ public class BuildMenuController : MonoBehaviour
             floatProperties.Add(floatSlider.GetComponent<FloatPropertyController>());
         }
 
-        foreach (IntProperty intProperty in curInstantiated.GetComponent<PropertiesContainer>().properties.intProperty)
+        foreach (IntProperty intProperty in curInstantiated.GetComponent<PropertiesController>().uniProperties.intProperty)
         {
             GameObject intSlider = (GameObject)Instantiate(intSliderPrefab);
             intSlider.transform.SetParent(turbineProperties.transform, false);
@@ -274,7 +275,7 @@ public class BuildMenuController : MonoBehaviour
             intProperties.Add(intSlider.GetComponent<IntPropertyController>());
         }
 
-        foreach (MinMaxFloatProperty minMaxProperty in curInstantiated.GetComponent<PropertiesContainer>().properties.minMaxProperty)
+        foreach (MinMaxFloatProperty minMaxProperty in curInstantiated.GetComponent<PropertiesController>().uniProperties.minMaxProperty)
         {
             GameObject minMaxSlider = (GameObject)Instantiate(minMaxPropertyPrefab);
             minMaxSlider.transform.SetParent(turbineProperties.transform, false);
@@ -282,7 +283,39 @@ public class BuildMenuController : MonoBehaviour
             minMaxProperties.Add(minMaxSlider.GetComponent<MinMaxController>());
         }
 
-        foreach (BoolProperty boolProperty in curInstantiated.GetComponent<PropertiesContainer>().properties.boolProperty)
+        foreach (BoolProperty boolProperty in curInstantiated.GetComponent<PropertiesController>().uniProperties.boolProperty)
+        {
+            GameObject boolSlider = (GameObject)Instantiate(boolPropertyPrefab);
+            boolSlider.transform.SetParent(turbineProperties.transform, false);
+            boolSlider.GetComponent<BoolPropertyController>().boolProperty = boolProperty;
+            boolProperties.Add(boolSlider.GetComponent<BoolPropertyController>());
+        }
+
+        foreach (FloatProperty floatProperty in curInstantiated.GetComponent<PropertiesController>().specificProperties.floatProperty)
+        {
+            GameObject floatSlider = (GameObject)Instantiate(floatSliderPrefab);
+            floatSlider.transform.SetParent(turbineProperties.transform, false);
+            floatSlider.GetComponent<FloatPropertyController>().floatProperty = floatProperty;
+            floatProperties.Add(floatSlider.GetComponent<FloatPropertyController>());
+        }
+
+        foreach (IntProperty intProperty in curInstantiated.GetComponent<PropertiesController>().specificProperties.intProperty)
+        {
+            GameObject intSlider = (GameObject)Instantiate(intSliderPrefab);
+            intSlider.transform.SetParent(turbineProperties.transform, false);
+            intSlider.GetComponent<IntPropertyController>().intProperty = intProperty;
+            intProperties.Add(intSlider.GetComponent<IntPropertyController>());
+        }
+
+        foreach (MinMaxFloatProperty minMaxProperty in curInstantiated.GetComponent<PropertiesController>().specificProperties.minMaxProperty)
+        {
+            GameObject minMaxSlider = (GameObject)Instantiate(minMaxPropertyPrefab);
+            minMaxSlider.transform.SetParent(turbineProperties.transform, false);
+            minMaxSlider.GetComponent<MinMaxController>().minMaxFloatProperty = minMaxProperty;
+            minMaxProperties.Add(minMaxSlider.GetComponent<MinMaxController>());
+        }
+
+        foreach (BoolProperty boolProperty in curInstantiated.GetComponent<PropertiesController>().specificProperties.boolProperty)
         {
             GameObject boolSlider = (GameObject)Instantiate(boolPropertyPrefab);
             boolSlider.transform.SetParent(turbineProperties.transform, false);

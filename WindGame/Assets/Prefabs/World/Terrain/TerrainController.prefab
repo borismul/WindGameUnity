@@ -76,9 +76,16 @@ MonoBehaviour:
       maxScale: 1
       minRotation: 0
       maxRotation: 360
-  - biomeObjects: []
+  - biomeObjects:
+    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
+      emptyPrefab: {fileID: 151212, guid: dbd01e6b58ab8f64caa4d428e56a9af5, type: 2}
+      occurance: 0.075
+      minScale: 1
+      maxScale: 3
+      minRotation: 0
+      maxRotation: 360
   objectPerTile: 5
-  seed: 6
+  seed: 0
   isFlatShaded: 0
   isIsland: 1
   radius: 700

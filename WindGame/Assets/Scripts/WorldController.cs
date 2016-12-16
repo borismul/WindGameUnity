@@ -241,22 +241,23 @@ public class WorldController : MonoBehaviour
     {
         GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
-        Collider[] colliders = Physics.OverlapBox(buildObj.GetComponent<BoxCollider>().center * scale + pos, buildObj.GetComponent<BoxCollider>().size / 2 * scale, rotation, notTerrain);
+        Collider[] colliders = Physics.OverlapBox(buildObj.GetComponentInChildren<BoxCollider>().center * scale + pos, buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale, rotation, notTerrain);
+        //print(colliders[0].transform.name);
+        //Vector3 Start1 = buildObj.GetComponentInChildren<BoxCollider>().center * scale - buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale + pos;
+        //Vector3 End1 = pos + buildObj.GetComponentInChildren<BoxCollider>().center * scale;
 
-        //Vector3 Start1 = buildObj.GetComponent<BoxCollider>().center * scale - buildObj.GetComponent<BoxCollider>().size / 2 * scale + pos;
-        //Vector3 End1 = pos + buildObj.GetComponent<BoxCollider>().center * scale;
-
-        //Vector3 Start2 = buildObj.GetComponent<BoxCollider>().center * scale + buildObj.GetComponent<BoxCollider>().size / 2 * scale + pos;
-        //Vector3 End2 = pos + buildObj.GetComponent<BoxCollider>().center * scale;
+        //Vector3 Start2 = buildObj.GetComponentInChildren<BoxCollider>().center * scale + buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale + pos;
+        //Vector3 End2 = pos + buildObj.GetComponentInChildren<BoxCollider>().center * scale;
 
         //Debug.DrawLine(Start1, End1, Color.red, Mathf.Infinity);
         //Debug.DrawLine(Start2, End2, Color.green, Mathf.Infinity);
+
         if (colliders.Length > 1)
             return false;
         else if (colliders.Length == 1 && colliders[0].gameObject.GetInstanceID() != buildObj.GetInstanceID())
             return false;
 
-        if (thisTile.underWater)
+        if (pos.y <= 55f)
             return false;
 
         foreach (GridTile tile in gridtiles)

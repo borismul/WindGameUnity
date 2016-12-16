@@ -20,12 +20,12 @@ public class BoolPropertyController : MonoBehaviour {
         if (SavedTurbineProperties.GetSavedValue(boolProperty.propertyName, out value))
             toggle.isOn = value;
         else
-            toggle.isOn = boolProperty.property;
+            toggle.isOn = boolProperty.propertyValue;
     }
 
     void ToggleChange(bool isOn)
     {
-        boolProperty.property = isOn;
+        boolProperty.propertyValue = isOn;
 
         if (boolProperty.graphicsFunction != null)
             boolProperty.graphicsFunction.Invoke(boolProperty.callObject, new object[] { toggle.isOn });

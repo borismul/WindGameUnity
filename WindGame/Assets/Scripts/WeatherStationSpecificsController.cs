@@ -11,8 +11,8 @@ public class WeatherStationSpecificsController : MonoBehaviour {
     void GenerateProperties()
     {
         // Range
-        FloatProperty floatProperty = new FloatProperty("Range", "m",100, 20, 500, null, null, GetType().GetMethod("RangeCost"), null, this);
-        GetComponent<PropertiesContainer>().properties.floatProperty.Add(floatProperty);
+        //FloatProperty floatProperty = new FloatProperty("Range", "m",100, 20, 500, null, null, GetType().GetMethod("RangeCost"), null, this);
+        //GetComponent<PropertiesController>().properties.floatProperty.Add(floatProperty);
     }
 
     public int RangeCost(float range)

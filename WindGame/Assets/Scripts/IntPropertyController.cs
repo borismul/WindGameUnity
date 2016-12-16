@@ -25,7 +25,7 @@ public class IntPropertyController : MonoBehaviour {
         if (SavedTurbineProperties.GetSavedValue(intProperty.propertyName, out savedValue))
             slider.value = savedValue;
         else
-            slider.value = intProperty.property;
+            slider.value = intProperty.propertyValue;
         inputField.contentType = InputField.ContentType.IntegerNumber;
         inputField.text = slider.value.ToString();
 
@@ -46,7 +46,7 @@ public class IntPropertyController : MonoBehaviour {
     void SliderChange(int value)
     {
         inputField.text = value.ToString();
-        intProperty.property = value;
+        intProperty.propertyValue = value;
         if (intProperty.graphicsFunction != null)
             intProperty.graphicsFunction.Invoke(intProperty.callObject, new object[] { Mathf.RoundToInt(slider.value) });
 

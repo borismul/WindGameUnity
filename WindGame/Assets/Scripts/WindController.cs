@@ -8,7 +8,7 @@ public class WindController : MonoBehaviour {
     public static float time = 0;
 
     //Variables used for balancing
-    public static float heightInfluence = 1f/200f;
+    public static float heightInfluence = 1/100f;
     public static float turbineHeight = 10;
 
     //Seasons contains the season index per month
@@ -40,7 +40,7 @@ public class WindController : MonoBehaviour {
     // SHOULD BE UPDATED!
     float WindMagnitude()
     {
-        magnitude = 6 * Mathf.Abs(Mathf.Sin(0.2313f * Mathf.PI * Time.timeSinceLevelLoad)) + 6 * Mathf.Abs(Mathf.Cos(0.132f * Mathf.PI * Time.timeSinceLevelLoad));
+        magnitude = 6 * Mathf.Abs(Mathf.Sin(0.02313f * Mathf.PI * Time.timeSinceLevelLoad)) + 6 * Mathf.Abs(Mathf.Cos(0.0132f * Mathf.PI * Time.timeSinceLevelLoad));
         return magnitude;
     }
 
@@ -48,7 +48,6 @@ public class WindController : MonoBehaviour {
     //Formula found on the wind gradient wikipedia page
     public static float GetWindAtTile(GridTile tile, float height)
     {
-
         //Calculates the base magnitude depending on the season
         float baseWind = magnitude * seasonvalues[seasons[GameResources.getDate().Month - 1]];
 
@@ -56,7 +55,7 @@ public class WindController : MonoBehaviour {
         GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 80);
         float blockedWind = 0;
         float deltaHeight; float dot; TerrainObject terrainObj;
-        float blockedTile =  0;
+        float blockedTile =  1;
         for(int i = 0; i < nearTiles.Length; i++)
         {
             Vector3 diff = nearTiles[i].position - tile.position;
@@ -64,14 +63,14 @@ public class WindController : MonoBehaviour {
             dot = Vector3.Dot(Vector3.Normalize(diff), Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * direction), 0, Mathf.Cos(Mathf.Deg2Rad * direction))));
             if (dot > 0)
             {
-                blockedTile =  0;
-                deltaHeight = nearTiles[i].position.y - tile.position.y;
+                blockedTile =  1;
+                deltaHeight = nearTiles[i].position.y - tile.position.y - height;
 
                 //Reduces the wind coefficient when the tiles around it are higher 
                 //  Tiles block a maximum of 100% divided by their distance to the desired point each
-                if (deltaHeight > 5) blockedTile += Mathf.Min(deltaHeight * heightInfluence, 1/diff.magnitude);
+                if (deltaHeight > 10) blockedTile *=  (1-Mathf.Min(1/Mathf.Pow(diff.magnitude,0.7f) * heightInfluence *  Mathf.Pow(deltaHeight,1.1f) * dot, 1) );
 
-                for(int j = 0; j< nearTiles[i].occupants.Count; j++)
+                for (int j = 0; j< nearTiles[i].occupants.Count; j++)
                 if (nearTiles[i].occupants[j] != null)
                 {
                     terrainObj = nearTiles[i].occupants[j].terrainObject;
@@ -79,18 +78,19 @@ public class WindController : MonoBehaviour {
                     if (terrainObj != null)
                     {
                         WindEffectController controller = nearTiles[i].occupants[j].windEffectController;
-                        if (deltaHeight + controller.objectHeight > height) blockedTile += controller.objectDensity;
+                        if (deltaHeight + controller.objectHeight > height) blockedTile *= (1-controller.objectDensity);
                     }
                 }
-                blockedWind += blockedTile * dot;
+                blockedWind += (1-blockedTile) * dot;
             }
         }
+
+        blockedWind = Mathf.Min(0.99f, blockedWind);
         //print("Total amount of tiles evaluated: " + nearTiles.Length);
         //print("Amount of tiles with terrainobjects in the direction of the wind: " + testDirection);
         //print("Coefficient of blocked wind: " + blockedWind);
-        blockedWind = Mathf.Min(blockedWind, 0.9f);
 
-        return GetMaximumWind() * (1f - blockedWind);
+        return GetMaximumWind() * (1 - blockedWind);
     }
 
     public static float GetMaximumWind()

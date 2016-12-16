@@ -37,12 +37,12 @@ public class MinMaxController : MonoBehaviour {
             MinSliderChange(value);
         }
         else
-            minSlider.value = minMaxFloatProperty.minProperty;
+            minSlider.value = minMaxFloatProperty.minPropertyValue;
 
         if (SavedTurbineProperties.GetSavedValue(minMaxFloatProperty.maxPropertyName, out value))
             maxSlider.value = value;
         else
-            maxSlider.value = minMaxFloatProperty.maxProperty;
+            maxSlider.value = minMaxFloatProperty.maxPropertyValue;
 
         nameText.text = minMaxFloatProperty.propertyName;
         minUnitText.text = minMaxFloatProperty.unit;
@@ -103,7 +103,7 @@ public class MinMaxController : MonoBehaviour {
         if (minMaxFloatProperty.minGraphicsFunction != null)
             minMaxFloatProperty.minGraphicsFunction.Invoke(minMaxFloatProperty.callObject, new object[] { minSlider.value });
 
-        minMaxFloatProperty.minProperty = minSlider.value;
+        minMaxFloatProperty.minPropertyValue = minSlider.value;
         SavedTurbineProperties.SaveValue(minMaxFloatProperty.minPropertyName, value);
     }
 
@@ -120,7 +120,7 @@ public class MinMaxController : MonoBehaviour {
         if (minMaxFloatProperty.maxGraphicsFunction != null)
             minMaxFloatProperty.maxGraphicsFunction.Invoke(minMaxFloatProperty.callObject, new object[] { maxSlider.value });
 
-        minMaxFloatProperty.maxProperty = maxSlider.value;
+        minMaxFloatProperty.maxPropertyValue = maxSlider.value;
         minMaxFloatProperty.minLastSetting = maxSlider.value;
 
         SavedTurbineProperties.SaveValue(minMaxFloatProperty.maxPropertyName, value);

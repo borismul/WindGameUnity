@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PropertiesContainer : MonoBehaviour {
+public class PropertiesController : MonoBehaviour {
 
-    public ObjectProperties properties = new ObjectProperties();
+    public ObjectProperties uniProperties = new ObjectProperties();
+    public ObjectProperties specificProperties = new ObjectProperties();
 }

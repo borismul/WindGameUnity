@@ -100,6 +100,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011041136072}
+  - 65: {fileID: 65000012513155324}
   m_Layer: 9
   m_Name: Turbine
   m_TagString: Untagged
@@ -138,7 +139,7 @@ GameObject:
   - 114: {fileID: 114000011409999744}
   - 114: {fileID: 114000011601301914}
   - 114: {fileID: 114000012012679896}
-  - 65: {fileID: 65000012292252250}
+  - 114: {fileID: 114000010744198936}
   m_Layer: 9
   m_Name: Persian Windmill
   m_TagString: turbine
@@ -168,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013478390948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1884.8256, y: 477.31213, z: 2383.9084}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -212,7 +213,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012505210070}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.024, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -432,18 +433,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012976430290}
   m_Mesh: {fileID: 4300008, guid: e62ad045231b3a04c88ca19a5655488c, type: 3}
---- !u!65 &65000012292252250
+--- !u!65 &65000012513155324
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013478390948}
+  m_GameObject: {fileID: 1000012505210070}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 14.3, y: 13.63, z: 14.44}
-  m_Center: {x: 0, y: 3.7, z: 0.6}
+  m_Center: {x: 0, y: -0.03, z: 0.05}
 --- !u!114 &114000010430950158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -455,17 +456,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e563d4bfeb354646a05c4b970beada8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {fileID: 1000013803109158}
-  baseTurbineObject: {fileID: 1000011497124286}
-  turbineHouse: {fileID: 1000011593488806}
-  turbineBase: {fileID: 1000012976430290}
-  areaPropertyName: Frontal Area
-  areaUnit: m^2
-  areaStartValue: 10
-  areaMinValue: 5
-  areaMaxValue: 25
-  areaCostMultiplier: 5
-  unitScaleArea: 7.5
+  a: 0.15
+  b: 0.1
+  c: 0.1
+  wallPropertyName: Use A Wall
+  wallUnit: 
+  wallCost: 1000
+  wallMultiplier: 1.3
+  wallIsOn: 0
+  wall: {fileID: 1000013120947920, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
+--- !u!114 &114000010744198936
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013478390948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe88aabb5bd7bc24892676d4d1042d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   heightPropertyName: Height
   heightUnit: m
   heightStartValue: 0
@@ -478,30 +488,31 @@ MonoBehaviour:
   bladesPropertyName: '# Blades'
   bladesUnit: 
   bladesStartValue: 3
-  bladesMinValue: 0
-  bladesMaxValue: 20
-  costPerBlade: 20
-  a: 0.15
-  b: 0.1
-  c: 0.1
+  bladesMinValue: 2
+  bladesMaxValue: 6
   persianBlade: {fileID: 1000014047877730, guid: 1e982e288293a7f4789eff61058f9e59,
     type: 2}
-  wallPropertyName: Use A Wall
-  wallUnit: 
-  wallCost: 1000
-  wallMultiplier: 1.3
-  wallIsOn: 0
-  wall: {fileID: 1000013120947920, guid: ae8e2421b70ead84d96bd0ce5f02b3d1, type: 2}
-  RatedCutoffpropertyName: Rated/Cuttoff Power
-  ratedPropertyName: Rated Power
-  ratedCutoffUnit: kW
-  RatedCostMultiplier: 500
-  CutoffCostMultiplier: 500
-  cutoffPropertyName: Cutoff Power
+  RatedCutoffpropertyName: Rated/Cuttoff Speed
+  ratedPropertyName: Rated Speed
+  ratedCutoffUnit: m/s
+  cutoffPropertyName: Cutoff Speed
   ratedProperty: 5
   cutOffProperty: 10
   ratedCutoffMin: 1
   ratedCuroffMax: 30
+  areaPropertyName: Frontal Area
+  areaUnit: m^2
+  areaStartValue: 10
+  areaMinValue: 5
+  areaMaxValue: 15
+  areaCostMultiplier: 5
+  unitScaleArea: 7
+  Cp_design: 0
+  Cp_reference: 0
+  axis: {fileID: 1000011966378136}
+  baseTurbineObject: {fileID: 1000012505210070}
+  turbineHouse: {fileID: 1000011593488806}
+  turbineBase: {fileID: 1000012976430290}
 --- !u!114 &114000011409999744
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -522,7 +533,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013478390948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b3921577efed674ebe15458fcaa57c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 215c07503a32bd14d9216f67ce421802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114000012012679896
@@ -536,7 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0303a73dd22432e4c851e4b443d15ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canRotateAtBuild: 0
+  canRotateAtBuild: 1
 --- !u!114 &114000012748795752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,11 +559,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13c02c88430e2547853707acab8ab2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cp_ref_min: 0.8
+  Cp_ref_max: 1
+  Vcutin: 4
+  n_aboveRated: 2
+  eff: 0.5
+  safemode: 0
+  penaltyControl: 0.25
+  cp: 0
   blades: {fileID: 1000013803109158}
-  nacelle: {fileID: 0}
+  nacelle: {fileID: 1000011966378136}
   power: 0
   efficiency: 0
-  health: 0.0000023548706404986452
+  health: 0.0000023548707
   avgPower: 0
   desiredScale: 0
   desiredHeight: 0
@@ -568,5 +587,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe62095cc02642f44bcf2579e39aa139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diameter: 17.5
+  diameter: 20
   desiredScale: 0
