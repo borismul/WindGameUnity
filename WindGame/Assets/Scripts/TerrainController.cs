@@ -158,9 +158,10 @@ public class TerrainController : MonoBehaviour {
         GameObject light = new GameObject();
         light.transform.SetParent(transform);
         light.AddComponent<Light>().type = LightType.Directional;
-        light.GetComponent<Light>().shadows = LightShadows.Hard;
+        light.GetComponent<Light>().shadows = LightShadows.Soft;
         light.transform.rotation = Quaternion.Euler(45, 0, 0);
         light.name = "Sun";
+        light.GetComponent<Light>().shadowNormalBias = 1.2f;
     }
 
     // Method creates meshes of all objects per biome

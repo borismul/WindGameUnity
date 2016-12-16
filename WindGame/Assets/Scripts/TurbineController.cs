@@ -159,7 +159,6 @@ public class TurbineController : MonoBehaviour {
     {
         float Cp_ref = CpReference();
         float BaseEq = Mathf.Sqrt(Mathf.Sin(Mathf.PI / 2 + (Mathf.PI / 4) * ((V - V_rated) / (V_cutoff - V_rated)))) * Mathf.Pow(V_rated / V, n_aboveRated);
-        print(BaseEq);
         return Cp_ref * BaseEq;
     }
 

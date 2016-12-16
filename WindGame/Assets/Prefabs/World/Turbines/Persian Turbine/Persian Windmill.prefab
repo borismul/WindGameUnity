@@ -496,8 +496,8 @@ MonoBehaviour:
   ratedPropertyName: Rated Speed
   ratedCutoffUnit: m/s
   cutoffPropertyName: Cutoff Speed
-  ratedProperty: 5
-  cutOffProperty: 10
+  ratedProperty: 10
+  cutOffProperty: 15
   ratedCutoffMin: 1
   ratedCuroffMax: 30
   areaPropertyName: Frontal Area
