@@ -7,6 +7,7 @@ using System.Linq;
 
 public class CityController : MonoBehaviour {
 
+    // List containing the different types of buildings
     public CityObject[] buildings;
     [Range(0,1)]
     public float minLocX;
@@ -139,12 +140,13 @@ public class CityController : MonoBehaviour {
 
     void BuildStartCity()
     {
-        currentRadius = startRadius;
-        world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, transform);
+        // currentRadius = startRadius;
+        // world.AddOther(buildings[0].prefab, centerTile.position , Quaternion.identity, buildings[0].scale, GridTileOccupant.OccupantType.City, transform);
 
         GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, startRadius, 1);
         foreach (GridTile tile in gridTiles)
         {
+            // Pick a type of building randomly
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
             float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
@@ -152,7 +154,19 @@ public class CityController : MonoBehaviour {
             if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
                 rotation = Quaternion.identity;
             else
-                rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+            {
+                // List of possible orientations
+                float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+
+                // Get an angle from the possible orientation
+                float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
+
+                // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
+                angle += (float)rand.NextDouble() * 10;
+
+                // Create the rotation quaternion
+                rotation = Quaternion.AngleAxis(angle, Vector3.up);
+            }
 
             if (!world.BuildingNearby(tile.position, diameter) && world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
@@ -170,7 +184,19 @@ public class CityController : MonoBehaviour {
             if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
                 rotation = Quaternion.identity;
             else
-                rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+            {
+                // List of possible orientations
+                float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+
+                // Get an angle from the possible orientation
+                float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
+
+                // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
+                angle += (float)rand.NextDouble() * 10;
+
+                // Create the rotation quaternion
+                rotation = Quaternion.AngleAxis(angle, Vector3.up);
+            }
 
             if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
