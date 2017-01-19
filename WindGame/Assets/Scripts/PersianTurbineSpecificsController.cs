@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// script. The functions for each the properties, calculation of power, cost, health 
 /// degeneration and a graphics funcion, are determined in this script.
 /// </summary>
-[RequireComponent(typeof(PersianTurbineController))]
+[RequireComponent(typeof(TurbineController))]
 public class PersianTurbineSpecificsController : MonoBehaviour {
 
     public ObjectProperties properties;

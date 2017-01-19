@@ -43,7 +43,8 @@ public abstract class TurbineController : MonoBehaviour {
 
     public GridTile onGridtile;
 
-    UniversalProperties uniProperties;
+    [HideInInspector]
+    public UniversalProperties uniProperties;
 
     void Start()
     {
@@ -106,6 +107,8 @@ public abstract class TurbineController : MonoBehaviour {
     }
 
     public abstract void SpecificProperties();
+
+    public abstract ObjectProperties getSpecificProperties();
 
     float Cp()
     {

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PersianTurbineController :TurbineController {
-    PersianTurbineSpecificsController specificProperties;
+    
+    public PersianTurbineSpecificsController specificProperties;
 
     public override void SpecificProperties()
     {
@@ -34,16 +35,12 @@ public class PersianTurbineController :TurbineController {
 
     public override void startChild()
     {
+        specificProperties = GetComponent<PersianTurbineSpecificsController>();
         SpecificProperties();
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public override ObjectProperties getSpecificProperties()
+    {
+        return specificProperties.properties;
+    }
 }

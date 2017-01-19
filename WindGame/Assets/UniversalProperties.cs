@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class UniversalProperties : MonoBehaviour {
-    ObjectProperties properties;
+    public ObjectProperties properties;
 
     [Header("Height Properties")]
     // Property variables

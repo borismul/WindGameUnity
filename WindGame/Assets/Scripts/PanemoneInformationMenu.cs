@@ -116,9 +116,9 @@ public class PanemoneInformationMenu : MonoBehaviour {
     public void GenerateInfoElements()
     {
         separators.Add(CreateSeparator("User Variables:"));
-        ObjectProperties properties = turbine.GetComponent<PropertiesController>().uniProperties;
+        ObjectProperties properties = turbine.GetComponent<TurbineController>().uniProperties.properties;
         GenerateElements(properties);
-        properties = turbine.GetComponent<PropertiesController>().specificProperties;
+        properties = turbine.GetComponent<TurbineController>().getSpecificProperties();
         GenerateElements(properties);
 
     }
