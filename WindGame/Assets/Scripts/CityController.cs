@@ -81,57 +81,42 @@ public class CityController : MonoBehaviour {
     {
         List<GridTile> gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
 
-        while (true)
+        while (gridTiles.Count > 0)
         {
+            // Grab a random tile  
             int currentTile = Random.Range(0, gridTiles.Count);
             GridTile tile = gridTiles[currentTile];
+
+            // Grab a random building object
             CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
             float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
             Quaternion rotation;
-            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                rotation = Quaternion.identity;
-            else
-             rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+
+            // List of possible orientations
+            float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+
+            // Get an angle from the possible orientation
+            float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
+
+            // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
+            angle += (float)rand.NextDouble() * 10;
+
+            // Create the rotation quaternion
+            rotation = Quaternion.AngleAxis(angle, Vector3.up);
 
             if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true) && !world.BuildingNearby(tile.position, diameter))
             {
-                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
+                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
                 return;
             }
 
+            // Remove the current tile we're inspecting because we couldn't build here; Try another.
             gridTiles.RemoveAt(currentTile);
 
-            if (gridTiles.Count == 0)
-            {
-                gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
-
-                while (true)
-                {
-                    currentTile = Random.Range(0, gridTiles.Count);
-                    tile = gridTiles[currentTile];
-                    buildObject = buildings[rand.Next(0, buildings.Length)];
-
-                    diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-                    if(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                        rotation = Quaternion.identity;
-                    else
-                        rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
-                    if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
-                    {
-                        world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-                        return;
-                    }
-                    gridTiles.RemoveAt(currentTile);
-
-                    if (gridTiles.Count == 0)
-                        break;
-                }
-                break;
-            }
-
         }
-        if (!(currentRadius + 30 > maximumRadius))
+        // We couldn't build anywhere within the city radius. Expand the borders.
+        if (currentRadius + 30 < maximumRadius)
         {
             currentRadius += 80;
         }

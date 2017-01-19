@@ -76,16 +76,23 @@ public class GridTile{
     // Find all GridTiles in a radius around point
     public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius)
     {
+        // Create the container that we'll be returning when this function is called
         List<GridTile> gridTiles = new List<GridTile>();
+
+        // Find the GridTile object closest to the center point
         GridTile middleTile = FindClosestGridTile(point);
+
+        // If there is no middle Tile, return our empty array
+        if (middleTile == null)
+            return gridTiles.ToArray();
+
+        // Grab the terrain controller singleton
         TerrainController terrain = TerrainController.thisTerrainController;
 
         float startTile = -circleRadius;
         float endTile = circleRadius;
 
-        if (middleTile == null)
-            return gridTiles.ToArray();
-
+        // Finds all the tiles within a SQUARE BOX of the center location
         for (float i = startTile-1; i < endTile; i += terrain.tileSize)
         {
             for (float j = startTile-1; j < endTile; j += terrain.tileSize)
@@ -94,6 +101,7 @@ public class GridTile{
                 if (tile == null)
                     continue;
 
+                // Only adds a grid tile to the list of tiles when it is within a CIRCULAR RADIUS
                 if (Vector3.Distance(new Vector3(tile.position.x, 0, tile.position.z), new Vector3(point.x, 0, point.z)) < circleRadius)
                 {
                     gridTiles.Add(FindClosestGridTile(tile.position));
