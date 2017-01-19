@@ -8,10 +8,10 @@ using System.Collections.Generic;
 /// script. The functions for each the properties, calculation of power, cost, health 
 /// degeneration and a graphics funcion, are determined in this script.
 /// </summary>
-[RequireComponent(typeof(TurbineController))]
+[RequireComponent(typeof(PersianTurbineController))]
 public class PersianTurbineSpecificsController : MonoBehaviour {
 
-
+    public ObjectProperties properties;
 
     [Tooltip("Power Function: a + (nBlades/maxBlades)^b * c")]
     public float a = 0.15f;
@@ -36,8 +36,6 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     // Properties, used for cross linking values to eachother
     BoolProperty wallProperty;
 
-    PropertiesController controller;
-
     float height;                                               // Current height of the turbine
     List<GameObject> currentBlades = new List<GameObject>();    // The instantiated blades, if there is at least one
     GameObject currentWall;                                     // The instantiate wall, if there is one
@@ -50,11 +48,11 @@ public class PersianTurbineSpecificsController : MonoBehaviour {
     // Generate the properties for the persian turbine
     void GenerateProperties()
     {
-        controller = GetComponent<PropertiesController>();
+        properties = new ObjectProperties();
 
         // Wall
         wallProperty = new BoolProperty(wallPropertyName, wallIsOn, GetType().GetMethod("WallPower"), GetType().GetMethod("CreateWall"), GetType().GetMethod("WallCost"), null, this);
-        controller.specificProperties.boolProperty.Add(wallProperty);
+        properties.boolProperty.Add(wallProperty);
     }
 
     // Wall //

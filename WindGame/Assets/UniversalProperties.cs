@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class UniversalProperties : MonoBehaviour {
+    ObjectProperties properties;
 
     [Header("Height Properties")]
     // Property variables
@@ -63,7 +64,7 @@ public class UniversalProperties : MonoBehaviour {
     List<GameObject> currentBlades = new List<GameObject>();    // The instantiated blades, if there is at least one
 
     public GameObject axis;                                 // Axis where the blades attach to
-    public GameObject baseTurbineObject;                    // Turbine object without the base to make it heigher
+    public GameObject baseTurbineObject;                    // Turbine object without the base to make it higher
     public GameObject turbineHouse;
     public GameObject turbineBase;
 
@@ -74,23 +75,22 @@ public class UniversalProperties : MonoBehaviour {
 
     void GenerateProperties()
     {
-        PropertiesController controller = GetComponent<PropertiesController>();
-
+        properties = new ObjectProperties();
         // Frontal area
         areaProperty = new FloatProperty(areaPropertyName, areaUnit, areaStartValue, areaMinValue, areaMaxValue, null, GetType().GetMethod("ScaleByArea"), GetType().GetMethod("AreaCost"), null, this);
-        controller.uniProperties.floatProperty.Add(areaProperty);
+        properties.floatProperty.Add(areaProperty);
 
         // Height
         heightProperty = new FloatProperty(heightPropertyName, heightUnit, heightStartValue, heightMinValue, heightMaxValue, null, GetType().GetMethod("SetUpHeight"), GetType().GetMethod("HeightCost"), null, this);
-        controller.uniProperties.floatProperty.Add(heightProperty);
+        properties.floatProperty.Add(heightProperty);
 
         // Number of blades
         bladesProperty = new IntProperty(bladesPropertyName, bladesUnit, bladesStartValue, bladesMinValue, bladesMaxValue, null, GetType().GetMethod("CreateBlades"), null, null, this);
-        controller.uniProperties.intProperty.Add(bladesProperty);
+        properties.intProperty.Add(bladesProperty);
 
         // Rated/Cutoff Speed
         ratedCutoffProperty = new MinMaxFloatProperty(RatedCutoffpropertyName, ratedCutoffUnit, ratedPropertyName, cutoffPropertyName, ratedProperty, cutOffProperty, ratedCutoffMin, ratedCuroffMax, null, null, null, null, null, null, null, null, this);
-        controller.uniProperties.minMaxProperty.Add(ratedCutoffProperty);
+        properties.minMaxProperty.Add(ratedCutoffProperty);
 
     }
 

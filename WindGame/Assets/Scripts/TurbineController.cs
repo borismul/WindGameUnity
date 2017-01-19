@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Reflection;
 
-public class TurbineController : MonoBehaviour {
+public abstract class TurbineController : MonoBehaviour {
 
     public float Cp_ref_min = 0;
     public float Cp_ref_max = 1;
@@ -44,14 +44,19 @@ public class TurbineController : MonoBehaviour {
     public GridTile onGridtile;
 
     UniversalProperties uniProperties;
-    PropertiesController properties;
 
     void Start()
     {
         uniProperties = GetComponent<UniversalProperties>();
         health = 1;
         onGridtile = GridTile.FindClosestGridTile(transform.position);
+        startChild();
     }
+
+    // This method starts the part of the Start cycle that is specific to the actual turbine being made.
+    // This mainly prepares the specific properties.
+    public abstract void startChild();
+
 	// Update is called once per frame
 	void Update ()
     {
@@ -100,33 +105,7 @@ public class TurbineController : MonoBehaviour {
         //print(WindController.GetWindAtTile(onGridtile, uniProperties.heightProperty.propertyValue));
     }
 
-    void SpecificProperties()
-    {
-        ObjectProperties specificProperties = properties.specificProperties;
-
-        foreach (FloatProperty prop in specificProperties.floatProperty)
-        {
-            if(prop.powerFunction != null)
-                prop.powerFunction.Invoke(prop.callObject, new object[] { });
-        }
-        foreach (IntProperty prop in specificProperties.intProperty)
-        {
-            if (prop.powerFunction != null)
-                prop.powerFunction.Invoke(prop.callObject, new object[] { });
-        }
-        foreach (BoolProperty prop in specificProperties.boolProperty)
-        {
-            if (prop.powerFunction != null)
-                prop.powerFunction.Invoke(prop.callObject, new object[] { });
-        }
-        foreach (MinMaxFloatProperty prop in specificProperties.minMaxProperty)
-        {
-            if (prop.maxPowerFunction != null)
-                prop.maxPowerFunction.Invoke(prop.callObject, new object[] { });
-            if (prop.minPowerFunction != null)
-                prop.minPowerFunction.Invoke(prop.callObject, new object[] { });
-        }
-    }
+    public abstract void SpecificProperties();
 
     float Cp()
     {
