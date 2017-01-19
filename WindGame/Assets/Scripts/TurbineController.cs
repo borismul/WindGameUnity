@@ -46,21 +46,24 @@ public abstract class TurbineController : MonoBehaviour {
     [HideInInspector]
     public UniversalProperties uniProperties;
 
-    void Start()
+    void Awake()
     {
         uniProperties = GetComponent<UniversalProperties>();
         health = 1;
-        onGridtile = GridTile.FindClosestGridTile(transform.position);
         startChild();
     }
 
-    // This method starts the part of the Start cycle that is specific to the actual turbine being made.
+    // This method starts the part of the Start cycle that is specific to the child turbine being made.
     // This mainly prepares the specific properties.
     public abstract void startChild();
 
 	// Update is called once per frame
 	void Update ()
     {
+        if (onGridtile == null)
+        {
+            onGridtile = GridTile.FindClosestGridTile(transform.position);
+        }
         RotateTurbine();
     }
 

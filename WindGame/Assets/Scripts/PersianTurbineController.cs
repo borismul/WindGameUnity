@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PersianTurbineController :TurbineController {
-    
+    [HideInInspector]
     public PersianTurbineSpecificsController specificProperties;
 
+    //Copied from previous version of TurbineController.
+    //No idea what it was or if it was even used.
     public override void SpecificProperties()
     {
         foreach (FloatProperty prop in specificProperties.properties.floatProperty)
@@ -36,7 +38,6 @@ public class PersianTurbineController :TurbineController {
     public override void startChild()
     {
         specificProperties = GetComponent<PersianTurbineSpecificsController>();
-        SpecificProperties();
     }
 
     public override ObjectProperties getSpecificProperties()
