@@ -7,52 +7,64 @@ using System.Linq;
 
 public class CityController : MonoBehaviour {
 
+    // THINGS SET IN UNITY
     // List containing the different types of buildings
     public CityObject[] buildings;
+
     [Range(0,1)]
-    public float minLocX;
+    public float minLocX; // Minimal X value of city center start location
+
     [Range(0, 1)]
-    public float maxLocX;
+    public float maxLocX; // Maximal X value of city center start location
+
     [Range(0, 1)]
-    public float minLocZ;
+    public float minLocZ; // Minimal Z value of city center start location
+
     [Range(0, 1)]
-    public float maxLocZ;
-    public float startRadius;
-    public float currentRadius;
+    public float maxLocZ; // Maximal Z value of city center start location
+
+    public float startRadius; 
+
     [Range(0, 1)]
     public float density;
 
-    TerrainController terrain;
-    WorldController world;
-    Rand rand = new Rand();
-
     public GridTile centerTile;
 
+    // THINGS UNITY DOES NOT TOUCH
     private float cityPointTimer;
     private float cityPoints;
     private float requiredCityPoints;
     private float maximumRadius;
+    private float currentRadius;
 
+    WorldController world;
+    Rand rand = new Rand();
+
+    // Singleton for outside use
     public static CityController city;
 
     // Use this for initialization
     void Start ()
     {
-        city = this;
+        city = this; // Set 'this' as the singleton
 
-        terrain = TerrainController.thisTerrainController;
-        world = WorldController.GetInstance();
+        world = WorldController.GetInstance(); // Get the world controller singleton
+
+        TerrainController terrain = TerrainController.thisTerrainController;
 
         float xPos = minLocX * terrain.length + (float)rand.NextDouble() * (maxLocX - minLocX) * terrain.length;
         float zPos = minLocZ * terrain.width + (float)rand.NextDouble() * (maxLocZ - minLocZ) * terrain.width;
+
+        // Create the city center
         Vector3 centerPos = new Vector3(xPos, 0, zPos);
         centerTile = GridTile.FindClosestGridTile(centerPos);
         cityPointTimer = 0;
         cityPoints = 0;
         requiredCityPoints = 8000;
         maximumRadius = 400;
+        currentRadius = startRadius;
 
-        BuildStartCity();
+        BuildStartCity(); // Create an initial city
     }
 
     void Update()
@@ -153,37 +165,6 @@ public class CityController : MonoBehaviour {
             if (!world.BuildingNearby(tile.position, diameter) && world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
             {
                 // Place the building
-                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-            }
-
-        }
-
-        // Second time we do this foreach loop for 'reasons'
-        foreach (GridTile tile in gridTiles)
-        {
-            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-
-            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-            Quaternion rotation;
-            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                rotation = Quaternion.identity;
-            else
-            {
-                // List of possible orientations
-                float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
-
-                // Get an angle from the possible orientation
-                float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
-
-                // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
-                angle += (float)rand.NextDouble() * 10;
-
-                // Create the rotation quaternion
-                rotation = Quaternion.AngleAxis(angle, Vector3.up);
-            }
-
-            if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
-            {
                 world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
             }
 
