@@ -42,6 +42,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3d6726780e42a4c9bdd71e1b29d5fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windSound: {fileID: 82000011808638718, guid: 1f8d8502bb3c6114b9d974e727007f4f, type: 2}
+  windSounds:
+  - {fileID: 8300000, guid: 51d126a53fa6b474db86bcefe802b351, type: 3}
+  - {fileID: 8300000, guid: 8f88ab536b2380245be36293ffddd9bc, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -77,3 +81,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1938bfda08867b14cbe98cd6a19153ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  treeObjects: []
+  shakeSpeed: 0.6

@@ -19,19 +19,45 @@ public class WindController : MonoBehaviour {
     //Hellman exponents used in calculations of the wind magnitude
     static float[] biomevalues = new float[] { 0.25f, 0.10f, 0.20f, 0.15f};
 
+    public AudioSource windSound;
+
+    public AudioClip[] windSounds;
+
+    void Start()
+    {
+        windSound = Camera.main.transform.FindChild("WindSound").GetComponent<AudioSource>();
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (GameResources.isPaused()) return;
         direction = WindDirection(GameResources.getGameSpeed());
         magnitude = WindMagnitude();
+        WindSound();
+
+
+    }
+
+    void WindSound()
+    {
+        float camHeight = Camera.main.GetComponentInParent<CameraController>().camHeight/ Camera.main.GetComponentInParent<CameraController>().maxHeight;
+        windSound.volume = magnitude / 12 * 0.3f * camHeight*camHeight;
+
+        windSound.pitch = 0.8f + (Mathf.PerlinNoise(time / 1.5f, time / 1.5f)) * 0.4f;
+
+        if (windSound.isPlaying)
+            return;
+
+        windSound.clip = windSounds[Random.Range(0, windSounds.Length)];
+        windSound.Play();
     }
 
     // Method that determines the wind direction
     // SHOULD BE UPDATED!
     float WindDirection(float gameSpeed)
     {
-        time += Time.deltaTime * gameSpeed/200;
+        time += Time.deltaTime;
         direction = 180 * Mathf.Sin(0.021f * Mathf.PI * time) + 180 * Mathf.Cos(0.0133f * Mathf.PI * time);
         return direction;
     }

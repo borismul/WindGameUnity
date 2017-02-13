@@ -6,6 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Mission1.unity
-  - enabled: 0
-    path: Assets/Scenes/Main Menu.unity
+    path: Assets/Scenes/MainMenu.unity
+  - enabled: 1
+    path: Assets/Scenes/1_Persia.unity
+  - enabled: 1
+    path: Assets/Scenes/2_DutchRepulic.unity
+  - enabled: 1
+    path: Assets/Scenes/3_RuralTown.unity
+  - enabled: 1
+    path: Assets/Scenes/4_UnitedStates.unity
+  - enabled: 1
+    path: Assets/Scenes/5_WesternEurope.unity
+  - enabled: 1
+    path: Assets/Scenes/6_NorthSea.unity

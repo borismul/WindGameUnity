@@ -590,6 +590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectivesValue: {fileID: 114000011731157652}
   restartButton: {fileID: 114000010637236810}
+  mainMenuButton: {fileID: 114000010445168860}
   nextMissionButton: {fileID: 1000013023294852}
   menuText: {fileID: 114000014090545098}
 --- !u!114 &114000013405286940

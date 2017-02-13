@@ -64748,6 +64748,7 @@ MonoBehaviour:
   propertiesScroller: {fileID: 114000013902186584}
   blueBuildMaterial: {fileID: 2100000, guid: faff3d2fed54b9a4e9619a02594adccc, type: 2}
   redBuildMaterial: {fileID: 2100000, guid: 7c77d08fbebe75144b44723afca8e52b, type: 2}
+  doef: {fileID: 8300000, guid: bd92130c89af0d645bb69a3372ce9ffb, type: 3}
 --- !u!114 &114000011682830542
 MonoBehaviour:
   m_ObjectHideFlags: 1

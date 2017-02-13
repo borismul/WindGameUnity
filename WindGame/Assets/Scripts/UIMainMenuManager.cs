@@ -7,12 +7,14 @@ public class UIMainMenuManager : MonoBehaviour {
     public Text objectivesValue;
 
     public Button restartButton;
+    public Button mainMenuButton;
 
     public GameObject nextMissionButton;
 
     public Text menuText;
     
     void Start () {
+        mainMenuButton.onClick.AddListener(MainMenu);
         restartButton.onClick.AddListener(RestartMission);
         nextMissionButton.GetComponent<Button>().onClick.AddListener(NextMission);
         restartButton.onClick.AddListener(MainMenu);
@@ -44,7 +46,7 @@ public class UIMainMenuManager : MonoBehaviour {
     void MainMenu()
     {
         TerrainController.thisTerrainController.DestroyAll();
-        SceneManager.LoadScene("Main Menu");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void GameOver()

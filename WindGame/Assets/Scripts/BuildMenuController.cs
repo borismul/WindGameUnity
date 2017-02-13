@@ -85,6 +85,8 @@ public class BuildMenuController : MonoBehaviour
 
     float mouseX;
 
+    public AudioClip doef;
+
     void OnEnable()
     {
         GetComponentInChildren<CanvasGroup>().alpha = 1;
@@ -523,6 +525,11 @@ public class BuildMenuController : MonoBehaviour
         GameResources.Buy(curInstantiated.GetComponent<PriceController>().price);
         curInstantiated = null;
 
+        GameObject newObject = new GameObject();
+        newObject.transform.parent = Camera.main.transform;
+        AudioSource doefAudioSource = newObject.AddComponent<AudioSource>();
+        doefAudioSource.clip = doef;
+        doefAudioSource.Play();
     }
 
     public void OnMouseEnter()

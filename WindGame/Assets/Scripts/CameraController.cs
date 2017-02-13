@@ -43,7 +43,7 @@ public class CameraController : MonoBehaviour
     Vector3 targetRot;
     float prevHitPointY;
     float hitPointDiff;
-    float camHeight;
+    public float camHeight;
     float tiltDeg;
 
     float xInput;
