@@ -44,7 +44,7 @@ public class Chunk : MonoBehaviour {
     // Map terrain and biome of this chunk
     public Vector3[,] map;
     public Vector3[,] tempMap;
-    public int[,] biomeMap;
+    public float[,] biomeMap;
 
     // Mesh of this chunk
     Mesh mesh;
@@ -92,7 +92,7 @@ public class Chunk : MonoBehaviour {
         if (map == null)
         {
             map = new Vector3[chunkSize / tileSize + 3, chunkSize / tileSize + 3];
-            biomeMap = new int[chunkSize / tileSize + 3, chunkSize / tileSize + 3];
+            biomeMap = new float[chunkSize / tileSize + 3, chunkSize / tileSize + 3];
         }
 
         // Generate the noise offsets
@@ -111,7 +111,7 @@ public class Chunk : MonoBehaviour {
         Vector3 pos = new Vector3();
 
         // Loop through all grid tiles plus 3 extra. 2 on the borders (which overlap with other chunk) to calculate normals from.
-        // And one more extra to get the desired number of tiles from vertices. (numTiles = numVertex + 1)
+        // And one extra to get the desired number of tiles from vertices. (numTiles = numVertex + 1)
         for (int i = 0; i < numTiles + 3; i++)
         {
             for (int k = 0; k < numTiles + 3; k++)
@@ -120,14 +120,42 @@ public class Chunk : MonoBehaviour {
                 pos.Set((i-1) * tileSize, 0, (k-1) * tileSize);
                 float r = Vector3.Magnitude(pos + transform.position - terrain.middlePoint);
 
-                // Generate the height and biome of the vertex, depending on its horizontal position.
-                Vector3 terrainMapVert = GenerateTerrainMap(i, k, pos);
-                map[i, k] = terrainMapVert;
+                // In case the flat area surrounded by mountains options is activated
+                if (terrain.isSourroundedByMountains)
+                {
+                    if (Mathf.Abs(r) > terrain.flatRadius || Mathf.Abs(r) > terrain.flatRadius)
+                    {
+                        map[i, k] = GenerateTerrainMap(i, k, pos);
 
-                if (terrain.isIsland)
-                    map[i, k] += new Vector3(0, -terrain.islandSteepness * r * r + terrain.baseHeight + terrain.waterLevel, 0);
+                        map[i, k].y *= (-(Mathf.Cos(Mathf.PI/(terrain.width/2f) * (r - terrain.flatRadius))) + 1) / 2;
 
-                biomeMap[i,k] = GenerateBiomes(i, k, pos);
+                    }
+                    else
+                    {
+                        map[i, k] = pos;
+                    }
+                }
+                // In other cases
+                else
+                {
+                    
+
+                    // Generate the height and biome of the vertex, depending on its horizontal position.
+                    map[i, k] = GenerateTerrainMap(i, k, pos);
+
+                    if (terrain.isIsland)
+                        map[i, k] += new Vector3(0, -terrain.islandSteepness * r * r + terrain.baseHeight + terrain.waterLevel, 0);
+
+                    else if (terrain.isCoastLine)
+                        map[i, k].y -= Mathf.Sin(Mathf.PI/(terrain.width*2) * (pos.x + transform.position.x)) * (pos.x + transform.position.x) * terrain.coastSteepness - terrain.coastBaseHeight;
+                }
+
+                biomeMap[i, k] = GenerateBiomes(i, k, pos);
+                if (terrain.isCoastLine)
+                {
+                    biomeMap[i, k] *= Mathf.Pow(Mathf.Cos(Mathf.PI / (terrain.width * 2) * (pos.x + transform.position.x)), 5) * 2;
+                    biomeMap[i, k] = Mathf.Clamp(biomeMap[i, k], 0.1f, terrain.biomes.Length - 0.5f);
+                }
             }
         }
 
@@ -146,15 +174,15 @@ public class Chunk : MonoBehaviour {
     }
 
     // Generate biome noise at a position on a horizontal plane
-    int GenerateBiomes(int i, int k, Vector3 pos)
+    float GenerateBiomes(int i, int k, Vector3 pos)
     {
         // Gernerate the perlin noise based on position, octaves, persistance, frequency and number of set biomes.
         float noise = (terrain.biomes.Length) * (Noise.PerlinNoise(new Vector2(pos.x, pos.z) + new Vector2(transform.position.x, transform.position.z), offset2D[1], bioOctaves, bioPersistance, bioFrequency, 0, 1));
-        return Mathf.Clamp(Mathf.FloorToInt(noise), 0, terrain.biomes.Length - 1);
+        return Mathf.Clamp(noise, 0, terrain.biomes.Length - 0.5f); ;
     }
 
     // Function generates a grid tile in the world 2d Array in TerrainController
-    void GenerateGridTile(List<Vector3> positions, int biome, int iPos, int jPos)
+    void GenerateGridTile(List<Vector3> positions, float biome, int iPos, int jPos)
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
@@ -234,7 +262,7 @@ public class Chunk : MonoBehaviour {
                 if (!update)
                 {
                     // Determine the uv of the vertex, depending on the biome
-                    uv.Add(DetermineUV(biomeMap[i-1, j-1]));
+                    uv.Add(DetermineUV(biomeMap[i-1, j-1], vert[vert.Count -1]));
                 }
 
                 if(!isTemp)
@@ -381,15 +409,15 @@ public class Chunk : MonoBehaviour {
     }
 
     // Determines the UV based on the biome
-    Vector2 DetermineUV(int biome)
+    Vector2 DetermineUV(float biome, Vector3 pos)
     {
         Vector2 uv;
 
         // Determine the row and collum in which the texture is situated
-        int col = biome;
-
+        float col = biome;
+        float noise = Mathf.Clamp((Noise.PerlinNoise(new Vector2(pos.x, pos.z) + new Vector2(transform.position.x, transform.position.z), offset2D[0], 1, 0.5f, 0.0025f, 0, 1)), 0, 0.7f);
         // Set the middle point of the texture to the vertex
-        uv = new Vector2((float)col / texturesPerLine + 1f/(texturesPerLine)/2f, 3f/8f);
+        uv = new Vector2(col / texturesPerLine, noise / texturesPerLine);
 
         return uv;
     }

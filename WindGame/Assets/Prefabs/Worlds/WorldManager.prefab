@@ -52,7 +52,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weatherManagerPrefab: {fileID: 162066, guid: 1b925df9d1723d34d8f67d911c218e90, type: 2}
-  terrainManagerPrefab: {fileID: 118210, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+  terrainManagerPrefab:
+  - {fileID: 118210, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+  - {fileID: 118210, guid: 17a6a8cc82fd1d6468cbf2eb30aaa1b2, type: 2}
+  - {fileID: 118210, guid: 9743ef0bdb0d79a4a967ed9f4b5220f0, type: 2}
+  - {fileID: 118210, guid: 9ea87f801ee38544f8f0ab9a2b77a914, type: 2}
+  - {fileID: 118210, guid: c288273bb30d2e1448d7a1b23f644cc2, type: 2}
+  - {fileID: 118210, guid: 781020a7f3de38d4b8ba4be4289d938d, type: 2}
   turbineManagerPrefab: {fileID: 1000012533908156, guid: c3c78971c22fb9745a3b7b835e0ea517,
     type: 2}
   buildingsManagerPrefab: {fileID: 1000013730450184, guid: 54aa5c1a6e2e1084f890ef3378f7ade4,

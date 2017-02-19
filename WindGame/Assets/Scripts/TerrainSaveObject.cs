@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class TerrainSaveObject
 {
     public MyVector3[,] map;
-    public int[,] biomeMap;
+    public float[,] biomeMap;
     public MyVector3 chunkLoc;
 
-    public TerrainSaveObject(Vector3[,] map, int[,] biomeMap, Vector3 chunkLoc)
+    public TerrainSaveObject(Vector3[,] map, float[,] biomeMap, Vector3 chunkLoc)
     {
         MyVector3[,] myVec = new MyVector3[map.GetLength(0), map.GetLength(1)];
         for (int i = 0; i < map.GetLength(0); i++)

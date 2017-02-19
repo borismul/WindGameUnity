@@ -63,7 +63,7 @@ public class TileInfomationMenu : MonoBehaviour {
         tile = til;
 
         WindController.GetWindAtTile(til, 0);
-        biome.text = biomes[tile.biome];
+        biome.text = biomes[Mathf.FloorToInt(tile.biome)];
         if (true/*tile.occupant == null*/)
         {
             occupant.text = "None";

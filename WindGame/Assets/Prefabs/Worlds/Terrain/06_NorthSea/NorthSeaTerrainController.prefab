@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 408742}
   - 114: {fileID: 11490242}
   m_Layer: 0
-  m_Name: TerrainController
+  m_Name: NorthSeaTerrainController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,8 +40,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c427726aa5889174d8082225163af879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  length: 4000
-  width: 4000
+  length: 6000
+  width: 6000
   maxHeight: 200
   biomes:
   - biomeObjects:
@@ -87,9 +87,14 @@ MonoBehaviour:
   objectPerTile: 5
   seed: 0
   isFlatShaded: 0
-  isIsland: 1
+  isIsland: 0
   radius: 700
   baseHeight: 50
+  isSourroundedByMountains: 0
+  flatRadius: 0
+  isCoastLine: 1
+  coastSteepness: 0.1
+  coastBaseHeight: 100
   islandSteepness: 0
   terrainOctaves: 5
   terrainPersistance: 0.5
@@ -97,7 +102,7 @@ MonoBehaviour:
   biomeOctaves: 5
   biomePersistance: 0.5
   biomeFrequency: 0.0003
-  chunkPrefab: {fileID: 133574, guid: 02e2e066ef0cc244c90f2623628e95b0, type: 2}
+  chunkPrefab: {fileID: 133574, guid: 1998e0ca10caac84abc65a4a6157f956, type: 2}
   chunkSize: 200
   tileSize: 20
   tileSlope: 2

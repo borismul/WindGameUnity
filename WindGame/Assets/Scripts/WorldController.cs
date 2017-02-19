@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /**
     The goal of this class is to keep track of all objects in the scene. 
@@ -16,7 +17,7 @@ public class WorldController : MonoBehaviour
 
     [Header("Prefabs")]
     public GameObject weatherManagerPrefab;
-    public GameObject terrainManagerPrefab;
+    public GameObject[] terrainManagerPrefab;
     public GameObject turbineManagerPrefab;
     public GameObject buildingsManagerPrefab;
     public GameObject worldInteractionManagerPrefab;
@@ -60,7 +61,7 @@ public class WorldController : MonoBehaviour
     // Instantiate the starting prefabs as the children of the WorldManager
     void InstantiateStartPrefabs()
     {
-        GameObject obj = Instantiate(terrainManagerPrefab);
+        GameObject obj = Instantiate(terrainManagerPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
         obj.transform.SetParent(transform);
         obj = Instantiate(weatherManagerPrefab);
         obj.transform.SetParent(transform);
@@ -257,7 +258,7 @@ public class WorldController : MonoBehaviour
         else if (colliders.Length == 1 && colliders[0].gameObject.GetInstanceID() != buildObj.GetInstanceID())
             return false;
 
-        if (pos.y <= 55f)
+        if (pos.y <= TerrainController.thisTerrainController.waterLevel)
             return false;
 
         foreach (GridTile tile in gridtiles)
@@ -308,9 +309,9 @@ public class WorldController : MonoBehaviour
             {
                 if (Mathf.Abs(chunk.vert[i].x + chunk.transform.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
                     Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
-                    chunk.uv[i] = new Vector2(chunk.uv[i].x, 3f / 8f);
+                    chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y + 0.25f);
                 else
-                    chunk.uv[i] = new Vector2(chunk.uv[i].x, 1f / 8f);
+                    chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y);
             }
 
             chunk.SetMesh(TerrainController.thisTerrainController.isFlatShaded);
@@ -325,6 +326,13 @@ public class WorldController : MonoBehaviour
             else
                 tile.isOutsideBorder = false;
         }
+
+        Camera.main.GetComponent<CameraController>().maxX = TerrainController.thisTerrainController.width / 2 + (width * TerrainController.thisTerrainController.tileSize) + 1000;
+        Camera.main.GetComponent<CameraController>().minX = TerrainController.thisTerrainController.width / 2 - (width * TerrainController.thisTerrainController.tileSize) - 1000;
+
+        Camera.main.GetComponent<CameraController>().maxZ = TerrainController.thisTerrainController.length / 2 + (length * TerrainController.thisTerrainController.tileSize) + 1000;
+        Camera.main.GetComponent<CameraController>().minZ = TerrainController.thisTerrainController.length / 2 - (length * TerrainController.thisTerrainController.tileSize) - 1000;
+
 
     }
 }

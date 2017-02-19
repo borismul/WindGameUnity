@@ -21,10 +21,19 @@ public class TerrainController : MonoBehaviour {
     public int seed;
     public bool isFlatShaded;
 
-    [Header("Island details")]
+    [Header("Island options")]
     public bool isIsland;
     public float radius;
     public float baseHeight;
+
+    [Header("Mountain Surrounded options")]
+    public bool isSourroundedByMountains;
+    public float flatRadius;
+
+    [Header("Coast Line Options")]
+    public bool isCoastLine;
+    public float coastSteepness;
+    public float coastBaseHeight;
 
     [HideInInspector]
     public float islandSteepness;
@@ -227,13 +236,13 @@ public class TerrainController : MonoBehaviour {
                 timeNow = Time.realtimeSinceStartup;
             }
             yield return null;
-
         }
 
         yield return null;
 
-        // Build the water chunks
-        BuildWater();
+        if (isIsland || isCoastLine)
+            // Build the water chunks
+            BuildWater();
 
         // Generate all the biome attributes
         StartCoroutine(GenerateBiomeAttributes());
@@ -273,7 +282,7 @@ public class TerrainController : MonoBehaviour {
                     continue;
 
                 // Get all Meshes with paramters of the biome
-                BiomeMesh curBiomeMesh = biomeMeshes[world[i,k].biome];
+                BiomeMesh curBiomeMesh = biomeMeshes[Mathf.FloorToInt(world[i,k].biome)];
                 List<float> occurances = curBiomeMesh.occurance;
                 int objectsPerTile = curBiomeMesh.objectsPerTile;
                 List<float> minScale = curBiomeMesh.minScale;
@@ -305,7 +314,7 @@ public class TerrainController : MonoBehaviour {
                             Vector3 pos = world[i, k].position + Vector3.right * tileSize * ((float)rand.NextDouble() -0.5f) + Vector3.forward * tileSize * ((float)rand.NextDouble() - 0.5f);
                             
                             // Generate the object
-                            GenerateObject(pos, Quaternion.Euler(0, rot, 0), Vector3.one * scale, world[i, k].biome, j, world[i, k]);
+                            GenerateObject(pos, Quaternion.Euler(0, rot, 0), Vector3.one * scale, Mathf.FloorToInt(world[i, k].biome), j, world[i, k]);
 
                             // Break the loop for this grid tile
                             break;
@@ -373,7 +382,7 @@ public class TerrainController : MonoBehaviour {
 
         UIScript.GetInstance().DisableLoadingScreen();
 
-        WorldController.SetBorders(new Vector3(2000, 0, 2000), 30, 30);
+        WorldController.SetBorders(new Vector3(width/2, 0, length/2), 30, 30);
     }
 
     // Method that generates an object on the terrain based on the inputs

@@ -107,7 +107,7 @@ MonoBehaviour:
   camLerpTrans: 8
   camLerpScroll: 8
   camLerpRot: 8
-  maxHeight: 400
+  maxHeight: 600
   minHeight: 50
   maxTilt: 50
   minTilt: 40
@@ -118,6 +118,7 @@ MonoBehaviour:
   maxX: 3000
   minZ: 1000
   maxZ: 3000
+  camHeight: 0
   hasStarted: 0
   haveControl: 0
   groundLayer:
@@ -535,6 +536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forestSounds:
   - {fileID: 8300000, guid: b7382f1d93bad3849aea7e5a9479ed53, type: 3}
+  soundObject: {fileID: 0}
 --- !u!124 &124000013898501526
 Behaviour:
   m_ObjectHideFlags: 1

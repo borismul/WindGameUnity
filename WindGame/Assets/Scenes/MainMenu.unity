@@ -1457,9 +1457,9 @@ MonoBehaviour:
   PersiaButton: {fileID: 1158609798}
   DutchButton: {fileID: 1186518080}
   RuralButton: {fileID: 166148797}
-  USButton: {fileID: 783293997}
+  USButton: {fileID: 992539207}
   EuropeButton: {fileID: 1837024978}
-  SeaButton: {fileID: 992539207}
+  SeaButton: {fileID: 783293997}
 --- !u!1 &1750589017
 GameObject:
   m_ObjectHideFlags: 0

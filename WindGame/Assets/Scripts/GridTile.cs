@@ -6,7 +6,7 @@ using System;
 public class GridTile{
 
     public Vector3 position;
-    public int biome;
+    public float biome;
     public List<GridTileOccupant> occupants;
     public bool underWater;
     public bool isOutsideBorder;
@@ -14,7 +14,7 @@ public class GridTile{
     public List<GridNode> gridNodes;
     public Chunk chunk;
 
-    public GridTile(Vector3 position, Chunk chunk, List<GridNode> gridNodes, int biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
+    public GridTile(Vector3 position, Chunk chunk, List<GridNode> gridNodes, float biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
     {
         this.position = position;
         this.biome = biome;

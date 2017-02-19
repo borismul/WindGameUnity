@@ -52,7 +52,7 @@ public class TreeAnimationController : MonoBehaviour
 
             for (int i = 0; i < threads.Length; i++)
             {
-                if(tasks[i] == null || tasks[i].isDone)
+                if ((tasks[i] == null || tasks[i].isDone) && treeObjects.Count != 0)
                     tasks[i] = MyThreadPool.AddActionToQueue(AnimatePart, i);
             }
             yield return null;
