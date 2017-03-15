@@ -132,7 +132,7 @@ public class CameraController : MonoBehaviour
         Camera.main.orthographic = false;
         UpdateCamHeight();
 
-        targetPos = new Vector3(CityController.city.centerTile.position.x, transform.position.y - camHeight + maxHeight, CityController.city.centerTile.position.z - CityController.city.startRadius * 3);
+        targetPos = new Vector3(terrain.width/2, transform.position.y - camHeight + maxHeight, terrain.length/2 - terrain.tileSize * 5);
         camScrollLerpSet = camLerpScrollStart;
         setStartPos = true;
     }
@@ -141,7 +141,7 @@ public class CameraController : MonoBehaviour
     {
         if(terrain.levelLoaded && !hasStarted)
         {
-            transform.LookAt(CityController.city.centerTile.position);
+            transform.LookAt(new Vector3(terrain.width/2, 0, terrain.length/2));
             if (Vector3.Distance(transform.position, targetPos) < 5)
             {
                 hasStarted = true;

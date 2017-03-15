@@ -301,38 +301,40 @@ public class WorldController : MonoBehaviour
         }
     }
     
-    public static void SetBorders(Vector3 mapMiddle, int width, int length)
+    public static void SetBorders(Vector3 mapMiddle, int width, int length, int camWidth, int camLength, bool makeBorderLine)
     {
-        foreach (Chunk chunk in TerrainController.thisTerrainController.chunks)
+
+        if (makeBorderLine)
         {
-            for (int i = 0; i < chunk.vert.Count; i++)
+            foreach (Chunk chunk in TerrainController.thisTerrainController.chunks)
             {
-                if (Mathf.Abs(chunk.vert[i].x + chunk.transform.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
-                    Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
-                    chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y + 0.25f);
-                else
-                    chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y);
+                for (int i = 0; i < chunk.vert.Count; i++)
+                {
+                    if (Mathf.Abs(chunk.vert[i].x + chunk.transform.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
+                        Mathf.Abs(chunk.vert[i].z + chunk.transform.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
+                        chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y + 0.25f);
+                    else
+                        chunk.uv[i] = new Vector2(chunk.uv[i].x, chunk.uv[i].y);
+                }
+
+                chunk.SetMesh(TerrainController.thisTerrainController.isFlatShaded);
             }
 
-            chunk.SetMesh(TerrainController.thisTerrainController.isFlatShaded);
+            foreach (GridTile tile in TerrainController.thisTerrainController.world)
+            {
+
+                if (Mathf.Abs(tile.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
+                    Mathf.Abs(tile.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
+                    tile.isOutsideBorder = true;
+                else
+                    tile.isOutsideBorder = false;
+            }
         }
 
-        foreach (GridTile tile in TerrainController.thisTerrainController.world)
-        {
+        Camera.main.GetComponent<CameraController>().maxX = mapMiddle.x + (camWidth * TerrainController.thisTerrainController.tileSize);
+        Camera.main.GetComponent<CameraController>().minX = mapMiddle.x - (camWidth * TerrainController.thisTerrainController.tileSize);
 
-            if (Mathf.Abs(tile.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
-                Mathf.Abs(tile.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
-                tile.isOutsideBorder = true;
-            else
-                tile.isOutsideBorder = false;
-        }
-
-        Camera.main.GetComponent<CameraController>().maxX = TerrainController.thisTerrainController.width / 2 + (width * TerrainController.thisTerrainController.tileSize) + 1000;
-        Camera.main.GetComponent<CameraController>().minX = TerrainController.thisTerrainController.width / 2 - (width * TerrainController.thisTerrainController.tileSize) - 1000;
-
-        Camera.main.GetComponent<CameraController>().maxZ = TerrainController.thisTerrainController.length / 2 + (length * TerrainController.thisTerrainController.tileSize) + 1000;
-        Camera.main.GetComponent<CameraController>().minZ = TerrainController.thisTerrainController.length / 2 - (length * TerrainController.thisTerrainController.tileSize) - 1000;
-
-
+        Camera.main.GetComponent<CameraController>().maxZ = mapMiddle.z + (camLength * TerrainController.thisTerrainController.tileSize);
+        Camera.main.GetComponent<CameraController>().minZ = mapMiddle.z - (camLength * TerrainController.thisTerrainController.tileSize);
     }
 }

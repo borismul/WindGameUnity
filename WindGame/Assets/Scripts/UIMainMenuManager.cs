@@ -8,6 +8,7 @@ public class UIMainMenuManager : MonoBehaviour {
 
     public Button restartButton;
     public Button mainMenuButton;
+    public Button exitButton;
 
     public GameObject nextMissionButton;
 
@@ -17,7 +18,8 @@ public class UIMainMenuManager : MonoBehaviour {
         mainMenuButton.onClick.AddListener(MainMenu);
         restartButton.onClick.AddListener(RestartMission);
         nextMissionButton.GetComponent<Button>().onClick.AddListener(NextMission);
-        restartButton.onClick.AddListener(MainMenu);
+        exitButton.onClick.AddListener(Exit);
+        //restartButton.onClick.AddListener(MainMenu);
         nextMissionButton.SetActive(false);
     }
 	
@@ -34,7 +36,7 @@ public class UIMainMenuManager : MonoBehaviour {
     void RestartMission()
     {
         TerrainController.thisTerrainController.DestroyAll();
-        SceneManager.LoadScene("Mission1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void NextMission()
@@ -58,5 +60,10 @@ public class UIMainMenuManager : MonoBehaviour {
     {
         menuText.text = "Mission Succes";
         nextMissionButton.SetActive(true);
+    }
+
+    void Exit()
+    {
+        UIScript.GetInstance().menuButtonPress();
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - 114: {fileID: 11434296}
   - 114: {fileID: 114000010346674514}
   m_Layer: 0
-  m_Name: RockEmptyUSEmpty
+  m_Name: RockEmptyUS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -44,46 +44,24 @@ MonoBehaviour:
   width: 6000
   maxHeight: 200
   biomes:
+  - biomeObjects: []
+  - biomeObjects: []
   - biomeObjects:
-    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
-      emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
-      occurance: 0.669
-      minScale: 1
-      maxScale: 3
-      minRotation: 0
-      maxRotation: 360
-  - biomeObjects:
-    - prefab: {fileID: 1000012505856870, guid: 017d6e2b7ae549e47868afec18589797, type: 2}
-      emptyPrefab: {fileID: 1000013884488210, guid: 01e335b3cebd49542b8def54dee4bafd,
-        type: 2}
-      occurance: 0.005
+    - prefab: {fileID: 169438, guid: c5568cd6755e4744ab453b5a2961cd2c, type: 2}
+      emptyPrefab: {fileID: 163290, guid: 715434035e3089c4086aefcc9c474c91, type: 2}
+      occurance: 0.05
       minScale: 0.5
       maxScale: 2
       minRotation: 0
       maxRotation: 360
   - biomeObjects:
-    - prefab: {fileID: 114194, guid: a8426223ccfce4d47bf37e155f1ed1ae, type: 2}
-      emptyPrefab: {fileID: 125940, guid: ec59005bb099fff46bca0ecd771b3126, type: 2}
-      occurance: 0.06
+    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
+      emptyPrefab: {fileID: 151212, guid: 0013f5b5a18f0424b82b45d61ca44e37, type: 2}
+      occurance: 0.037
       minScale: 0.5
       maxScale: 3
       minRotation: 0
-      maxRotation: 0
-    - prefab: {fileID: 169438, guid: c5568cd6755e4744ab453b5a2961cd2c, type: 2}
-      emptyPrefab: {fileID: 163290, guid: 715434035e3089c4086aefcc9c474c91, type: 2}
-      occurance: 0.105
-      minScale: 0.1
-      maxScale: 1
-      minRotation: 0
-      maxRotation: 360
-  - biomeObjects:
-    - prefab: {fileID: 1000013792607572, guid: 9431c8ff9184d784b851d129302546ac, type: 2}
-      emptyPrefab: {fileID: 151212, guid: dbd01e6b58ab8f64caa4d428e56a9af5, type: 2}
-      occurance: 0.075
-      minScale: 1
-      maxScale: 3
-      minRotation: 0
-      maxRotation: 360
+      maxRotation: 349
   objectPerTile: 5
   seed: 0
   isFlatShaded: 0

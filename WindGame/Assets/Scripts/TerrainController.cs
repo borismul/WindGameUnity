@@ -374,15 +374,26 @@ public class TerrainController : MonoBehaviour {
     {
         yield return null;
         // instantiate the city
-        curCity = Instantiate(city);
-        curCity.transform.SetParent(transform);
+
+        if (SceneManager.GetActiveScene().name == "1_Persia")
+        {
+            curCity = Instantiate(city);
+            curCity.transform.SetParent(transform);
+        }
+
+
+        if (SceneManager.GetActiveScene().name == "1_Persia")
+            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
+        else if (SceneManager.GetActiveScene().name == "4_UnitedStates")
+            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
+        else if (SceneManager.GetActiveScene().name == "6_NorthSea")
+            WorldController.SetBorders(new Vector3(width / 2 , 0, length / 2), 30, 20, 50, 30, false);
 
         // When that is done the level loading is complete
         levelLoaded = true;
 
         UIScript.GetInstance().DisableLoadingScreen();
 
-        WorldController.SetBorders(new Vector3(width/2, 0, length/2), 30, 30);
     }
 
     // Method that generates an object on the terrain based on the inputs

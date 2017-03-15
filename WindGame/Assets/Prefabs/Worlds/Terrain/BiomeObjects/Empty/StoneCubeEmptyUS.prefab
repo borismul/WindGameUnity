@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11447662}
   - 114: {fileID: 114000011307346832}
   m_Layer: 0
-  m_Name: StoneCubeEmpty
+  m_Name: StoneCubeEmptyUS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,6 +85,8 @@ MonoBehaviour:
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
+  numVerticesPerObject: 
+  animationNumber: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

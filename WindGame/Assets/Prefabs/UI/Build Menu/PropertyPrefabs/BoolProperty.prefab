@@ -258,8 +258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0515577ef845704aa09f28f03d52b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggle: {fileID: 0}
-  nameText: {fileID: 0}
+  toggle: {fileID: 114000011916100408}
+  nameText: {fileID: 114000013428992028}
 --- !u!114 &114000014234867286
 MonoBehaviour:
   m_ObjectHideFlags: 1

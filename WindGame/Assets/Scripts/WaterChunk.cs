@@ -32,14 +32,14 @@ public class WaterChunk : MonoBehaviour {
         CreateMesh();
     }
 
-    void Update()
-    {
-        if (Vector3.Magnitude(transform.position - terrain.middlePoint) > terrain.length)
-            return;
+    //void Update()
+    //{
+    //    if (Vector3.Magnitude(transform.position - terrain.middlePoint) > terrain.length)
+    //        return;
 
-        UpdateWater();
-        CreateMesh();
-    }
+    //    UpdateWater();
+    //    CreateMesh();
+    //}
 
     void Initialize()
     {
