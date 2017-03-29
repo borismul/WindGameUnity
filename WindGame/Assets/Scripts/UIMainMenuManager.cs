@@ -19,12 +19,10 @@ public class UIMainMenuManager : MonoBehaviour {
         restartButton.onClick.AddListener(RestartMission);
         nextMissionButton.GetComponent<Button>().onClick.AddListener(NextMission);
         exitButton.onClick.AddListener(Exit);
-        //restartButton.onClick.AddListener(MainMenu);
         nextMissionButton.SetActive(false);
     }
 	
 	void Update () {
-        //objectivesValue.text = GameResources.getObjectiveText();
         string objText = GameResources.getObjectiveText();
         if(GameResources.finalScore != 0)
         {
