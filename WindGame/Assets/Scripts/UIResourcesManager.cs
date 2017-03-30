@@ -5,26 +5,17 @@ using System.Collections;
 
 public class UIResourcesManager : MonoBehaviour {    
 
-    public Button menuButton;
-
     public Text capitalText;
-
     //public Text publicAcceptanceText;
-
     public Text powerText;
-
     //public Text scoreText;
-
     public Text dateText;
 
+    public Button menuButton;
     public Button pauseButton;
-
     public Button speedButton1x;
-
     public Button speedButton10x;
-
     public Button buildButton;
-
     public Button infoButton;
 
     float coeffWealth = 1;              // coefficient for total wealth

@@ -13,9 +13,8 @@ public class UIScript : MonoBehaviour {
     public GameObject eventSystemPrefab;
     public GameObject persianBuildMenuPrefab;
     public GameObject USBuildMenuPrefab;
-    public GameObject resourcesMenuPrefab;
+    public GameObject[] MissionCanvasPrefab;
     public GameObject pauseMenuPrefab;
-    public GameObject radialMenuPrefab;
     public GameObject tutorialPrefab;
     public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
@@ -80,7 +79,8 @@ public class UIScript : MonoBehaviour {
         GameObject obj = Instantiate(eventSystemPrefab);
         obj.transform.SetParent(transform);
 
-        GameObject obj2 = Instantiate(resourcesMenuPrefab);
+        print(SceneManager.GetActiveScene().buildIndex - 1);
+        GameObject obj2 = Instantiate(MissionCanvasPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
         obj2.transform.SetParent(transform);
         menus.Add(obj2);
 

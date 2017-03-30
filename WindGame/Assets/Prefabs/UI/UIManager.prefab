@@ -16,10 +16,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000011238609982}
-  - 114: {fileID: 114000013881635902}
+  - component: {fileID: 4000011238609982}
+  - component: {fileID: 114000013881635902}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -36,10 +36,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114000013881635902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,11 +56,14 @@ MonoBehaviour:
   persianBuildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
     type: 2}
   USBuildMenuPrefab: {fileID: 0}
-  resourcesMenuPrefab: {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d,
-    type: 2}
+  MissionCanvasPrefab:
+  - {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1141466314962334, guid: 6010a95bbddaf664bb94ee56887c5a6e, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   pauseMenuPrefab: {fileID: 1000010926663146, guid: b95d6d745f99cc84f958b5e6ec711e7e,
-    type: 2}
-  radialMenuPrefab: {fileID: 1000011896378622, guid: 0814e698324edc04daa12e6c0b720f23,
     type: 2}
   tutorialPrefab: {fileID: 153166, guid: e547aa806672bb14e880f81a673edbb4, type: 2}
   panemoneInformationPrefab: {fileID: 1000012921458914, guid: 109c807ac5814b54fa519ca62af72e9e,
