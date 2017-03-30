@@ -1,49 +1,41 @@
 fileFormatVersion: 2
-guid: 2a0216545a4660b448266f8add98dc55
-timeCreated: 1489592236
+guid: 7c64826b0a32b5d4a9470035120e102e
+timeCreated: 1490798222
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: ConcreteSupport
-    100002: Engine
-    100004: EngineMount
-    100006: //RootNode
-    100008: PlaneSymmetry
-    100010: PlaneSymmetry.001
-    100012: RotorBlades
-    100014: TrussStructure
-    100016: AxisEngineRotation
-    400000: ConcreteSupport
-    400002: Engine
-    400004: EngineMount
-    400006: //RootNode
-    400008: PlaneSymmetry
-    400010: PlaneSymmetry.001
-    400012: RotorBlades
-    400014: TrussStructure
-    400016: AxisEngineRotation
+    100000: AxisEngineRotation
+    100002: ConcreteSupport
+    100004: Engine
+    100006: EngineMount
+    100008: //RootNode
+    100010: RotorBlades
+    100012: TrussStructure
+    400000: AxisEngineRotation
+    400002: ConcreteSupport
+    400004: Engine
+    400006: EngineMount
+    400008: //RootNode
+    400010: RotorBlades
+    400012: TrussStructure
     2300000: ConcreteSupport
     2300002: Engine
     2300004: EngineMount
-    2300006: PlaneSymmetry
-    2300008: PlaneSymmetry.001
-    2300010: RotorBlades
-    2300012: TrussStructure
+    2300006: RotorBlades
+    2300008: TrussStructure
     3300000: ConcreteSupport
     3300002: Engine
     3300004: EngineMount
-    3300006: PlaneSymmetry
-    3300008: PlaneSymmetry.001
-    3300010: RotorBlades
-    3300012: TrussStructure
-    4300000: EngineMount
-    4300002: RotorBlades
-    4300004: Engine
-    4300006: PlaneSymmetry.001
-    4300008: PlaneSymmetry
-    4300010: ConcreteSupport
-    4300012: TrussStructure
+    3300006: RotorBlades
+    3300008: TrussStructure
+    4300000: ConcreteSupport
+    4300002: EngineMount
+    4300004: TrussStructure
+    4300006: Engine
+    4300008: RotorBlades
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -102,7 +94,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

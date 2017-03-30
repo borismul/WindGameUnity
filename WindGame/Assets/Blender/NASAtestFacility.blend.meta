@@ -1,0 +1,182 @@
+fileFormatVersion: 2
+guid: bb6741d7aa8a6774daf6caf92158bcc5
+timeCreated: 1490798226
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BuildingLeft
+    100002: BuildingRight
+    100004: Chimney
+    100006: Cube_003
+    100008: Cube_004
+    100010: Cube_005
+    100012: Cube_006
+    100014: Cube_017
+    100016: Cube_018
+    100018: Cube_019
+    100020: Cube_020
+    100022: Dome
+    100024: DoorFront
+    100026: DoorRear
+    100028: ElevatorShaft
+    100030: Fans
+    100032: FrontHall
+    100034: //RootNode
+    100036: Pipes
+    100038: RandomBuilding
+    100040: RoofItems
+    100042: RoofLIght
+    100044: WindowsRear
+    400000: BuildingLeft
+    400002: BuildingRight
+    400004: Chimney
+    400006: Cube_003
+    400008: Cube_004
+    400010: Cube_005
+    400012: Cube_006
+    400014: Cube_017
+    400016: Cube_018
+    400018: Cube_019
+    400020: Cube_020
+    400022: Dome
+    400024: DoorFront
+    400026: DoorRear
+    400028: ElevatorShaft
+    400030: Fans
+    400032: FrontHall
+    400034: //RootNode
+    400036: Pipes
+    400038: RandomBuilding
+    400040: RoofItems
+    400042: RoofLIght
+    400044: WindowsRear
+    2300000: BuildingLeft
+    2300002: BuildingRight
+    2300004: Chimney
+    2300006: Cube_003
+    2300008: Cube_004
+    2300010: Cube_005
+    2300012: Cube_006
+    2300014: Cube_017
+    2300016: Cube_018
+    2300018: Cube_019
+    2300020: Cube_020
+    2300022: Dome
+    2300024: DoorFront
+    2300026: DoorRear
+    2300028: ElevatorShaft
+    2300030: Fans
+    2300032: FrontHall
+    2300034: Pipes
+    2300036: RandomBuilding
+    2300038: RoofLIght
+    2300040: WindowsRear
+    3300000: BuildingLeft
+    3300002: BuildingRight
+    3300004: Chimney
+    3300006: Cube_003
+    3300008: Cube_004
+    3300010: Cube_005
+    3300012: Cube_006
+    3300014: Cube_017
+    3300016: Cube_018
+    3300018: Cube_019
+    3300020: Cube_020
+    3300022: Dome
+    3300024: DoorFront
+    3300026: DoorRear
+    3300028: ElevatorShaft
+    3300030: Fans
+    3300032: FrontHall
+    3300034: Pipes
+    3300036: RandomBuilding
+    3300038: RoofLIght
+    3300040: WindowsRear
+    4300000: DoorFront
+    4300002: RoofLIght
+    4300004: ElevatorShaft
+    4300006: WindowsRear
+    4300008: DoorRear
+    4300010: Fans
+    4300012: Chimney
+    4300014: Pipes
+    4300016: BuildingRight
+    4300018: BuildingLeft
+    4300020: RandomBuilding
+    4300022: Dome
+    4300024: FrontHall
+    4300026: Cube_019
+    4300028: Cube_020
+    4300030: Cube_018
+    4300032: Cube_017
+    4300034: Cube_006
+    4300036: Cube_005
+    4300038: Cube_004
+    4300040: Cube_003
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

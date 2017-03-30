@@ -1,49 +1,69 @@
 fileFormatVersion: 2
-guid: 2a0216545a4660b448266f8add98dc55
-timeCreated: 1489592236
+guid: ee49d0f88a7425c4db52f116ecefbcf8
+timeCreated: 1490798228
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: ConcreteSupport
-    100002: Engine
-    100004: EngineMount
-    100006: //RootNode
-    100008: PlaneSymmetry
-    100010: PlaneSymmetry.001
-    100012: RotorBlades
-    100014: TrussStructure
-    100016: AxisEngineRotation
-    400000: ConcreteSupport
-    400002: Engine
-    400004: EngineMount
-    400006: //RootNode
-    400008: PlaneSymmetry
-    400010: PlaneSymmetry.001
-    400012: RotorBlades
-    400014: TrussStructure
-    400016: AxisEngineRotation
-    2300000: ConcreteSupport
-    2300002: Engine
-    2300004: EngineMount
-    2300006: PlaneSymmetry
-    2300008: PlaneSymmetry.001
-    2300010: RotorBlades
-    2300012: TrussStructure
-    3300000: ConcreteSupport
-    3300002: Engine
-    3300004: EngineMount
-    3300006: PlaneSymmetry
-    3300008: PlaneSymmetry.001
-    3300010: RotorBlades
-    3300012: TrussStructure
-    4300000: EngineMount
-    4300002: RotorBlades
-    4300004: Engine
-    4300006: PlaneSymmetry.001
-    4300008: PlaneSymmetry
-    4300010: ConcreteSupport
-    4300012: TrussStructure
+    100000: Blade1
+    100002: Blade2
+    100004: Blade3
+    100006: EngineRoom
+    100008: LegSeaBase
+    100010: LegUpper
+    100012: Light
+    100014: Rotorhead
+    100016: Screws
+    100018: SeaBase
+    100020: //RootNode
+    100022: Structure
+    400000: Blade1
+    400002: Blade2
+    400004: Blade3
+    400006: EngineRoom
+    400008: LegSeaBase
+    400010: LegUpper
+    400012: Light
+    400014: Rotorhead
+    400016: Screws
+    400018: SeaBase
+    400020: //RootNode
+    400022: Structure
+    2300000: Blade1
+    2300002: Blade2
+    2300004: Blade3
+    2300006: EngineRoom
+    2300008: LegSeaBase
+    2300010: LegUpper
+    2300012: Light
+    2300014: Rotorhead
+    2300016: Screws
+    2300018: SeaBase
+    2300020: Structure
+    3300000: Blade1
+    3300002: Blade2
+    3300004: Blade3
+    3300006: EngineRoom
+    3300008: LegSeaBase
+    3300010: LegUpper
+    3300012: Light
+    3300014: Rotorhead
+    3300016: Screws
+    3300018: SeaBase
+    3300020: Structure
+    4300000: Structure
+    4300002: SeaBase
+    4300004: Screws
+    4300006: Rotorhead
+    4300008: Blade1
+    4300010: Blade2
+    4300012: Blade3
+    4300014: Light
+    4300016: LegSeaBase
+    4300018: LegUpper
+    4300020: EngineRoom
+    7400000: Default Take
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -102,7 +122,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
