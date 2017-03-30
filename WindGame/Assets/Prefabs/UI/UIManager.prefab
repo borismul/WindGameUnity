@@ -53,13 +53,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventSystemPrefab: {fileID: 1000011911297958, guid: a97a2ae18f5d08145b62fbd43735221a,
     type: 2}
-  buildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
+  persianBuildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
     type: 2}
+  USBuildMenuPrefab: {fileID: 0}
   resourcesMenuPrefab: {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d,
     type: 2}
   pauseMenuPrefab: {fileID: 1000010926663146, guid: b95d6d745f99cc84f958b5e6ec711e7e,
     type: 2}
-  mainMenuPrefab: {fileID: 155136, guid: bf18ff7bcbf0f4947a385a4d0f6d4328, type: 2}
   radialMenuPrefab: {fileID: 1000011896378622, guid: 0814e698324edc04daa12e6c0b720f23,
     type: 2}
   tutorialPrefab: {fileID: 153166, guid: e547aa806672bb14e880f81a673edbb4, type: 2}
