@@ -29,21 +29,21 @@ public class UIResourcesManager : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        pauseButton.onClick.AddListener(Pause);
-        speedButton1x.onClick.AddListener(SetSpeed1x);
-        speedButton10x.onClick.AddListener(SetSpeed10x);
-        menuButton.onClick.AddListener(Menu);
+        //pauseButton.onClick.AddListener(Pause);
+        //speedButton1x.onClick.AddListener(SetSpeed1x);
+        //speedButton10x.onClick.AddListener(SetSpeed10x);
+        //menuButton.onClick.AddListener(Menu);
         buildButton.onClick.AddListener(BuildButton);
-        infoButton.onClick.AddListener(InfoButton);
+        //infoButton.onClick.AddListener(InfoButton);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        capitalText.text = GameResources.getWealth().ToString("0");
-        //publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
-        powerText.text = GameResources.getProduction().ToString("0");
-        dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
+        //capitalText.text = GameResources.getWealth().ToString("0");
+        ////publicAcceptanceText.text = GameResources.getPublicAcceptance().ToString("F1");
+        //powerText.text = GameResources.getProduction().ToString("0");
+        //dateText.text = GameResources.getDate().ToString("dd-MM-yyyy");
         //scoreText.text = CalculateScore().ToString("F0");
     }
 

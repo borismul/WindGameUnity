@@ -53,8 +53,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventSystemPrefab: {fileID: 1000011911297958, guid: a97a2ae18f5d08145b62fbd43735221a,
     type: 2}
-  persianBuildMenuPrefab: {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811,
-    type: 2}
+  BuildMenuPrefab:
+  - {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1847264588522492, guid: 8bb393b7b0bff574bafad42620e28bd2, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   USBuildMenuPrefab: {fileID: 0}
   MissionCanvasPrefab:
   - {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d, type: 2}

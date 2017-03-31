@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 4bd2b10101bab834e98888fb6e216be0
+timeCreated: 1490960281
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: TU Delft-UltraLight
+  fontNames:
+  - TU Delft-UltraLight
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
