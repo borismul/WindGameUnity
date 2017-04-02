@@ -1,79 +1,36 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
 public class MainMenuController : MonoBehaviour
 {
-    [SerializeField]
-    Button PersiaButton;        // Button that links to Persia mission
-
-    [SerializeField]
-    Button DutchButton;         // Button that links to Dutch Repulic mission
-
-    [SerializeField]
-    Button RuralButton;         // Button that links to Rural Town mission
-
-    [SerializeField]
-    Button USButton;            // Button that links to United States mission
-
-    [SerializeField]
-    Button EuropeButton;        // Button that links to Western Europe mission
-
-    [SerializeField]
-    Button SeaButton;           // Button that links to Norh Sea mission
-
     public static MainMenuController curMainMenu;   // Static object this main menu controller so it can be obtained easily from anywhere
 
-    // Method gets called when object is initiated
+    // Declaration of all the different buttons in the menu
+    public Button persiaButton;
+    public Button dutchButton;
+    public Button ruralButton;
+    public Button usButton;
+    public Button euButton;
+    public Button seaButton;
+
+    // Add listener to all buttons
     void Start()
     {
-        // Add a method to a click on the button
-        PersiaButton.onClick.AddListener(Persia);
-        DutchButton.onClick.AddListener(Dutch);
-        RuralButton.onClick.AddListener(Rural);
-        USButton.onClick.AddListener(US);
-        EuropeButton.onClick.AddListener(Europe);
-        SeaButton.onClick.AddListener(Sea);
+        // Add listeners to all, and delegate loading of a scene OnClick (lambda expression)
+        persiaButton.onClick.AddListener(() => LoadSceneOnClick(1));
+        dutchButton.onClick.AddListener(() => LoadSceneOnClick(2));
+        ruralButton.onClick.AddListener(() => LoadSceneOnClick(3));
+        usButton.onClick.AddListener(() => LoadSceneOnClick(4));
+        euButton.onClick.AddListener(() => LoadSceneOnClick(5));
+        seaButton.onClick.AddListener(() => LoadSceneOnClick(6));
     }
 
-    // Method loads the Persia scene
-    void Persia()
+    // Couple the button pressed to scenes in the build settings
+    void LoadSceneOnClick(int level)
     {
-        SceneManager.LoadScene("1_Persia");
+        SceneManager.LoadScene(level);
     }
-
-    // Method loads the Dutch Repulic scene
-    void Dutch()
-    {
-        SceneManager.LoadScene("2_DutchRepulic");
-    }
-
-    // Method loads the Rural Town scene
-    void Rural()
-    {
-        SceneManager.LoadScene("3_RuralTown");
-    }
-
-    // Method loads the United States scene
-    void US()
-    {
-        SceneManager.LoadScene("4_UnitedStates");
-    }
-
-    // Method loads the Western Europe scene
-    void Europe()
-    {
-        SceneManager.LoadScene("5_WesternEurope");
-    }
-
-    // Method loads the North Sea scene
-    void Sea()
-    {
-        SceneManager.LoadScene("6_NorthSea");
-    }
-
-
-
+    
 }
