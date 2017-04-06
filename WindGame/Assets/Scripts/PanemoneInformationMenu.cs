@@ -303,7 +303,7 @@ public class PanemoneInformationMenu : MonoBehaviour {
 
     void CloseMenu()
     {
-        UIScript.GetInstance().CloseTurbineMenu();
+        UIManager.instance.CloseTurbineMenu();
     }
 
     public void OnMouseOver()

@@ -120,7 +120,7 @@ public class BuildMenuController : MonoBehaviour
         ClickOutside();
 
         BuildPriceColorUpdate();
-        if (UIScript.GetInstance().GetInBuildMode())
+        if (UIManager.instance.GetInBuildMode())
         {
             UpdateSelectedPosition();
         }
@@ -143,10 +143,10 @@ public class BuildMenuController : MonoBehaviour
             Destroy(curInstantiated);
             infoCamera.enabled = false;
             curSelected = null;
-            UIScript.GetInstance().SetInBuildMode(false);
+            UIManager.instance.SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
             instantHere.SetActive(false);
-            UIScript.GetInstance().CloseBuildMenu();
+            UIManager.instance.CloseBuildMenu();
         }
     }
 
@@ -367,7 +367,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
-        UIScript.GetInstance().SetInBuildMode(true);
+        UIManager.instance.SetInBuildMode(true);
 
         originalMaterial.Clear();
         foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
@@ -389,7 +389,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 1;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
         infoCamera.enabled = true;
-        UIScript.GetInstance().SetInBuildMode(false);
+        UIManager.instance.SetInBuildMode(false);
         curInstantiated = (GameObject)Instantiate(curSelected);
         curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
@@ -487,7 +487,7 @@ public class BuildMenuController : MonoBehaviour
             BuildNow(plantGrid, plantPos); // Run the build function
             infoCamera.enabled = false;
             curSelected = null;
-            UIScript.GetInstance().SetInBuildMode(false);
+            UIManager.instance.SetInBuildMode(false);
             instantHere.SetActive(false);
             gameObject.transform.parent.gameObject.SetActive(false);
         }

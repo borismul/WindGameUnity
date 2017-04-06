@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4000011238609982}
-  - component: {fileID: 114000013881635902}
+  - component: {fileID: 114023774659691996}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114000013881635902
+--- !u!114 &114023774659691996
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -48,11 +48,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000011636269252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f9135aec075854428e70c772c8daa88, type: 3}
+  m_Script: {fileID: 11500000, guid: 154ebcb61b8eea3418462fa638918d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventSystemPrefab: {fileID: 1000011911297958, guid: a97a2ae18f5d08145b62fbd43735221a,
+  MainMenuCanvasPrefab: {fileID: 1437897296630536, guid: 38b6128c9530ff14c8cd056328d394a1,
     type: 2}
+  MissionCanvasPrefab:
+  - {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1488381785379394, guid: 0977fea3096e2934e8682a1221019872, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   BuildMenuPrefab:
   - {fileID: 1000013197903826, guid: 7ea41180b80a2e141bc944093db77811, type: 2}
   - {fileID: 0}
@@ -60,22 +67,9 @@ MonoBehaviour:
   - {fileID: 1847264588522492, guid: 8bb393b7b0bff574bafad42620e28bd2, type: 2}
   - {fileID: 0}
   - {fileID: 0}
-  USBuildMenuPrefab: {fileID: 0}
-  MissionCanvasPrefab:
-  - {fileID: 1000010604113258, guid: 51a78a06547c8ab42a811cdfa863288d, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 1141466314962334, guid: 6010a95bbddaf664bb94ee56887c5a6e, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
   pauseMenuPrefab: {fileID: 1000010926663146, guid: b95d6d745f99cc84f958b5e6ec711e7e,
     type: 2}
-  tutorialPrefab: {fileID: 153166, guid: e547aa806672bb14e880f81a673edbb4, type: 2}
-  panemoneInformationPrefab: {fileID: 1000012921458914, guid: 109c807ac5814b54fa519ca62af72e9e,
-    type: 2}
   tileInformationPrefab: {fileID: 1000011009651682, guid: 57c9c82ef7d0d3647a4915db1f537ea0,
-    type: 2}
-  loadingMenuPrefab: {fileID: 1000010360985060, guid: 90a7cf7ac90cf7043ab060a38fe62910,
     type: 2}
   weatherMenuPrefab: {fileID: 1000012432964068, guid: 152f5c6ae7356734a89ab3826a012cc2,
     type: 2}

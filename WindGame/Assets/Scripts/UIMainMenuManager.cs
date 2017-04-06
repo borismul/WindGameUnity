@@ -62,6 +62,6 @@ public class UIMainMenuManager : MonoBehaviour {
 
     void Exit()
     {
-        UIScript.GetInstance().menuButtonPress();
+        UIManager.instance.menuButtonPress();
     }
 }

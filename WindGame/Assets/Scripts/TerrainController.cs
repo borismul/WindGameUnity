@@ -88,7 +88,7 @@ public class TerrainController : MonoBehaviour {
 
     // Check with this if level is done loading
     [HideInInspector]
-    public bool levelLoaded = false;
+    public static bool levelLoaded = false;
 
     // The world, containing all gridtiles in matrix
     public GridTile[,] world;
@@ -391,8 +391,6 @@ public class TerrainController : MonoBehaviour {
 
         // When that is done the level loading is complete
         levelLoaded = true;
-
-        UIScript.GetInstance().DisableLoadingScreen();
 
     }
 
@@ -794,6 +792,11 @@ public class TerrainController : MonoBehaviour {
 
         // Destory the city
         Destroy(curCity);
+    }
+
+    void OnDestroy()
+    {
+        levelLoaded = false;
     }
 
     // Structs that are used to visualize the biome parameters in the editor

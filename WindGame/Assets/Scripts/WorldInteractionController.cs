@@ -60,7 +60,7 @@ public class WorldInteractionController : MonoBehaviour
             highlighter.triangles = tri;
             highlighter.uv = uv;
 
-            UIScript.GetInstance().SetActiveTile(tile);
+            UIManager.instance.SetActiveTile(tile);
 
         }
         highlighter.RecalculateNormals();
@@ -81,25 +81,25 @@ public class WorldInteractionController : MonoBehaviour
 
             TurbineController tubineController = hit.transform.GetComponentInParent<TurbineController>();
             if (tubineController != null)
-                UIScript.GetInstance().OpenTurbineMenu(tubineController);
+                UIManager.instance.OpenTurbineMenu(tubineController);
 
             WindVaneController windVaneController = hit.transform.GetComponentInParent<WindVaneController>();
 
             if (windVaneController != null)
-                UIScript.GetInstance().OpenWindVaneMenu(windVaneController);
+                UIManager.instance.OpenWindVaneMenu(windVaneController);
         }
 
     }
 
     void Update()
     {
-        if (!TerrainController.thisTerrainController.levelLoaded)
+        if (!TerrainController.levelLoaded)
             return;
 
         if (inInfoMode)
             CheckSelectedTile();
 
-        if (!UIScript.GetInstance().GetInBuildMode() || PointerInfo.overUIElement)
+        if (!UIManager.instance.GetInBuildMode() || PointerInfo.overUIElement)
         {
             CheckLeftClick();
             GetComponent<MeshFilter>().mesh = highlighter;

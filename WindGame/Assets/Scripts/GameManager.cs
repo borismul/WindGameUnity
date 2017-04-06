@@ -1,13 +1,94 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject UIManagerPrefab;
-    public GameObject mission1ManagerPrefab;
-    public GameObject mission2ManagerPrefab;
-    public GameObject mainCameraPrefab;
+    // Declaration of static Singleton class
+    public static GameManager instance;
 
+    // Declaration of GameObjects to be managed
+    public GameObject EventSystemPrefab;
+    public GameObject UIManagerPrefab;
+    public GameObject WorldManagerPrefab;
+    public GameObject loadingMenuPrefab;
+    public GameObject MainCameraPrefab;
+
+    // Local GameObjects
+    GameObject loadingScreen;
+
+    void Start()
+    {
+        CreateSingleton();
+
+        print("Gamemanager - Instantiating Event Manager");
+        GameObject eventSystem = Instantiate(EventSystemPrefab);
+        DontDestroyOnLoad(eventSystem);
+
+        print("Gamemanager - Instantiating UI Manager");
+        GameObject UIManager = Instantiate(UIManagerPrefab);
+        
+        SceneManager.sceneLoaded += LoadSceneContents;
+    }
+
+    // Create a singleton instance of the Game Manager
+    void CreateSingleton()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            Debug.Log("Gamemanager - Singleton created");
+        }
+        else if (instance != this)
+        {
+            Debug.LogError("GameManager already exists!");
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Functions handeled by the GameManager
+    public void LoadLevel(int level)
+    {
+        print("Moving to level " + level);
+        SceneManager.LoadScene(level, LoadSceneMode.Single);
+    }
+
+    void LoadSceneContents(Scene scene, LoadSceneMode mode)
+    {
+        // Open loadingscreen
+        loadingScreen = Instantiate(loadingMenuPrefab);
+        loadingScreen.transform.SetParent(transform);
+
+        // Load mission specific UI layout
+        UIManager.instance.LoadMissionCanvas(SceneManager.GetActiveScene().buildIndex);
+
+        // Load world
+        GameObject worldManager = Instantiate(WorldManagerPrefab);
+        worldManager.transform.SetParent(transform);
+
+        // Load main camera
+        GameObject mainCamera = Instantiate(MainCameraPrefab);
+        mainCamera.transform.SetParent(transform);
+
+        // Checking for level loading
+        InvokeRepeating("CloseLoadScreen", 0, 1f / 5);
+    }
+
+    // Close load screen if level is loaded
+    void CloseLoadScreen()
+    {
+        if (TerrainController.levelLoaded)
+        {
+            loadingScreen.SetActive(false);
+            CancelInvoke("CloseLoadScreen");
+        }
+        print("Gamemanager - Invoke repeating running...");
+    }
+   
+
+
+
+    /*
     private static GameManager instance;
 
 	void Awake ()
@@ -56,4 +137,6 @@ public class GameManager : MonoBehaviour {
     {
         return instance;
     }
+    */
+
 }

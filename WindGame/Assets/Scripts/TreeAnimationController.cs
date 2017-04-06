@@ -38,7 +38,7 @@ public class TreeAnimationController : MonoBehaviour
 
         while (true)
         {
-            if (!TerrainController.thisTerrainController.levelLoaded)
+            if (!TerrainController.levelLoaded)
             {
                 yield return null;
                 continue;

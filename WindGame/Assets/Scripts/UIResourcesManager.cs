@@ -1,10 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
 
-public class UIResourcesManager : MonoBehaviour {    
+public class UIResourcesManager : MonoBehaviour {
 
+    //public Button buildButton;
+    //public GameObject buildMenuPrefab;
+
+    void Awake()
+    {
+
+        //GameObject buildMenu = Instantiate(buildMenuPrefab);
+        //buildMenu.SetActive(false);
+    }
+
+
+
+    //void Start()
+    //{
+    //    buildButton.onClick.AddListener(BuildMenu);
+    //}
+
+    //void BuildMenu()
+    //{
+    //    buildMenu.SetActive(true);
+    //}
+
+    /*
     public Text capitalText;
     //public Text publicAcceptanceText;
     public Text powerText;
@@ -12,9 +36,8 @@ public class UIResourcesManager : MonoBehaviour {
     public Text dateText;
 
     public Button menuButton;
-    public Button pauseButton;
-    public Button speedButton1x;
-    public Button speedButton10x;
+    public Button playPauseButton;
+    public Button fastForwardButton;
     public Button buildButton;
     public Button infoButton;
 
@@ -78,9 +101,8 @@ public class UIResourcesManager : MonoBehaviour {
     void Menu()
     {
         bool hideSpeedButtons = UIScript.GetInstance().menuButtonPress();
-        pauseButton.gameObject.SetActive(hideSpeedButtons);
-        speedButton1x.gameObject.SetActive(hideSpeedButtons);
-        speedButton10x.gameObject.SetActive(hideSpeedButtons);
+        playPauseButton.gameObject.SetActive(hideSpeedButtons);
+        fastForwardButton.gameObject.SetActive(hideSpeedButtons);
     }
 
     float CalculateScore()
@@ -98,4 +120,5 @@ public class UIResourcesManager : MonoBehaviour {
         return coeffWealth * GameResources.getWealth() + coeffProduction * GameResources.getProduction() + coeffValue * value + coeffTime * Convert.ToSingle(days);
 
     }
+    */
 }

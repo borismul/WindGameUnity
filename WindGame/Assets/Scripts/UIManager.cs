@@ -3,128 +3,104 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class UIScript : MonoBehaviour {
+public class UIManager : MonoBehaviour {
 
-    private static UIScript instance;
+    public static UIManager instance;
 
-    List<GameObject> menus;
-
-    [Header("Prefabs")]
-    public GameObject eventSystemPrefab;
-    public GameObject[] BuildMenuPrefab;
-    public GameObject USBuildMenuPrefab;
+    [Header("Top Level Prefabs")]
+    public GameObject MainMenuCanvasPrefab;
     public GameObject[] MissionCanvasPrefab;
+
+    [Header("Mission Specific Prefabs")]
+    public GameObject[] BuildMenuPrefab;
+    //public GameObject USBuildMenuPrefab;
     public GameObject pauseMenuPrefab;
-    public GameObject tutorialPrefab;
-    public GameObject panemoneInformationPrefab;
+    //public GameObject panemoneInformationPrefab;
     public GameObject tileInformationPrefab;
-    public GameObject loadingMenuPrefab;
     public GameObject weatherMenuPrefab;
+
+    // Local GameObjects
+    List<GameObject> menus;
     CameraController cameraController;
 
-    GameObject managerObj;
-    GameObject cameraObj;
 
-    int menuActive;
-
-    int activeUIElements = 1;
-
-    bool startGiven;
-
-    bool inBuildMode;
-
-    // Use this for initialization
-    void Awake ()
-    {
-        CreateSingleton();
-        menus = new List<GameObject>();
-        InstantiateStartPrefabs();
-        menuActive = -1;
-        
-    }
+    // Local variables
+    int menuActive;                 // If a menu is currently open?
+    int activeUIElements = 1;       // AMount of active UI elements?
+    bool startGiven;                // ?
+    bool inBuildMode;               // If build mode is active
 
     void Start()
     {
+        CreateSingleton();
+        //InstantiateUIPrefabs();
         cameraController = Camera.main.GetComponent<CameraController>();
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    // Method to create the correct mission canvas with the scene
+    public void LoadMissionCanvas(int level)
     {
-        if (AccessSiblingData() & !startGiven)
-        {
-            //GameObject obj7 = Instantiate(tutorialPrefab);
-            //obj7.transform.SetParent(transform);
-            GameResources.unPause();
-            GameResources.setGameSpeed(200);
-            startGiven = true;
-        }
+        GameObject missionCanvas = Instantiate(MissionCanvasPrefab[level-1]);
+        missionCanvas.transform.SetParent(transform);
     }
+   
 
-    // Create the singleton for the UIManager. Also checks if there is another present and logs and error.
+    // Create a singleton instance of the UI Manager
     void CreateSingleton()
     {
-        if (instance != null)
+        if (instance == null)
         {
-            Debug.LogError("UIManager already exists while it should be instantiated only once.");
-            Destroy(gameObject);
-            return;
+            instance = this;
         }
-        instance = this;
+        else if (instance != this)
+        {
+            Debug.LogError("UI Manager already exists!");
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
     }
-
+    
     // Instantiate the starting prefabs as the children of the UIScript
-    void InstantiateStartPrefabs()
+    void InstantiateUIPrefabs()
     {
-        GameObject obj = Instantiate(eventSystemPrefab);
-        obj.transform.SetParent(transform);
+        GameObject pauseMenu = Instantiate(pauseMenuPrefab);
+        pauseMenu.transform.SetParent(transform);
+        pauseMenu.SetActive(false);
+        menus.Add(pauseMenu);
 
-        GameObject obj2 = Instantiate(MissionCanvasPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
-        obj2.transform.SetParent(transform);
-        menus.Add(obj2);
+        GameObject buildMenu = Instantiate(BuildMenuPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
+        buildMenu.transform.SetParent(transform);
+        buildMenu.SetActive(false);
+        menus.Add(buildMenu);
 
-        GameObject obj3 = Instantiate(pauseMenuPrefab);
-        obj3.transform.SetParent(transform);
-        obj3.SetActive(false);
-        menus.Add(obj3);
+        //GameObject panemoneInformation = Instantiate(panemoneInformationPrefab);
+        //panemoneInformation.transform.SetParent(transform);
+        //panemoneInformation.SetActive(false);
+        //menus.Add(panemoneInformation);
 
-        GameObject obj4 = Instantiate(BuildMenuPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
-        obj4.transform.SetParent(transform);
-        obj4.SetActive(false);
-        menus.Add(obj4);
+        GameObject tileInformation = Instantiate(tileInformationPrefab);
+        tileInformation.transform.SetParent(transform);
+        tileInformation.SetActive(false);
+        menus.Add(tileInformation);
 
-        GameObject obj5 = Instantiate(panemoneInformationPrefab);
-        obj5.transform.SetParent(transform);
-        obj5.SetActive(false);
-        menus.Add(obj5);
-
-        GameObject obj6 = Instantiate(tileInformationPrefab);
-        obj6.transform.SetParent(transform);
-        obj6.SetActive(false);
-        menus.Add(obj6);
-
-        GameObject obj7 = Instantiate(loadingMenuPrefab);
-        obj7.transform.SetParent(transform);
-        menus.Add(obj7);
-
-        GameObject obj8 = Instantiate(weatherMenuPrefab);
-        obj8.transform.SetParent(transform);
-        obj8.SetActive(false);
-        menus.Add(obj8);
+        GameObject weatherMenu = Instantiate(weatherMenuPrefab);
+        weatherMenu.transform.SetParent(transform);
+        weatherMenu.SetActive(false);
+        menus.Add(weatherMenu);
     }
-
+    
     // Get the singleton instance
-    public static UIScript GetInstance()
+    public static UIManager GetInstance()
     {
         return instance;
     }
-
+    
     public bool menuButtonPress()
     {
         if (menuActive == 1)
         {
             menuActive = -1;
-            menus[1].SetActive(false);
+            menus[2].SetActive(false);
             GameResources.unPause();
             activeUIElements--;
             return true;
@@ -201,15 +177,6 @@ public class UIScript : MonoBehaviour {
 
     }
 
-    //Get to know if the camera has zoomed on the village
-    bool AccessSiblingData()
-    {
-        managerObj = gameObject.transform.parent.gameObject;
-        cameraObj = managerObj.transform.GetChild(2).gameObject;
-
-        return cameraObj.GetComponent<CameraController>().GetHaveControl();
-    }
-
     public void DisableLoadingScreen()
     {
         menus[5].SetActive(false);
@@ -236,5 +203,6 @@ public class UIScript : MonoBehaviour {
     {
         menus[1].GetComponent<UIMainMenuManager>().GameOver();
     }
+    
 
 }

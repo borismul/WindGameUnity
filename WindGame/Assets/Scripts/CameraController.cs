@@ -79,7 +79,7 @@ public class CameraController : MonoBehaviour
     // Update inputs and process
     void Update()
     {
-        if (!terrain.levelLoaded)
+        if (!TerrainController.levelLoaded)
             return;
 
         if (!setStartPos)
@@ -101,7 +101,7 @@ public class CameraController : MonoBehaviour
     // Update camera position and rotation
     void LateUpdate()
     {
-        if (!terrain.levelLoaded)
+        if (!TerrainController.levelLoaded)
             return;
 
 
@@ -139,7 +139,7 @@ public class CameraController : MonoBehaviour
 
     void CheckStart()
     {
-        if(terrain.levelLoaded && !hasStarted)
+        if(TerrainController.levelLoaded && !hasStarted)
         {
             transform.LookAt(new Vector3(terrain.width/2, 0, terrain.length/2));
             if (Vector3.Distance(transform.position, targetPos) < 5)

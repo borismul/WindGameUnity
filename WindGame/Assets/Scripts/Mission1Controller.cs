@@ -161,7 +161,7 @@ public class Mission1Controller : MonoBehaviour{
         if (!gameFinished)
         {
             gameFinished = true;
-            UIScript.GetInstance().GameOver();
+            UIManager.instance.GameOver();
         }
     }
 
@@ -171,7 +171,7 @@ public class Mission1Controller : MonoBehaviour{
         {
             gameFinished = true;
             GameResources.finalScore = calculateFinalScore();
-            UIScript.GetInstance().GameWon();
+            UIManager.instance.GameWon();
         }
     }
 
