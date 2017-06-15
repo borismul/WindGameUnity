@@ -108,7 +108,7 @@ public class BuildMenuController : MonoBehaviour
         LoadOthers();
         canCancel = true;
 
-        world = WorldController.GetInstance();
+        world = WorldController.Instance;
 
         GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
         GetComponent<Canvas>().worldCamera = Camera.main.transform.GetChild(0).GetComponent<Camera>();

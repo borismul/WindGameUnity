@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 223251321828949176}
   - component: {fileID: 114575436072525020}
   - component: {fileID: 114740872073441328}
-  - component: {fileID: 114674284679023138}
+  - component: {fileID: 114767712055281266}
   m_Layer: 5
   m_Name: UICanvasUSA
   m_TagString: Untagged
@@ -1214,25 +1214,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114674284679023138
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1488381785379394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de19b5a4a6f83d94d98c1953d16b2c4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  capitalText: {fileID: 0}
-  powerText: {fileID: 0}
-  dateText: {fileID: 0}
-  menuButton: {fileID: 114226972024910118}
-  playPauseButton: {fileID: 114978618674852066}
-  fastForwardButton: {fileID: 114444703903667942}
-  buildButton: {fileID: 114126970527553538}
-  infoButton: {fileID: 0}
 --- !u!114 &114699570418118274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1336,6 +1317,27 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114767712055281266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1488381785379394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83733e8b0f031eb4bb1e56ac8500cd55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayPause: {fileID: 114978618674852066}
+  FastForward: {fileID: 114444703903667942}
+  Build: {fileID: 114126970527553538}
+  Objective: {fileID: 114040026069729212}
+  Graph: {fileID: 114635171069505374}
+  Exit: {fileID: 114226972024910118}
+  BuildMenu: {fileID: 1847264588522492, guid: 8bb393b7b0bff574bafad42620e28bd2, type: 2}
+  ObjectivesMenu: {fileID: 0}
+  GraphMenu: {fileID: 0}
+  ExitMenu: {fileID: 0}
 --- !u!114 &114850371448887016
 MonoBehaviour:
   m_ObjectHideFlags: 1

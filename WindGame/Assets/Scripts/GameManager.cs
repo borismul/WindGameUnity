@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
         GameObject UIManager = Instantiate(UIManagerPrefab);
         
         SceneManager.sceneLoaded += LoadSceneContents;
+        //instance.LoadLevel(4);  // Debug Purposes, load US immediately
     }
 
     // Create a singleton instance of the Game Manager
@@ -72,17 +73,19 @@ public class GameManager : MonoBehaviour {
 
         // Checking for level loading
         InvokeRepeating("CloseLoadScreen", 0, 1f / 5);
+        
     }
 
     // Close load screen if level is loaded
     void CloseLoadScreen()
     {
+        print("Gamemanager - Loading level...");
         if (TerrainController.levelLoaded)
         {
             loadingScreen.SetActive(false);
             CancelInvoke("CloseLoadScreen");
+            print("Gamemanager - Level loaded.");
         }
-        print("Gamemanager - Invoke repeating running...");
     }
    
 

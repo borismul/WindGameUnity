@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour {
     {
         CreateSingleton();
         //InstantiateUIPrefabs();
-        cameraController = Camera.main.GetComponent<CameraController>();
+        //cameraController = Camera.main.GetComponent<CameraController>();
     }
     
     // Method to create the correct mission canvas with the scene

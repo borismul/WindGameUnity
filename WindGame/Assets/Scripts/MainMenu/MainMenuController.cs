@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    //public static MainMenuController curMainMenu;   // Static object this main menu controller so it can be obtained easily from anywhere
+    //public static MainMenuController curMainMenu;
 
     // Declaration of all the different buttons in the menu
     public Button persiaButton;

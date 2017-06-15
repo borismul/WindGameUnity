@@ -61,7 +61,7 @@ public class TurbineManager : MonoBehaviour{
     public void RemoveTurbine(GameObject turb)
     {
         turbines.Remove(turb);
-        WorldController.GetInstance().RemoveTurbine(turb.GetComponent<TurbineController>());
+        WorldController.Instance.RemoveTurbine(turb.GetComponent<TurbineController>());
     }
 
 	// Returns the number of turbines in the world

@@ -9,6 +9,8 @@ using UnityEngine.SceneManagement;
     The goal of this class is to keep track of all objects in the scene. 
     It should contain functions for adding and removing new objects as well as
     maintaining a list of all relevant objects.
+
+    ToDo: Should this be deleted upon changing back to main menu? Probably.
 **/
 
 public class WorldController : MonoBehaviour
@@ -18,32 +20,29 @@ public class WorldController : MonoBehaviour
     [Header("Prefabs")]
     public GameObject weatherManagerPrefab;
     public GameObject[] terrainManagerPrefab;
-    public GameObject turbineManagerPrefab;
-    public GameObject buildingsManagerPrefab;
-    public GameObject worldInteractionManagerPrefab;
+    public GameObject turbineManagerPrefab;             // Not used yet
+    public GameObject buildingsManagerPrefab;           // Not used yet
+    public GameObject worldInteractionManagerPrefab;    // Not used yet
 
     [Header("Collision Info")]
     public LayerMask notTerrain;
-
     public GameObject debugThing;
 
     List<Chunk> tempChunks = new List<Chunk>();
 
+    public static WorldController Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
     // Use this for initialization
-    void Awake()
+    void Start()
     {
         CreateSingleton();
         InstantiateStartPrefabs();
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-     
     }
 
     // Create the singletone for the WorldManager. Also checks if there is another present and logs and error.
@@ -61,6 +60,8 @@ public class WorldController : MonoBehaviour
     // Instantiate the starting prefabs as the children of the WorldManager
     void InstantiateStartPrefabs()
     {
+        // Make sure the correct terrainManager is loaded for the level.
+        // And make all instantiated GameObjects children of the worldcontroller.
         GameObject obj = Instantiate(terrainManagerPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
         obj.transform.SetParent(transform);
         obj = Instantiate(weatherManagerPrefab);
@@ -71,12 +72,6 @@ public class WorldController : MonoBehaviour
         obj.transform.SetParent(transform);
         obj = Instantiate(worldInteractionManagerPrefab);
         obj.transform.SetParent(transform);
-    }
-
-    // Get the singleton instance
-    public static WorldController GetInstance()
-    {
-        return instance;
     }
 
     // Builder function, some class wants the world to add an object
