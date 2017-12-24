@@ -25,7 +25,7 @@ public class WindController : MonoBehaviour {
 
     void Start()
     {
-        windSound = Camera.main.transform.FindChild("WindSound").GetComponent<AudioSource>();
+        windSound = Camera.main.transform.Find("WindSound").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

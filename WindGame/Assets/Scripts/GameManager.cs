@@ -3,9 +3,11 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject UIManagerPrefab;
-    public GameObject mission1ManagerPrefab;
-    public GameObject mission2ManagerPrefab;
+    //public GameObject UIManagerPrefab;
+    //public GameObject mission1ManagerPrefab;
+    //public GameObject mission2ManagerPrefab;
+    public GameObject UICanvas;
+    public GameObject missionManager;
     public GameObject mainCameraPrefab;
 
     private static GameManager instance;
@@ -31,24 +33,27 @@ public class GameManager : MonoBehaviour {
     // Instantiate the starting prefabs as the children of the GameManager
     void InstantiateStartPrefabs()
     {
-        GameObject obj = Instantiate(UIManagerPrefab);
+        GameObject obj = Instantiate(UICanvas);
         obj.transform.SetParent(transform);
 
-        if (GameResources.currentMission == 1)
-        {
-            obj = Instantiate(mission1ManagerPrefab);
-            obj.transform.SetParent(transform);
-        }
-        else
-        {
-            obj = Instantiate(mission2ManagerPrefab);
-            obj.transform.SetParent(transform);
-        }
+        obj = Instantiate(missionManager);
+        obj.transform.SetParent(transform);
+
+        //if (GameResources.currentMission == 1)
+        //{
+        //    obj = Instantiate(mission1ManagerPrefab);
+        //    obj.transform.SetParent(transform);
+        //}
+        //else
+        //{
+        //    obj = Instantiate(mission2ManagerPrefab);
+        //    obj.transform.SetParent(transform);
+        //}
 
         obj = Instantiate(mainCameraPrefab);
         obj.transform.SetParent(transform);
 
-        
+
     }
 
     // Get the singleton instance
