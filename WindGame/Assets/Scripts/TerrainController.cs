@@ -392,7 +392,7 @@ public class TerrainController : MonoBehaviour {
         // When that is done the level loading is complete
         levelLoaded = true;
 
-        UIScript.GetInstance().DisableLoadingScreen();
+        //UIScript.GetInstance().DisableLoadingScreen();
 
     }
 

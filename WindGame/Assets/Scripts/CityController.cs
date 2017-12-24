@@ -23,7 +23,7 @@ public class CityController : MonoBehaviour {
     public float density;
 
     TerrainController terrain;
-    WorldController world;
+    public WorldController world;
     Rand rand = new Rand();
 
     public GridTile centerTile;
@@ -41,7 +41,6 @@ public class CityController : MonoBehaviour {
         city = this;
 
         terrain = TerrainController.thisTerrainController;
-        world = WorldController.GetInstance();
 
         float xPos = minLocX * terrain.length + (float)rand.NextDouble() * (maxLocX - minLocX) * terrain.length;
         float zPos = minLocZ * terrain.width + (float)rand.NextDouble() * (maxLocZ - minLocZ) * terrain.width;

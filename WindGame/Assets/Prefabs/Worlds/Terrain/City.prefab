@@ -5,11 +5,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 426286}
-  - 114: {fileID: 11476966}
-  - 114: {fileID: 114000013793124418}
+  - component: {fileID: 426286}
+  - component: {fileID: 11476966}
+  - component: {fileID: 114000013793124418}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -26,10 +26,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11476966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -51,7 +51,9 @@ MonoBehaviour:
   minLocZ: 0.6
   maxLocZ: 0.6
   startRadius: 200
+  currentRadius: 0
   density: 0.21
+  world: {fileID: 11400000, guid: eeb76dd92e7e2d849a28cedf2ac7ecd5, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -75,3 +77,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diameter: 30
+  desiredScale: 0

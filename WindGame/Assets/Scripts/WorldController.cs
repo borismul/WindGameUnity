@@ -11,73 +11,15 @@ using UnityEngine.SceneManagement;
     maintaining a list of all relevant objects.
 **/
 
-public class WorldController : MonoBehaviour
+[CreateAssetMenu]
+public class WorldController : ScriptableObject
 {
-    private static WorldController instance;
-
-    [Header("Prefabs")]
-    public GameObject weatherManagerPrefab;
-    public GameObject[] terrainManagerPrefab;
-    public GameObject turbineManagerPrefab;
-    public GameObject buildingsManagerPrefab;
-    public GameObject worldInteractionManagerPrefab;
-
     [Header("Collision Info")]
     public LayerMask notTerrain;
 
     public GameObject debugThing;
 
     List<Chunk> tempChunks = new List<Chunk>();
-
-    // Use this for initialization
-    void Awake()
-    {
-        CreateSingleton();
-        InstantiateStartPrefabs();
-    }
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-     
-    }
-
-    // Create the singletone for the WorldManager. Also checks if there is another present and logs and error.
-    void CreateSingleton()
-    {
-        if (instance != null)
-        {
-            Debug.LogError("WorldManager already exists while it should be instantiated only once.");
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-    }
-
-    // Instantiate the starting prefabs as the children of the WorldManager
-    void InstantiateStartPrefabs()
-    {
-        GameObject obj = Instantiate(terrainManagerPrefab[SceneManager.GetActiveScene().buildIndex - 1]);
-        obj.transform.SetParent(transform);
-        obj = Instantiate(weatherManagerPrefab);
-        obj.transform.SetParent(transform);
-        obj = Instantiate(turbineManagerPrefab);
-        obj.transform.SetParent(transform);
-        obj = Instantiate(buildingsManagerPrefab);
-        obj.transform.SetParent(transform);
-        obj = Instantiate(worldInteractionManagerPrefab);
-        obj.transform.SetParent(transform);
-    }
-
-    // Get the singleton instance
-    public static WorldController GetInstance()
-    {
-        return instance;
-    }
 
     // Builder function, some class wants the world to add an object
     public void AddTurbine(GameObject t, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
@@ -180,7 +122,7 @@ public class WorldController : MonoBehaviour
     {
         float diameter = something.GetComponent<SizeController>().diameter;
         pos.y = BuildingHeight(pos, diameter * scale);
-        GameObject t = (GameObject)Instantiate(something,pos,rotation,transform);
+        GameObject t = (GameObject)Instantiate(something,pos,rotation, parent);
         t.transform.localScale = Vector3.one * scale;
 
         AddToGridTiles(something, pos, diameter * scale, type);

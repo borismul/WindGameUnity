@@ -101,14 +101,12 @@ public class BuildMenuController : MonoBehaviour
         // Subscribe methods buttons
         cancelButton.onClick.AddListener(Cancel);
         buildButton.onClick.AddListener(BuildButton);
-
+    
         turbines = TurbineManager.GetInstance().turbinePrefabs;
         turbineText = TurbineManager.GetInstance().turbineText;
         LoadTurbines();
         LoadOthers();
         canCancel = true;
-
-        world = WorldController.GetInstance();
 
         GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
         GetComponent<Canvas>().worldCamera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
