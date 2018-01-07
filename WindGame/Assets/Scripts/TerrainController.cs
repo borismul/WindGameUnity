@@ -284,7 +284,11 @@ public class TerrainController : MonoBehaviour {
                 // Get all Meshes with paramters of the biome
                 BiomeMesh curBiomeMesh = biomeMeshes[Mathf.FloorToInt(world[i,k].biome)];
                 List<float> occurances = curBiomeMesh.occurance;
-                int objectsPerTile = curBiomeMesh.objectsPerTile;
+                int objectsPerTile = curBiomeMesh.objectsPerTile*tileSize/20;
+
+                if (objectsPerTile < 1)
+                    objectPerTile = 1;
+
                 List<float> minScale = curBiomeMesh.minScale;
                 List<float> maxScale = curBiomeMesh.maxScale;
                 List<float> minRot = curBiomeMesh.minRot;
@@ -305,7 +309,7 @@ public class TerrainController : MonoBehaviour {
                         upper += occurances[j];
 
                         // If the random variable is between upper and lower limit generate that object
-                        if (choice < upper && choice > lower)
+                        if (choice < upper*tileSize/20 && choice > lower*tileSize/20)
                         {
                             // Determine a random scale and rotation, based on the min and max set by the user
                             float scale = minScale[j] + (float)rand.NextDouble() * (maxScale[j] - minScale[j]);
@@ -383,7 +387,7 @@ public class TerrainController : MonoBehaviour {
 
 
         if (SceneManager.GetActiveScene().name == "1_Persia")
-            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
+            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 200, 200, 200, 200, true);
         else if (SceneManager.GetActiveScene().name == "4_UnitedStates")
             WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
         else if (SceneManager.GetActiveScene().name == "6_NorthSea")

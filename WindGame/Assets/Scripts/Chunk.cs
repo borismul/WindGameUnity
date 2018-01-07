@@ -208,6 +208,12 @@ public class Chunk : MonoBehaviour {
 
         //Vector3 position = new Vector3(xAvg / positions.Count, yAvg / positions.Count, zAvg / positions.Count);
         Vector3 position = positions[0];
+        //for (int i = 1; i < 4; i++)
+        //{
+        //    if (positions[i].y < position.y)
+        //        position = positions[i];
+        //}
+
         bool isUnderWater = yAvg / positions.Count < TerrainController.thisTerrainController.waterLevel;
         GridTile tile = new GridTile(position + transform.position, this, worldPositions, biome, isUnderWater, false, new List<GridTileOccupant>());
 

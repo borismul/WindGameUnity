@@ -64,10 +64,6 @@ public class CameraController : MonoBehaviour
     Vector3 rotatePoint;
     float hitDistance;
     public LayerMask groundLayer;
-    // Unity Methods //
-
-    // Determine initial conditions
-
 
     void Start()
     {
@@ -392,7 +388,7 @@ public class CameraController : MonoBehaviour
     // Method determines the rotation of the camera in x and y axis based on user mouse input
     void ManualRot(Vector3 hit)
     {
-        float movement = xMouse * camSpeedRot * Time.deltaTime;
+        float movement = xMouse * camSpeedRot;
 
         targetRot += new Vector3(0, movement, 0);
         targetPos = Quaternion.Euler(targetRot) * new Vector3(0, 0, -hitDistance) + hit;

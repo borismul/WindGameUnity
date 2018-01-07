@@ -182,18 +182,9 @@ public class WorldController : ScriptableObject
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
     public bool CanBuild(Vector3 pos, float size, GameObject buildObj, float scale, Quaternion rotation, bool neglectTerrainObjects)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size);
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size + 20);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
         Collider[] colliders = Physics.OverlapBox(buildObj.GetComponentInChildren<BoxCollider>().center * scale + pos, buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale, rotation, notTerrain);
-        //print(colliders[0].transform.name);
-        //Vector3 Start1 = buildObj.GetComponentInChildren<BoxCollider>().center * scale - buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale + pos;
-        //Vector3 End1 = pos + buildObj.GetComponentInChildren<BoxCollider>().center * scale;
-
-        //Vector3 Start2 = buildObj.GetComponentInChildren<BoxCollider>().center * scale + buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale + pos;
-        //Vector3 End2 = pos + buildObj.GetComponentInChildren<BoxCollider>().center * scale;
-
-        //Debug.DrawLine(Start1, End1, Color.red, Mathf.Infinity);
-        //Debug.DrawLine(Start2, End2, Color.green, Mathf.Infinity);
 
         if (colliders.Length > 1)
             return false;
@@ -203,15 +194,24 @@ public class WorldController : ScriptableObject
         if (pos.y <= TerrainController.thisTerrainController.waterLevel)
             return false;
 
+        float lowPoint = gridtiles[0].position.y;
+        float highPoint = gridtiles[0].position.y;
         foreach (GridTile tile in gridtiles)
         {
             if (tile.isOutsideBorder)
                 return false;
-            //else if (neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City))
-            //    return false;
-            //else if (!neglectTerrainObjects && tile.occupant != null && (tile.type == GridTileOccupant.OccupantType.Turbine || tile.type == GridTileOccupant.OccupantType.City || tile.type == GridTileOccupant.OccupantType.TerrainGenerated))
-            //    return false;
+
+            for (int i = 0; i < tile.gridNodes.Count; i++)
+            {
+                if (tile.gridNodes[i].position.y > highPoint)
+                    highPoint = tile.position.y;
+                else if (tile.gridNodes[i].position.y < lowPoint)
+                    lowPoint = tile.position.y;
+            }
+
         }
+        if (highPoint - lowPoint > 10)
+            return false;
 
         if (BuildingHeight(pos, size * scale) == -1)
             return false;
@@ -226,7 +226,7 @@ public class WorldController : ScriptableObject
         foreach (GridTile tile in gridtiles)
         {
             TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
-            //tile.occupants.Add(new GridTileOccupant(something));
+            tile.occupants.Add(new GridTileOccupant(something, type));
 
         }
         //tile.type = type;
@@ -245,6 +245,11 @@ public class WorldController : ScriptableObject
     
     public static void SetBorders(Vector3 mapMiddle, int width, int length, int camWidth, int camLength, bool makeBorderLine)
     {
+        width = width * 20 / TerrainController.thisTerrainController.tileSize;
+        length = length * 20 / TerrainController.thisTerrainController.tileSize;
+
+        camWidth = camWidth * 20 / TerrainController.thisTerrainController.tileSize;
+        camLength = camLength * 20 / TerrainController.thisTerrainController.tileSize;
 
         if (makeBorderLine)
         {

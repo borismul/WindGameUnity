@@ -30,6 +30,15 @@ public class GridTileOccupant
         this.windEffectController = obj.GetComponent<WindEffectController>();
     }
 
+    public GridTileOccupant(GameObject obj, OccupantType type)
+    {
+        this.obj = obj;
+        rotation = Quaternion.identity;
+        scale = Vector3.one;
+        this.windEffectController = obj.GetComponent<WindEffectController>();
+        this.type = type;
+    }
+
     public enum OccupantType { Empty, TerrainGenerated, Turbine, City, Other};
 
 }

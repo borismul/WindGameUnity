@@ -55,27 +55,10 @@ public class GridTile{
         return world[x,z];
     }
 
-    public static GridTile FindClosestGridTile(ThreadVector3 point)
-    {
-
-        GridTile[,] world = TerrainController.thisTerrainController.world;
-        int tileSize = TerrainController.thisTerrainController.tileSize;
-
-        int x = Mathf.FloorToInt((point.x + tileSize / 2) / tileSize);
-        int z = Mathf.FloorToInt((point.z + tileSize / 2) / tileSize);
-
-        if (x >= world.GetLength(0) || x < 0)
-            return null;
-
-        if (z >= world.GetLength(1) || z < 0)
-            return null;
-
-        return world[x, z];
-    }
-
     // Find all GridTiles in a radius around point
     public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius)
     {
+
         List<GridTile> gridTiles = new List<GridTile>();
         GridTile middleTile = FindClosestGridTile(point);
         TerrainController terrain = TerrainController.thisTerrainController;
@@ -104,59 +87,40 @@ public class GridTile{
         return gridTiles.ToArray();
     }
 
-    // Find all GridTiles in a radius around point
-    public static GridTile[] FindGridTilesAround(ThreadVector3 point, float circleRadius)
-    {
-        List<GridTile> gridTiles = new List<GridTile>();
-        GridTile middleTile = FindClosestGridTile(point - new ThreadVector3(TerrainController.thisTerrainController.tileSize, 0, TerrainController.thisTerrainController.tileSize));
-        TerrainController terrain = TerrainController.thisTerrainController;
-
-        float startTile = -circleRadius;
-        float endTile = circleRadius;
-
-        if (middleTile == null)
-            return gridTiles.ToArray();
-
-        for (float i = startTile - 1; i < endTile; i += terrain.tileSize)
-        {
-            for (float j = startTile - 1; j < endTile; j += terrain.tileSize)
-            {
-                GridTile tile = FindClosestGridTile(new Vector3(middleTile.position.x + i, 0, middleTile.position.z + j));
-                if (tile == null)
-                    continue;
-
-                if (ThreadVector3.Distance(new ThreadVector3(tile.position.x, 0, tile.position.z), new ThreadVector3(point.x, 0, point.z)) < circleRadius)
-                {
-                    gridTiles.Add(FindClosestGridTile(tile.position));
-                }
-            }
-        }
-
-        return gridTiles.ToArray();
-    }
-
     // Find all GridTiles in a radius around point with an added option to skip tiles in between tiles that are returned
-    public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius, int ammountSkipTile)
+    public static GridTile[] FindAnnulusAround(Vector3 point, int radius, int annulusTileWidth)
     {
         List<GridTile> gridTiles = new List<GridTile>();
         GridTile middleTile = FindClosestGridTile(point);
         TerrainController terrain = TerrainController.thisTerrainController;
+        float startTile = -radius * terrain.tileSize;
+        float endTile = radius * terrain.tileSize;
 
-        float startTile = -circleRadius;
-        float endTile = circleRadius;
+        float halfWidth = (float)annulusTileWidth / 2;
 
-        for (float i = startTile; i < endTile; i += terrain.tileSize * ammountSkipTile)
+        for (float i = startTile; i < endTile; i += terrain.tileSize)
         {
-            for (float j = startTile; j < endTile; j += terrain.tileSize * ammountSkipTile)
+            for (float j = startTile; j < endTile; j += terrain.tileSize)
             {
-                GridTile tile = FindClosestGridTile(new Vector3(middleTile.position.x + i, 0, middleTile.position.z + j));
-                if (Vector3.Distance(new Vector3(tile.position.x, 0, tile.position.z), new Vector3(point.x, 0, point.z)) < circleRadius)
+                GridTile tile = FindClosestGridTile(new Vector3(middleTile.position.x + i,0 , middleTile.position.z + j));
+
+                if (tile == null)
+                    continue;
+
+                if (Vector2.Distance(new Vector2(tile.position.x, tile.position.z), new Vector2(middleTile.position.x, middleTile.position.z)) < ((radius + halfWidth) * terrain.tileSize)  &&
+                    Vector2.Distance(new Vector2(tile.position.x, tile.position.z), new Vector2(middleTile.position.x, middleTile.position.z)) > ((radius - halfWidth) * terrain.tileSize))
                 {
-                    gridTiles.Add(FindClosestGridTile(tile.position));
+                    gridTiles.Add(tile);
+                }
+                else
+                {
+                    if (j < 0 && Vector2.Distance(new Vector2(tile.position.x, tile.position.z), new Vector2(middleTile.position.x, middleTile.position.z)) < ((radius - halfWidth) * terrain.tileSize))
+                        j = -j;
+                    else if (j > 0 && Vector2.Distance(new Vector2(tile.position.x, tile.position.z), new Vector2(middleTile.position.x, middleTile.position.z)) > ((radius + halfWidth) * terrain.tileSize))
+                        break;
                 }
             }
         }
-
         return gridTiles.ToArray();
     }
 

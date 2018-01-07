@@ -79,7 +79,7 @@ public class Noise : MonoBehaviour
         { 
             Vector3 finPos = frequency * (position + offset);
 
-            noise += Noise.Generate(finPos.x, finPos.y) * amplitude;
+            noise += Generate(finPos.x, finPos.y) * amplitude;
 
             maxValue += amplitude;
             frequency *= 2;
@@ -89,7 +89,7 @@ public class Noise : MonoBehaviour
         noise += 1;
         noise /= 2;
 
-        noise = (max - min) * noise + min;
+        noise = Mathf.Clamp((max - min) * noise + min, 0.01f, 1);
 
         return noise;
     }

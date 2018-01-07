@@ -50,7 +50,7 @@ MonoBehaviour:
   maxLocX: 0.5
   minLocZ: 0.6
   maxLocZ: 0.6
-  startRadius: 200
+  startRadius: 0
   currentRadius: 0
   density: 0.21
   world: {fileID: 11400000, guid: eeb76dd92e7e2d849a28cedf2ac7ecd5, type: 2}

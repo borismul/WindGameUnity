@@ -17,8 +17,8 @@ public class CityController : MonoBehaviour {
     public float minLocZ;
     [Range(0, 1)]
     public float maxLocZ;
-    public float startRadius;
-    public float currentRadius;
+    public int startRadius;
+    public int currentRadius;
     [Range(0, 1)]
     public float density;
 
@@ -35,6 +35,9 @@ public class CityController : MonoBehaviour {
 
     public static CityController city;
 
+    int currentMaxHouses = 30;
+    int currentPlacedHouses = 0;
+    int counter;
     // Use this for initialization
     void Start ()
     {
@@ -50,158 +53,90 @@ public class CityController : MonoBehaviour {
         cityPoints = 0;
         requiredCityPoints = 8000;
         maximumRadius = 400;
-
-        BuildStartCity();
+        currentRadius = startRadius;
+        StartCoroutine(BuildStartCity());
     }
 
     void Update()
     {
-        //updateRadius();
-        //Update city points every second
-        if (cityPointTimer + Time.deltaTime >= 1)
-        {
-            cityPointTimer = 0;
-            cityPoints += GameResources.getProduction();
-        }
-        else
-        {
-            cityPointTimer += Time.deltaTime;
-        }
 
-        //If city points higher than threshold, increase radius and threshold and reset points
-        if (cityPoints > requiredCityPoints)
-        {
-            cityPoints -= requiredCityPoints;
-            updateRadius();
-        }
+
+
     }
 
-    void updateRadius()
+    private void FixedUpdate()
     {
-        List<GridTile> gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
+        currentMaxHouses++;
+    }
 
+    void UpdateCity()
+    {
+        if (currentMaxHouses >= currentPlacedHouses)
+            return;
+    }
+
+
+    IEnumerator BuildStartCity()
+    {
+        GridTile[] gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
+        float timer = Time.realtimeSinceStartup;
         while (true)
         {
-            int currentTile = Random.Range(0, gridTiles.Count);
-            GridTile tile = gridTiles[currentTile];
-            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-
-            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-            Quaternion rotation;
-            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                rotation = Quaternion.identity;
-            else
-             rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
-
-            if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true) && !world.BuildingNearby(tile.position, diameter))
+            while (currentMaxHouses > currentPlacedHouses)
             {
-                world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-                return;
-            }
-
-            gridTiles.RemoveAt(currentTile);
-
-            if (gridTiles.Count == 0)
-            {
-                gridTiles = GridTile.FindGridTilesAround(centerTile.position, currentRadius, 1).ToList();
-
-                while (true)
+                // Get the grid tiles to build on
+                foreach (GridTile tile in gridTiles)
                 {
-                    currentTile = Random.Range(0, gridTiles.Count);
-                    tile = gridTiles[currentTile];
-                    buildObject = buildings[rand.Next(0, buildings.Length)];
+                    // Pick a type of building randomly
+                    CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
 
-                    diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-                    if(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                        rotation = Quaternion.identity;
-                    else
-                        rotation = Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z));
+
+                    float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
+
+                    // Rotation quaternion for the building orientation
+                    Quaternion rotation;
+
+                    // List of possible orientations
+                    float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+
+                    // Get an angle from the possible orientation
+                    float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
+
+                    // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
+                    angle += (float)rand.NextDouble() * 10;
+
+                    // Create the rotation quaternion
+                    rotation = Quaternion.AngleAxis(angle, Vector3.up);
                     if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
                     {
-                        world.AddOther(buildObject.prefab, tile.position, Quaternion.LookRotation(new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z)), buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-                        return;
+                        // Place the building
+                        world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
+                        currentPlacedHouses++;
                     }
-                    gridTiles.RemoveAt(currentTile);
 
-                    if (gridTiles.Count == 0)
+                    if (currentPlacedHouses >= currentMaxHouses)
                         break;
+
+                    if (Time.realtimeSinceStartup - timer > 1 / 60f)
+                    {
+                        yield return null;
+                        timer = Time.realtimeSinceStartup;
+                    }
                 }
-                break;
+
+
+                if (currentPlacedHouses >= currentMaxHouses)
+                    break;
+
+                yield return null;
+
+                currentRadius += 3;
+                gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
+
             }
-
-        }
-        if (!(currentRadius + 30 > maximumRadius))
-        {
-            currentRadius += 80;
-        }
-    }
-
-
-    void BuildStartCity()
-    {
-        // Get the grid tiles to build on
-        GridTile[] gridTiles = GridTile.FindGridTilesAround(centerTile.position, startRadius, 1);
-        foreach (GridTile tile in gridTiles)
-        {
-            // Pick a type of building randomly
-            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-
-            
-            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-
-            // Rotation quaternion for the building orientation
-            Quaternion rotation;
-            
-            // List of possible orientations
-            float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
-
-            // Get an angle from the possible orientation
-            float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
-
-            // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
-            angle += (float)rand.NextDouble() * 10;
-
-            // Create the rotation quaternion
-            rotation = Quaternion.AngleAxis(angle, Vector3.up);
-
-            if (!world.BuildingNearby(tile.position, diameter) && world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
-            {
-                // Place the building
-                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-            }
-
+            yield return null;
         }
 
-        // Second time we do this foreach loop for 'reasons'
-        foreach (GridTile tile in gridTiles)
-        {
-            CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-
-            float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-            Quaternion rotation;
-            if (new Vector3(tile.position.x, 0, tile.position.z) - new Vector3(centerTile.position.x, 0, centerTile.position.z) == Vector3.zero)
-                rotation = Quaternion.identity;
-            else
-            {
-                // List of possible orientations
-                float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
-
-                // Get an angle from the possible orientation
-                float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
-
-                // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
-                angle += (float)rand.NextDouble() * 10;
-
-                // Create the rotation quaternion
-                rotation = Quaternion.AngleAxis(angle, Vector3.up);
-            }
-
-            if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
-            {
-                world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-            }
-
-        }
     }
 
     [System.Serializable]
