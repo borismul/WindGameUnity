@@ -1,18 +1,69 @@
 fileFormatVersion: 2
-guid: f14d28257837482488a15654a9222884
-timeCreated: 1515425414
+guid: 73e09f6c1fd47a047af0d1dca4209163
+timeCreated: 1515599909
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Stone
-    2100002: StoneDarker
-    2100004: Window
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: HouseStructure
+    100000: Chimney
+    100002: Door
+    100004: Door_001
+    100006: DoorEdge
+    100008: HouseStructure
+    100010: Plane
+    100012: RoofBeams
+    100014: Stones
+    100016: //RootNode
+    100018: Topfloor
+    100020: WoodStack
+    400000: Chimney
+    400002: Door
+    400004: Door_001
+    400006: DoorEdge
+    400008: HouseStructure
+    400010: Plane
+    400012: RoofBeams
+    400014: Stones
+    400016: //RootNode
+    400018: Topfloor
+    400020: WoodStack
+    2100000: SandStone
+    2100002: WoodLight
+    2100004: Wood
+    2100006: SandStoneDark
+    2100008: Floor
+    2300000: Chimney
+    2300002: Door
+    2300004: Door_001
+    2300006: DoorEdge
+    2300008: HouseStructure
+    2300010: Plane
+    2300012: RoofBeams
+    2300014: Stones
+    2300016: Topfloor
+    2300018: WoodStack
+    2300020: //RootNode
+    3300000: Chimney
+    3300002: Door
+    3300004: Door_001
+    3300006: DoorEdge
+    3300008: HouseStructure
+    3300010: Plane
+    3300012: RoofBeams
+    3300014: Stones
+    3300016: Topfloor
+    3300018: WoodStack
+    3300020: //RootNode
+    4300000: Plane
+    4300002: DoorEdge
+    4300004: Door_001
+    4300006: Topfloor
+    4300008: Stones
+    4300010: WoodStack
+    4300012: Chimney
+    4300014: Door
+    4300016: RoofBeams
+    4300018: HouseStructure
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}

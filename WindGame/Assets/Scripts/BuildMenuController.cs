@@ -144,7 +144,8 @@ public class BuildMenuController : MonoBehaviour
             UIScript.GetInstance().SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
             instantHere.SetActive(false);
-            UIScript.GetInstance().CloseBuildMenu();
+            //UIScript.GetInstance().CloseBuildMenu();
+            BuildMenu.Instance.OnBackPressed();
         }
     }
 

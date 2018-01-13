@@ -8,8 +8,10 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour
 {
     // Public Menu Prefabs are listed here:
-    public MainMenu MainMenuPrefab;
-    public MissionMenu MissionMenuPrefab;
+    //public MainMenu MainMenuPrefab;
+    //public MissionMenu MissionMenuPrefab;
+    public UIMenu UIMenuPrefab;
+    public BuildMenu BuildMenuPersia;
 
     // Stack of menus that are open at any given time
     private Stack<Menu> menuStack = new Stack<Menu>();
@@ -20,7 +22,8 @@ public class MenuManager : MonoBehaviour
     {
         Instance = this;
         // Because MainMenu inherits from SimpleMenu, Show() will invoke Open() in the Menu.cs script
-        MainMenu.Show();
+        //MainMenu.Show();
+        UIMenu.Show();
     }
 
     private void OnDestroy()

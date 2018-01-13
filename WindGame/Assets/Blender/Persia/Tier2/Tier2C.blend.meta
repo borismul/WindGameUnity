@@ -1,15 +1,17 @@
 fileFormatVersion: 2
-guid: f14d28257837482488a15654a9222884
-timeCreated: 1515425414
+guid: e308259c07b4b6c4681556c579b1f4a8
+timeCreated: 1515605429
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Stone
-    2100002: StoneDarker
-    2100004: Window
+    2100000: SandStone
+    2100002: Floor
+    2100004: SandStoneDark
+    2100006: Wood
+    2100008: WoodLight
     2300000: //RootNode
     3300000: //RootNode
     4300000: HouseStructure

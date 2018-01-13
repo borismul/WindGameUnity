@@ -1,18 +1,95 @@
 fileFormatVersion: 2
-guid: f14d28257837482488a15654a9222884
-timeCreated: 1515425414
+guid: a3c517a8308512c48a428644074adbc0
+timeCreated: 1515605428
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Stone
-    2100002: StoneDarker
-    2100004: Window
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: HouseStructure
+    100000: Beam
+    100002: Chimney
+    100004: Door
+    100006: Door_001
+    100008: DoorEdge
+    100010: HouseStructure
+    100012: //RootNode
+    100014: Plane
+    100016: RoofBeams
+    100018: RoofHatch
+    100020: Stones
+    100022: SunRoof
+    100024: Topfloor
+    100026: Umbrella
+    100028: WindowFrame
+    100030: WoodStack
+    400000: Beam
+    400002: Chimney
+    400004: Door
+    400006: Door_001
+    400008: DoorEdge
+    400010: HouseStructure
+    400012: //RootNode
+    400014: Plane
+    400016: RoofBeams
+    400018: RoofHatch
+    400020: Stones
+    400022: SunRoof
+    400024: Topfloor
+    400026: Umbrella
+    400028: WindowFrame
+    400030: WoodStack
+    2100000: Wood
+    2100002: WoodLight
+    2100004: UmbrellaRed
+    2100006: UmbrellaBlue
+    2100008: Black
+    2100010: SandStone
+    2100012: SandStoneDark
+    2100014: Floor
+    2300000: Beam
+    2300002: Chimney
+    2300004: Door
+    2300006: Door_001
+    2300008: DoorEdge
+    2300010: HouseStructure
+    2300012: Plane
+    2300014: RoofBeams
+    2300016: RoofHatch
+    2300018: Stones
+    2300020: SunRoof
+    2300022: Topfloor
+    2300024: Umbrella
+    2300026: WindowFrame
+    2300028: WoodStack
+    3300000: Beam
+    3300002: Chimney
+    3300004: Door
+    3300006: Door_001
+    3300008: DoorEdge
+    3300010: HouseStructure
+    3300012: Plane
+    3300014: RoofBeams
+    3300016: RoofHatch
+    3300018: Stones
+    3300020: SunRoof
+    3300022: Topfloor
+    3300024: Umbrella
+    3300026: WindowFrame
+    3300028: WoodStack
+    4300000: SunRoof
+    4300002: Umbrella
+    4300004: RoofHatch
+    4300006: Plane
+    4300008: DoorEdge
+    4300010: Door_001
+    4300012: Topfloor
+    4300014: Stones
+    4300016: WindowFrame
+    4300018: Beam
+    4300020: WoodStack
+    4300022: Chimney
+    4300024: Door
+    4300026: RoofBeams
+    4300028: HouseStructure
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}

@@ -1,18 +1,44 @@
 fileFormatVersion: 2
-guid: f14d28257837482488a15654a9222884
-timeCreated: 1515425414
+guid: f63f4098aeb7a074eba11bab2712bc66
+timeCreated: 1515599912
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Stone
-    2100002: StoneDarker
-    2100004: Window
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: HouseStructure
+    100000: Chimney
+    100002: Door
+    100004: HouseStructure
+    100006: RoofBeams
+    100008: Stones
+    100010: //RootNode
+    400000: Chimney
+    400002: Door
+    400004: HouseStructure
+    400006: RoofBeams
+    400008: Stones
+    400010: //RootNode
+    2100000: SandStoneDark
+    2100002: WoodLight
+    2100004: Wood
+    2100006: SandStone
+    2100008: Floor
+    2300000: Chimney
+    2300002: Door
+    2300004: HouseStructure
+    2300006: RoofBeams
+    2300008: Stones
+    2300010: //RootNode
+    3300000: Chimney
+    3300002: Door
+    3300004: HouseStructure
+    3300006: RoofBeams
+    3300008: Stones
+    3300010: //RootNode
+    4300000: Stones
+    4300002: Chimney
+    4300004: Door
+    4300006: RoofBeams
+    4300008: HouseStructure
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}

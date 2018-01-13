@@ -1,0 +1,204 @@
+fileFormatVersion: 2
+guid: 14bdc728fa248eb4bbf4520eba186066
+timeCreated: 1515605421
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Beam_001
+    100002: Beam_002
+    100004: Beam_003
+    100006: Beam_004
+    100008: Chimney
+    100010: Door_001
+    100012: Door_002
+    100014: DoorEdge
+    100016: DoorEdge_001
+    100018: HouseStructure
+    100020: Ladder
+    100022: //RootNode
+    100024: RoofBeams
+    100026: RoofHatch
+    100028: Stones
+    100030: SunRoof
+    100032: SunRoof_001
+    100034: Topfloor
+    100036: Umbrella
+    100038: Umbrella_001
+    100040: WindowFrame
+    100042: WoodStack
+    400000: Beam_001
+    400002: Beam_002
+    400004: Beam_003
+    400006: Beam_004
+    400008: Chimney
+    400010: Door_001
+    400012: Door_002
+    400014: DoorEdge
+    400016: DoorEdge_001
+    400018: HouseStructure
+    400020: Ladder
+    400022: //RootNode
+    400024: RoofBeams
+    400026: RoofHatch
+    400028: Stones
+    400030: SunRoof
+    400032: SunRoof_001
+    400034: Topfloor
+    400036: Umbrella
+    400038: Umbrella_001
+    400040: WindowFrame
+    400042: WoodStack
+    2100000: UmbrellaRed
+    2100002: UmbrellaBlue
+    2100004: WoodLight
+    2100006: Wood
+    2100008: SandStone
+    2100010: Black
+    2100012: SandStoneDark
+    2100014: Floor
+    2300000: Beam_001
+    2300002: Beam_002
+    2300004: Beam_003
+    2300006: Beam_004
+    2300008: Chimney
+    2300010: Door_001
+    2300012: Door_002
+    2300014: DoorEdge
+    2300016: DoorEdge_001
+    2300018: HouseStructure
+    2300020: Ladder
+    2300022: RoofBeams
+    2300024: RoofHatch
+    2300026: Stones
+    2300028: SunRoof
+    2300030: SunRoof_001
+    2300032: Topfloor
+    2300034: Umbrella
+    2300036: Umbrella_001
+    2300038: WindowFrame
+    2300040: WoodStack
+    3300000: Beam_001
+    3300002: Beam_002
+    3300004: Beam_003
+    3300006: Beam_004
+    3300008: Chimney
+    3300010: Door_001
+    3300012: Door_002
+    3300014: DoorEdge
+    3300016: DoorEdge_001
+    3300018: HouseStructure
+    3300020: Ladder
+    3300022: RoofBeams
+    3300024: RoofHatch
+    3300026: Stones
+    3300028: SunRoof
+    3300030: SunRoof_001
+    3300032: Topfloor
+    3300034: Umbrella
+    3300036: Umbrella_001
+    3300038: WindowFrame
+    3300040: WoodStack
+    4300000: Umbrella_001
+    4300002: Door_002
+    4300004: DoorEdge_001
+    4300006: Ladder
+    4300008: SunRoof_001
+    4300010: Beam_004
+    4300012: Beam_003
+    4300014: Beam_002
+    4300016: Beam_001
+    4300018: SunRoof
+    4300020: Umbrella
+    4300022: RoofHatch
+    4300024: DoorEdge
+    4300026: Door_001
+    4300028: Topfloor
+    4300030: Stones
+    4300032: WindowFrame
+    4300034: WoodStack
+    4300036: Chimney
+    4300038: RoofBeams
+    4300040: HouseStructure
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
