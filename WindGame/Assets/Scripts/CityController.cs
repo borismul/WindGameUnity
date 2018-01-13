@@ -66,7 +66,7 @@ public class CityController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        currentMaxHouses++;
+        currentMaxHouses += 10;
     }
 
     void UpdateCity()
@@ -130,8 +130,17 @@ public class CityController : MonoBehaviour {
 
                 yield return null;
 
-                currentRadius += 3;
-                gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
+                if (currentRadius < 100)
+                {
+                    currentRadius += 3;
+                    gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
+                }
+                else
+                {
+                    yield break;
+                }
+
+
 
             }
             yield return null;

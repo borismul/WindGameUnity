@@ -5,16 +5,16 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 408742}
-  - 114: {fileID: 11490242}
+  - component: {fileID: 408742}
+  - component: {fileID: 11490242}
   m_Layer: 0
   m_Name: PersianTerrainController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &408742
 Transform:
@@ -25,10 +25,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11490242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -92,6 +92,9 @@ MonoBehaviour:
   baseHeight: 50
   isSourroundedByMountains: 0
   flatRadius: 1000
+  isCoastLine: 0
+  coastSteepness: 0
+  coastBaseHeight: 0
   islandSteepness: 0
   terrainOctaves: 5
   terrainPersistance: 0.5
@@ -103,6 +106,7 @@ MonoBehaviour:
   chunkSize: 200
   tileSize: 20
   tileSlope: 2
+  chunkFadeDistance: 0
   city: {fileID: 192104, guid: 6c05dc9569a734241bcb0a193a8716aa, type: 2}
   waterChunkPrefab: {fileID: 133574, guid: b10c435da05a1fd4ebeac4f8abe6a427, type: 2}
   waterUnderLayerPrefab: {fileID: 1000013717212630, guid: a0fcf61617646354cbc76d9822c772ce,

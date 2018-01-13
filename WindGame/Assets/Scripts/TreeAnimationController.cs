@@ -20,7 +20,7 @@ public class TreeAnimationController : MonoBehaviour
     bool initialized = false;
 
     public float shakeSpeed = 0.6f;
-    void Start()
+    void OnEnable()
     {
         treeObjects = new List<TerrainObject>();
         meshVertices = new List<Vector3[]>();
@@ -38,7 +38,7 @@ public class TreeAnimationController : MonoBehaviour
 
         while (true)
         {
-            if (!TerrainController.thisTerrainController.levelLoaded)
+            if (TerrainController.thisTerrainController == null || !TerrainController.thisTerrainController.levelLoaded)
             {
                 yield return null;
                 continue;
@@ -59,7 +59,8 @@ public class TreeAnimationController : MonoBehaviour
 
             for (int i = 0; i < meshVertices.Count; i++)
             {
-                treeObjects[i].GetComponent<MeshFilter>().mesh.vertices = updatedMeshVertices[i];
+                if(treeObjects[i].isEnabled)
+                    treeObjects[i].GetComponent<MeshFilter>().mesh.vertices = updatedMeshVertices[i];
             }
         }
     }
@@ -83,6 +84,14 @@ public class TreeAnimationController : MonoBehaviour
                 if (j >= updatedMeshVertices.Count)
                     break;
 
+                lock (treeObjects[j])
+                {
+                    if (!treeObjects[j].isEnabled)
+                    {
+                        continue;
+                    }
+                }
+
                 Vector3[] newVertPos = new Vector3[meshVertices[j].Length];
                 Vector3 windVector = -Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * WindController.direction), 0, Mathf.Cos(Mathf.Deg2Rad * WindController.direction)));
 
@@ -94,8 +103,6 @@ public class TreeAnimationController : MonoBehaviour
                     // for each vertex in this tree
                     for (int l = 0; l < vertPosPerObject[j][k].Count; l++)
                     {
-
-                        float a = lowestVertPerObject[j][k];
                         float height = meshVertices[j][vertPosPerObject[j][k][l]].y - lowestVertPerObject[j][k];
                         newVertPos[vertPosPerObject[j][k][l]] = meshVertices[j][vertPosPerObject[j][k][l]] + Mathf.Sqrt(Mathf.Abs(height)) * move;
 

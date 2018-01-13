@@ -15,11 +15,13 @@ public class TerrainObject : MonoBehaviour {
     public List<int> numVerticesPerObject;
     public int animationNumber;
     public readonly object verticesLocker = new object();
+    public bool isEmpty;
     Mesh thisMesh;
     AnimationParameters thisAnimationParameters;
     Vector3[] currentVertices;
     List<Mesh> nonCombinedMesh = new List<Mesh>();
     Mesh result;
+    public bool isEnabled = true;
 
     List<CombineInstance> instances = new List<CombineInstance>();
 
@@ -44,10 +46,22 @@ public class TerrainObject : MonoBehaviour {
         thisAnimationParameters = GetComponent<AnimationParameters>();
         StartCoroutine("RemoveObject");
     }
-	
+
+    private void Update()
+    {
+        isEnabled = true;
+    }
+
     public void Reload()
     {
-        result.Clear();
+        if (result != null)
+        {
+            result.Clear();
+        }
+        else
+        {
+            result = new Mesh();
+        }
         int index2 = -1;
         List<CombineInstance> finalCombiner = new List<CombineInstance>();
         foreach (List<Mesh> component in newComponents)
@@ -83,21 +97,15 @@ public class TerrainObject : MonoBehaviour {
             }
         }
         newComponents.Clear();
-        if (result.vertexCount > vertexMax)
+        if (result.vertexCount > vertexMax || !hasReloaded)
         {
             if (GetComponent<AnimationParameters>() != null)
                 GetComponent<AnimationParameters>().DetermineAnimationParameters();
 
             isFull = true;
+            hasReloaded = true;
             currentVertices = GetComponent<MeshFilter>().mesh.vertices;
-            FinalizeObject();
         }
-    }
-
-    public void FinalizeObject()
-    {
-        isFull = true;
-        currentVertices = GetComponent<MeshFilter>().mesh.vertices;
     }
 
     public void RemoveMesh(Mesh[] mesh)

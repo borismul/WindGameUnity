@@ -44,7 +44,7 @@ public class AnimationParameters : MonoBehaviour {
             sum += submesh;
         }
 
-        totalObjects = terrainObject.verticesNow / sum;
+        totalObjects = vertices.Length / sum;
         List<List<int>> vertPosPerObject = new List<List<int>>();
 
         for (int i = 0; i < totalObjects; i++)

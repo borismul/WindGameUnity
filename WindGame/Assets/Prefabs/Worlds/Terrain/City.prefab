@@ -46,6 +46,8 @@ MonoBehaviour:
     scale: 1.5
   - prefab: {fileID: 1000010700443020, guid: 265779f7c9e5ffd45825de97a982705b, type: 2}
     scale: 1
+  - prefab: {fileID: 1478743770627788, guid: ed1dd34e17d5c5145a00014427d90999, type: 2}
+    scale: 1.5
   minLocX: 0.5
   maxLocX: 0.5
   minLocZ: 0.6

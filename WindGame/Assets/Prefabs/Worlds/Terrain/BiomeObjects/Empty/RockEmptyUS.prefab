@@ -5,14 +5,14 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 441126}
-  - 33: {fileID: 3399186}
-  - 23: {fileID: 2331896}
-  - 95: {fileID: 9592958}
-  - 114: {fileID: 11434296}
-  - 114: {fileID: 114000010346674514}
+  - component: {fileID: 441126}
+  - component: {fileID: 3399186}
+  - component: {fileID: 2331896}
+  - component: {fileID: 9592958}
+  - component: {fileID: 11434296}
+  - component: {fileID: 114000010346674514}
   m_Layer: 0
   m_Name: RockEmptyUS
   m_TagString: Untagged
@@ -29,10 +29,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2331896
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -42,12 +42,15 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 05cb21d4d18aecb4c96b2d476aa0b39d, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -55,12 +58,14 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3399186
 MeshFilter:
@@ -99,12 +104,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biome: 0
   objectNR: 0
-  vertexMax: 8000
+  vertexMax: 10000
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
   numVerticesPerObject: 62000000
   animationNumber: 0
+  isEmpty: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

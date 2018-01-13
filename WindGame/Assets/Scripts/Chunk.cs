@@ -49,6 +49,10 @@ public class Chunk : MonoBehaviour {
     // Mesh of this chunk
     Mesh mesh;
 
+    public List<GridTile> tiles = new List<GridTile>();
+
+    List<TerrainObject> terrainObjects = new List<TerrainObject>();
+
     // Use this for initialization
     void Start()
     {
@@ -60,6 +64,30 @@ public class Chunk : MonoBehaviour {
             GenerateTerrain();
         }
         GenerateTerrainMesh(false, false);
+    }
+
+    private void OnEnable()
+    {
+        for(int i = 0; i < terrainObjects.Count; i++)
+        {
+            terrainObjects[i].gameObject.SetActive(true);
+            lock (terrainObjects[i])
+            {
+                terrainObjects[i].isEnabled = true;
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < terrainObjects.Count; i++)
+        {
+            terrainObjects[i].gameObject.SetActive(false);
+            lock (terrainObjects[i])
+            {
+                terrainObjects[i].isEnabled = false;
+            }
+        }
     }
 
     // Initialization of important attributes
@@ -138,8 +166,6 @@ public class Chunk : MonoBehaviour {
                 // In other cases
                 else
                 {
-                    
-
                     // Generate the height and biome of the vertex, depending on its horizontal position.
                     map[i, k] = GenerateTerrainMap(i, k, pos);
 
@@ -158,7 +184,6 @@ public class Chunk : MonoBehaviour {
                 }
             }
         }
-
         tempMap = (Vector3[,])map.Clone();
     }
 
@@ -223,6 +248,7 @@ public class Chunk : MonoBehaviour {
         terrain.worldNodes[startI + iPos + 1, startK + jPos + 1] = worldPositions[2];
 
         terrain.world[startI + iPos, startK + jPos] = tile;
+        tiles.Add(tile);
     }
 
     // Generate the mesh of this chunk
@@ -512,5 +538,10 @@ public class Chunk : MonoBehaviour {
 
         return chunks.ToArray();
 
+    }
+
+    public void AddTerrainObject(TerrainObject obj)
+    {
+        terrainObjects.Add(obj);
     }
 }

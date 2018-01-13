@@ -272,7 +272,7 @@ public class CameraController : MonoBehaviour
 
         // Determine a y movement of the camera based on the input the scrollspeed setting the previously calculated zoomHeightFactor.
         // Also move the camera up and down based on how the terrain change underneath due to horizontal camera movement (hitPointDiff)
-        float y = scrollInput * scrollSpeed * zoomHeightFactor * Time.deltaTime + hitPointDiff;
+        float y = scrollInput * scrollSpeed * zoomHeightFactor + hitPointDiff;
 
         // Calculate the difference in height of the ground wrt to the absolute axis system
         float heightDiff = transform.position.y - camHeight;

@@ -182,7 +182,7 @@ public class WorldController : ScriptableObject
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
     public bool CanBuild(Vector3 pos, float size, GameObject buildObj, float scale, Quaternion rotation, bool neglectTerrainObjects)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size + 20);
+        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size + 60);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
         Collider[] colliders = Physics.OverlapBox(buildObj.GetComponentInChildren<BoxCollider>().center * scale + pos, buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale, rotation, notTerrain);
 
@@ -194,8 +194,9 @@ public class WorldController : ScriptableObject
         if (pos.y <= TerrainController.thisTerrainController.waterLevel)
             return false;
 
-        float lowPoint = gridtiles[0].position.y;
-        float highPoint = gridtiles[0].position.y;
+        float lowPoint = pos.y;
+        float highPoint = pos.y;
+        bool heighSet = false;
         foreach (GridTile tile in gridtiles)
         {
             if (tile.isOutsideBorder)
@@ -207,10 +208,15 @@ public class WorldController : ScriptableObject
                     highPoint = tile.position.y;
                 else if (tile.gridNodes[i].position.y < lowPoint)
                     lowPoint = tile.position.y;
+
+                if (tile.gridNodes[i].heighIsSet)
+                    heighSet = true;
             }
 
+            
+
         }
-        if (highPoint - lowPoint > 10)
+        if ((highPoint - lowPoint > 40 || lowPoint < TerrainController.thisTerrainController.waterLevel) && heighSet)
             return false;
 
         if (BuildingHeight(pos, size * scale) == -1)

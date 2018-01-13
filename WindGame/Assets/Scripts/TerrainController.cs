@@ -9,15 +9,11 @@ using UnityEngine.SceneManagement;
 public class TerrainController : MonoBehaviour {
 
     [Header("Terrain Details")]
-    //[HideInInspector]
     public int length;
-    //[HideInInspector]
     public int width;
-    //[HideInInspector]
     public int maxHeight;
     public Biome[] biomes;
     public int objectPerTile;
-    //[HideInInspector]
     public int seed;
     public bool isFlatShaded;
 
@@ -40,27 +36,19 @@ public class TerrainController : MonoBehaviour {
 
 
     [Header("Perline Noise Attributes")]
-    //[HideInInspector]
     public int terrainOctaves;
-    //[HideInInspector]
     public float terrainPersistance;
-    //[HideInInspector]
     public float terrainFrequency;
-    //[HideInInspector]
     public int biomeOctaves;
-    //[HideInInspector]
     public float biomePersistance;
-    //[HideInInspector]
     public float biomeFrequency;
 
     [Header("Chunk Details")]
     public GameObject chunkPrefab;
-    //[HideInInspector]
     public int chunkSize;
-    //[HideInInspector]
     public int tileSize;
-    //[HideInInspector]
     public int tileSlope;
+    public float chunkFadeDistance;
 
     [Header("City Details")]
     public GameObject city;
@@ -68,19 +56,12 @@ public class TerrainController : MonoBehaviour {
     [Header("Water Details")]
     public GameObject waterChunkPrefab;
     public GameObject waterUnderLayerPrefab;
-    //[HideInInspector]
     public int waterChunkSize;
-    //[HideInInspector]
     public int waterTileSize;
-    //[HideInInspector]
     public int waterOctaves;
-    //[HideInInspector]
     public float waterPersistance;
-    //[HideInInspector]
     public float waterFrequency;
-    //[HideInInspector]
     public float waterLevel;
-    //[HideInInspector]
     public float maxWaveHeight;
 
     [Header("Camera")]
@@ -121,7 +102,7 @@ public class TerrainController : MonoBehaviour {
 
     void Awake()
     {
-        MyThreadPool.StartThreadPool();
+        MyThreadPool.StartThreadPool(SystemInfo.processorCount - 1);
 
         // Set this to the terraincontroller
         thisTerrainController = this;
@@ -134,6 +115,48 @@ public class TerrainController : MonoBehaviour {
         {
             BuildButton();
         }
+    }
+
+    private void Update()
+    {
+        if (!levelLoaded)
+            return;
+
+        foreach(Chunk chunk in chunks)
+        {
+            Vector2 chunk2D = new Vector2(chunk.transform.position.x, chunk.transform.position.z);
+            Vector2 cam2D = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z);
+
+            Vector2 camForward = new Vector2(Camera.main.transform.forward.x, Camera.main.transform.forward.z);
+            Vector2 dir = chunk2D - (cam2D - camForward * 5000);
+
+            if (Vector2.Distance(chunk2D, cam2D) > chunkFadeDistance || (Vector2.Dot(camForward, dir) < 0 && Vector2.Distance(chunk2D, cam2D) > chunkFadeDistance/3f))
+                chunk.gameObject.SetActive(false);
+            else
+            {
+                chunk.gameObject.SetActive(true);
+            }
+        }
+
+        //foreach (List<List<GameObject>> LLObj in worldObjects)
+        //{
+        //    foreach (List<GameObject> LObj in LLObj)
+        //    {
+        //        foreach (GameObject obj in LObj)
+        //        {
+
+        //            if (obj.GetComponent<TerrainObject>().isEmpty)
+        //                continue;
+        //            Vector2 obj2D = new Vector2(obj.transform.position.x, obj.transform.position.z);
+        //            Vector2 cam2D = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z);
+
+        //            if (Vector2.Distance(obj2D, cam2D) > chunkFadeDistance)
+        //                obj.gameObject.SetActive(false);
+        //            else
+        //                obj.gameObject.SetActive(true);
+        //        }
+        //    }
+        //}
     }
 
     // This method is used if the build button in the map editor is run
@@ -240,7 +263,7 @@ public class TerrainController : MonoBehaviour {
 
         yield return null;
 
-        if (isIsland || isCoastLine)
+        //if (isIsland || isCoastLine)
             // Build the water chunks
             BuildWater();
 
@@ -271,18 +294,19 @@ public class TerrainController : MonoBehaviour {
         // Index to keep track of how much time it takes
         float timeSinceUpdate = Time.realtimeSinceStartup;
         // Loop through each grid tile in the world
-        for (int i = 0; i < world.GetLength(0); i++)
+        for (int i = 0; i < chunks.Count; i++)
         {
-            for (int k = 0; k < world.GetLength(1); k++)
+            for (int k = 0; k < chunks[i].tiles.Count; k++)
             {
+                GridTile tile = chunks[i].tiles[k];
                 // If the grid tile is under the water level, don't do anything.
-                if (world[i, k] == null)
+                if (tile == null)
                     continue;
-                if (world[i, k].position.y < waterLevel)
+                if (tile.position.y < waterLevel)
                     continue;
 
-                // Get all Meshes with paramters of the biome
-                BiomeMesh curBiomeMesh = biomeMeshes[Mathf.FloorToInt(world[i,k].biome)];
+                // Get all Meshes with parameters of the biome
+                BiomeMesh curBiomeMesh = biomeMeshes[Mathf.FloorToInt(tile.biome)];
                 List<float> occurances = curBiomeMesh.occurance;
                 int objectsPerTile = curBiomeMesh.objectsPerTile*tileSize/20;
 
@@ -315,10 +339,10 @@ public class TerrainController : MonoBehaviour {
                             float scale = minScale[j] + (float)rand.NextDouble() * (maxScale[j] - minScale[j]);
                             float rot = minRot[j] + (float)rand.NextDouble() * (maxRot[j] - minRot[j]);
 
-                            Vector3 pos = world[i, k].position + Vector3.right * tileSize * ((float)rand.NextDouble() -0.5f) + Vector3.forward * tileSize * ((float)rand.NextDouble() - 0.5f);
+                            Vector3 pos = tile.position + Vector3.right * tileSize * ((float)rand.NextDouble() -0.5f) + Vector3.forward * tileSize * ((float)rand.NextDouble() - 0.5f);
                             
                             // Generate the object
-                            GenerateObject(pos, Quaternion.Euler(0, rot, 0), Vector3.one * scale, Mathf.FloorToInt(world[i, k].biome), j, world[i, k]);
+                            GenerateObject(pos, Quaternion.Euler(0, rot, 0), Vector3.one * scale, Mathf.FloorToInt(tile.biome), j, tile, chunks[i]);
 
                             // Break the loop for this grid tile
                             break;
@@ -336,8 +360,23 @@ public class TerrainController : MonoBehaviour {
                     yield return null;
                     timeSinceUpdate = Time.realtimeSinceStartup;
                 }
-
             }
+
+            for (int biome = 0; biome < biomes.Length; biome++)
+            {
+                for (int objs = 0; objs < worldObjects[biome].Count; objs++)
+                {
+
+                    List<GameObject> curGameObjectList = worldObjects[biome][objs];
+
+                    if (curGameObjectList.Count < 2)
+                        continue;
+
+                    curGameObjectList[curGameObjectList.Count - 1].GetComponent<TerrainObject>().verticesNow = 10001;
+
+                }
+            }
+
         }
 
         // When done, be sure the check if all meshes have been updated
@@ -347,22 +386,23 @@ public class TerrainController : MonoBehaviour {
     // Method that checks if all biome object meshes have been updated
     void BuildMeshesAll()
     {
+
         // Loop trhough all object lists that are in the world
         foreach (List<List<GameObject>> biomeList in worldObjects)
         {
+
             foreach (List<GameObject> objList in biomeList)
             {
+
                 int index = 0;
                 foreach (GameObject curObject in objList)
                 {
+
                     // if the mesh has not reloaded and it is not the first one in the list (prefab), reload it
                     if (!curObject.GetComponent<TerrainObject>().hasReloaded && index != 0)
                     {
-                        curObject.GetComponent<TerrainObject>().Reload();
-                        curObject.GetComponent<TerrainObject>().FinalizeObject();
 
-                        if (curObject.GetComponent<AnimationParameters>() != null)
-                            curObject.GetComponent<AnimationParameters>().DetermineAnimationParameters();
+                        curObject.GetComponent<TerrainObject>().Reload();
                     }
                     index++;
                 }
@@ -387,7 +427,7 @@ public class TerrainController : MonoBehaviour {
 
 
         if (SceneManager.GetActiveScene().name == "1_Persia")
-            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 200, 200, 200, 200, true);
+            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 50, 50, 50, 50, true);
         else if (SceneManager.GetActiveScene().name == "4_UnitedStates")
             WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
         else if (SceneManager.GetActiveScene().name == "6_NorthSea")
@@ -401,7 +441,7 @@ public class TerrainController : MonoBehaviour {
     }
 
     // Method that generates an object on the terrain based on the inputs
-    void GenerateObject(Vector3 position, Quaternion rotation, Vector3 scale, int biome, int objIndex, GridTile gridTile)
+    void GenerateObject(Vector3 position, Quaternion rotation, Vector3 scale, int biome, int objIndex, GridTile gridTile, Chunk chunk)
     {
         // create a TerrainObject
         TerrainObject curterrainObject;
@@ -416,7 +456,9 @@ public class TerrainController : MonoBehaviour {
         if (curGameObjectList.Count < 2 || curGameObjectList[count - 1].GetComponent<TerrainObject>().isFull)
         {
             // Add another instance of the prefab (on index 0) to the list
-            curGameObjectList.Add(Instantiate(curGameObjectList[0]));
+            GameObject obj = Instantiate(curGameObjectList[0]);
+            curGameObjectList.Add(obj);
+            chunk.AddTerrainObject(obj.GetComponent<TerrainObject>());
 
             // recalculate the count
             count = curGameObjectList.Count;
@@ -464,8 +506,6 @@ public class TerrainController : MonoBehaviour {
         // If the gameobject has more vertices than the maximum allowed reload the mesh and set it to full
         if (curterrainObject.verticesNow > curterrainObject.vertexMax)
         {
-            curterrainObject.isFull = true;
-            curterrainObject.hasReloaded = true;
             curterrainObject.Reload();
         }
 

@@ -294,15 +294,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: isIsland
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: length
-      value: 5000
+      value: 8000
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: width
-      value: 5000
+      value: 8000
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: terrainPersistance
@@ -310,7 +310,47 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: tileSize
-      value: 10
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: waterLevel
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: maxHeight
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: chunkFadeDistance
+      value: 2500
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: objectsFadeDistance
+      value: 2500
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: chunkSize
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].occurance
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[1].biomeObjects.Array.data[0].occurance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[2].biomeObjects.Array.data[0].occurance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[2].biomeObjects.Array.data[1].occurance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: biomes.Array.data[3].biomeObjects.Array.data[0].occurance
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
@@ -761,7 +801,7 @@ MonoBehaviour:
   maxTranslationSpeed: 300
   minTranslationSpeed: 80
   camSpeedRot: 8.333333
-  scrollSpeed: 10000
+  scrollSpeed: 166.66667
   baseZoomSpeed: 1
   maxZoomSpeed: 40
   translationFormulaPow: 0.8
@@ -819,7 +859,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 4
-  far clip plane: 5000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 80

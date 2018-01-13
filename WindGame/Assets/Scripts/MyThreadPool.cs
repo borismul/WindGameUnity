@@ -5,19 +5,23 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 
-public class MyThreadPool {
+public class MyThreadPool
+{
 
     static int numThreads;
-    static PoolThread[] workers;
-
-    static Task[] threadTasks;
+    public static PoolThread[] workers;
+    public static bool abort = false;
     public static List<Task> taskQueue = new List<Task>();
-
+    public static int waitingThreads = 0;
     public static readonly object queueLocker = new object();
 
-    public static void StartThreadPool()
+    public static readonly object waitingThreadsLocker = new object();
+
+
+    public static void StartThreadPool(int NumThreads)
     {
-        Initialize();
+        Initialize(NumThreads);
+        abort = false;
         Run();
     }
 
@@ -28,7 +32,7 @@ public class MyThreadPool {
         lock (queueLocker)
             taskQueue.Add(task);
 
-        for(int i = 0; i < workers.Length; i++)
+        for (int i = 0; i < workers.Length; i++)
         {
             lock (workers[i].eventLocker)
             {
@@ -38,11 +42,10 @@ public class MyThreadPool {
         return task;
     }
 
-    static void Initialize()
+    static void Initialize(int NumThreads)
     {
-        numThreads = SystemInfo.processorCount-1;
+        numThreads = NumThreads;
         workers = new PoolThread[numThreads];
-        threadTasks = new Task[numThreads];
     }
 
     static void Run()
@@ -51,9 +54,21 @@ public class MyThreadPool {
         for (int i = 0; i < numThreads; i++)
         {
             int threadNum = i;
-            workers[i] = new PoolThread();
+            workers[i] = new PoolThread(threadNum);
         }
 
+    }
+
+    public static void DestroyThreadPool()
+    {
+        abort = true;
+        waitingThreads = 0;
+    }
+
+    public static int GetWaitingThreads()
+    {
+        lock (waitingThreadsLocker)
+            return waitingThreads;
     }
 }
 
@@ -88,37 +103,50 @@ public class Task
 public class PoolThread
 {
     public Task task;
-    Thread thread;
+    public Thread thread;
     int threadNum;
     public ManualResetEvent threadCanStart;
 
     public readonly object eventLocker = new object();
 
-    public PoolThread()
+    public PoolThread(int threadNum)
     {
         threadCanStart = new ManualResetEvent(true);
         thread = new Thread(delegate () { Worker(); });
         thread.Priority = System.Threading.ThreadPriority.Lowest;
         thread.IsBackground = true;
-
+        this.threadNum = threadNum;
         thread.Start();
     }
 
     public void GetTask()
     {
-        if (MyThreadPool.taskQueue.Count > 0)
+        lock (MyThreadPool.queueLocker)
         {
-            lock (MyThreadPool.queueLocker)
+            if (MyThreadPool.taskQueue.Count > 0)
             {
                 task = MyThreadPool.taskQueue[0];
                 MyThreadPool.taskQueue.RemoveAt(0);
             }
+            else
+            {
+                task = null;
+                lock (eventLocker)
+                    threadCanStart.Reset();
+            }
         }
-        else
+
+    }
+
+    void SetWaitingThreads(bool plus)
+    {
+        lock (MyThreadPool.waitingThreadsLocker)
         {
-            task = null;
-            lock (eventLocker)
-                threadCanStart.Reset();
+            if (plus)
+                MyThreadPool.waitingThreads++;
+
+            else
+                MyThreadPool.waitingThreads--;
         }
     }
 
@@ -126,14 +154,24 @@ public class PoolThread
     {
         while (true)
         {
+            SetWaitingThreads(true);
             threadCanStart.WaitOne();
+            if (MyThreadPool.abort)
+                thread.Abort();
+            SetWaitingThreads(false);
+
+
+
             GetTask();
             if (task != null)
             {
                 task.RunTask();
                 task.isDone = true;
             }
+
+
         }
     }
+
 }
 
