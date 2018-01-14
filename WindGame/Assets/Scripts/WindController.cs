@@ -78,11 +78,11 @@ public class WindController : MonoBehaviour {
         float baseWind = magnitude * seasonvalues[seasons[GameResources.getDate().Month - 1]];
 
         //Gets the gridtiles up to 3 tiles around the target
-        GridTile[] nearTiles = GridTile.FindGridTilesAround(tile.position, 80);
+        List<GridTile> nearTiles = GridTile.FindGridTilesAround(tile.position, 80);
         float blockedWind = 0;
         float deltaHeight; float dot; TerrainObject terrainObj;
         float blockedTile =  1;
-        for(int i = 0; i < nearTiles.Length; i++)
+        for(int i = 0; i < nearTiles.Count; i++)
         {
             Vector3 diff = nearTiles[i].position - tile.position;
             diff.y = 0;

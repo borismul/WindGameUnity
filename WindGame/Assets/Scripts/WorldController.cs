@@ -61,7 +61,7 @@ public class WorldController : ScriptableObject
     void EqualTerrain(Vector3 pos, float circleRadius, bool isTemp)
     {
         GridTile middleTile = GridTile.FindClosestGridTile(pos);
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(pos, circleRadius);
 
         List<Chunk> updateChunks = new List<Chunk>();
         foreach(GridTile tile in gridtiles)
@@ -136,7 +136,7 @@ public class WorldController : ScriptableObject
 
     public bool BuildingNearby(Vector3 pos, float diameter)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, diameter);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(pos, diameter);
 
         foreach (GridTile tile in gridtiles)
         {
@@ -154,7 +154,7 @@ public class WorldController : ScriptableObject
 
     public float BuildingHeight(Vector3 pos, float diameter)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, diameter);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(pos, diameter);
         int count = 0;
         float curHeight = -1;
         foreach (GridTile tile in gridtiles)
@@ -182,7 +182,7 @@ public class WorldController : ScriptableObject
     // Function that determines if a tile has an object on it and return true if there is no objects on all the tiles in a circle with size as diameter.
     public bool CanBuild(Vector3 pos, float size, GameObject buildObj, float scale, Quaternion rotation, bool neglectTerrainObjects)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(pos, size + 60);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(pos, size + 60);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
         Collider[] colliders = Physics.OverlapBox(buildObj.GetComponentInChildren<BoxCollider>().center * scale + pos, buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale, rotation, notTerrain);
 
@@ -228,7 +228,7 @@ public class WorldController : ScriptableObject
     // Function that adds on object to all gridtiles in a certian circle radius around a tile with position point.
     void AddToGridTiles(GameObject something, Vector3 point, float circleRadius, GridTileOccupant.OccupantType type)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius + 2*TerrainController.thisTerrainController.tileSize);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(point, circleRadius + 2*TerrainController.thisTerrainController.tileSize);
         foreach (GridTile tile in gridtiles)
         {
             TerrainController.thisTerrainController.RemoveTerrainTileOccupant(tile);
@@ -240,7 +240,7 @@ public class WorldController : ScriptableObject
 
     void RemoveFromGridTiles(Vector3 point, float circleRadius)
     {
-        GridTile[] gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
+        List<GridTile> gridtiles = GridTile.FindGridTilesAround(point, circleRadius);
 
         foreach (GridTile tile in gridtiles)
         {

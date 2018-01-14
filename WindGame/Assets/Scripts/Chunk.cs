@@ -53,6 +53,8 @@ public class Chunk : MonoBehaviour {
 
     List<TerrainObject> terrainObjects = new List<TerrainObject>();
 
+    public bool isActive;
+
     // Use this for initialization
     void Start()
     {
@@ -66,20 +68,10 @@ public class Chunk : MonoBehaviour {
         GenerateTerrainMesh(false, false);
     }
 
-    private void OnEnable()
+    public void Disable()
     {
-        for(int i = 0; i < terrainObjects.Count; i++)
-        {
-            terrainObjects[i].gameObject.SetActive(true);
-            lock (terrainObjects[i])
-            {
-                terrainObjects[i].isEnabled = true;
-            }
-        }
-    }
+        GetComponent<MeshRenderer>().enabled = false;
 
-    private void OnDisable()
-    {
         for (int i = 0; i < terrainObjects.Count; i++)
         {
             terrainObjects[i].gameObject.SetActive(false);
@@ -88,6 +80,25 @@ public class Chunk : MonoBehaviour {
                 terrainObjects[i].isEnabled = false;
             }
         }
+
+        isActive = false;
+
+    }
+
+    public void Enable()
+    {
+
+        GetComponent<MeshRenderer>().enabled = true;
+
+        for (int i = 0; i < terrainObjects.Count; i++)
+        {
+            terrainObjects[i].gameObject.SetActive(true);
+
+            terrainObjects[i].isEnabled = true;
+
+        }
+        isActive = true;
+
     }
 
     // Initialization of important attributes
@@ -448,7 +459,6 @@ public class Chunk : MonoBehaviour {
         // Determine the row and collum in which the texture is situated
         float col = biome;
         float noise = Mathf.Clamp((Noise.PerlinNoise(new Vector2(pos.x, pos.z) + new Vector2(transform.position.x, transform.position.z), offset2D[0], 1, 0.5f, 0.0025f, 0, 1)), 0, 0.7f);
-        // Set the middle point of the texture to the vertex
         uv = new Vector2(col / texturesPerLine, noise / texturesPerLine);
 
         return uv;

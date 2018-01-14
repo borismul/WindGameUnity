@@ -8,7 +8,7 @@ public class TerrainObject : MonoBehaviour {
     public int biome;
     public int objectNR;
     public List<List<Mesh>> newComponents = new List<List<Mesh>>();
-    public int vertexMax = 10000;
+    public int vertexMax = 65000;
     public int verticesNow;
     public bool isFull;
     public bool hasReloaded;
@@ -44,6 +44,10 @@ public class TerrainObject : MonoBehaviour {
     {
         thisMesh = GetComponent<MeshFilter>().mesh;
         thisAnimationParameters = GetComponent<AnimationParameters>();
+    }
+
+    private void OnEnable()
+    {
         StartCoroutine("RemoveObject");
     }
 
@@ -97,7 +101,7 @@ public class TerrainObject : MonoBehaviour {
             }
         }
         newComponents.Clear();
-        if (result.vertexCount > vertexMax || !hasReloaded)
+        if (result.vertexCount > vertexMax || verticesNow > vertexMax || !hasReloaded)
         {
             if (GetComponent<AnimationParameters>() != null)
                 GetComponent<AnimationParameters>().DetermineAnimationParameters();
@@ -216,9 +220,10 @@ public class TerrainObject : MonoBehaviour {
 
     public IEnumerator RemoveObject()
     {
+        int count = 0;
         while (true)
         {
-            while (currentVertices == null)
+            while (currentVertices == null || removeList.Count == 0)
             {
                 yield return null;
             }
@@ -231,7 +236,7 @@ public class TerrainObject : MonoBehaviour {
                     verticesToRemove.Add(removeList[0][j].vertices);
                 object args = verticesToRemove;
 
-                MyThreadPool.AddActionToQueue(MoveMesh, args);
+                MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium);
                 removeList.RemoveAt(0);
             }
 
@@ -241,7 +246,11 @@ public class TerrainObject : MonoBehaviour {
                     GetComponent<MeshFilter>().mesh.vertices = currentVertices;
             }
 
-            yield return null;
+            if (count++ > 10)
+            {
+                yield return null;
+                count = 0;
+            }
         }
     }
     

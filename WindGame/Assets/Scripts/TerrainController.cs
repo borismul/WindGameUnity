@@ -49,6 +49,7 @@ public class TerrainController : MonoBehaviour {
     public int tileSize;
     public int tileSlope;
     public float chunkFadeDistance;
+    public LayerMask chunkMask;
 
     [Header("City Details")]
     public GameObject city;
@@ -100,9 +101,12 @@ public class TerrainController : MonoBehaviour {
 
     int treeCounter = -1;
 
+    int tempCount;
+
     void Awake()
     {
-        MyThreadPool.StartThreadPool(SystemInfo.processorCount - 1);
+        int poolThreads = Mathf.Min(3, Mathf.Max(SystemInfo.processorCount - 1, 1));
+        MyThreadPool.StartThreadPool(poolThreads);
 
         // Set this to the terraincontroller
         thisTerrainController = this;
@@ -122,42 +126,38 @@ public class TerrainController : MonoBehaviour {
         if (!levelLoaded)
             return;
 
-        foreach(Chunk chunk in chunks)
+        ChunkActivate();
+
+
+    }
+
+    void ChunkActivate()
+    {
+
+        for (int i = 0; i < chunks.Count; i++)
         {
-            Vector2 chunk2D = new Vector2(chunk.transform.position.x, chunk.transform.position.z);
-            Vector2 cam2D = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z);
+            chunks[i].Disable();
+        }
 
-            Vector2 camForward = new Vector2(Camera.main.transform.forward.x, Camera.main.transform.forward.z);
-            Vector2 dir = chunk2D - (cam2D - camForward * 5000);
+        foreach (Chunk chunk in chunks)
+        {
 
-            if (Vector2.Distance(chunk2D, cam2D) > chunkFadeDistance || (Vector2.Dot(camForward, dir) < 0 && Vector2.Distance(chunk2D, cam2D) > chunkFadeDistance/3f))
-                chunk.gameObject.SetActive(false);
+            if (chunk.GetComponent<Renderer>().IsVisibleFrom(Camera.main))
+            {
+                if (!chunk.isActive)
+                    chunk.Enable();
+
+            }
             else
             {
-                chunk.gameObject.SetActive(true);
+                if (chunk.isActive)
+                    chunk.Disable();
             }
         }
 
-        //foreach (List<List<GameObject>> LLObj in worldObjects)
-        //{
-        //    foreach (List<GameObject> LObj in LLObj)
-        //    {
-        //        foreach (GameObject obj in LObj)
-        //        {
-
-        //            if (obj.GetComponent<TerrainObject>().isEmpty)
-        //                continue;
-        //            Vector2 obj2D = new Vector2(obj.transform.position.x, obj.transform.position.z);
-        //            Vector2 cam2D = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.z);
-
-        //            if (Vector2.Distance(obj2D, cam2D) > chunkFadeDistance)
-        //                obj.gameObject.SetActive(false);
-        //            else
-        //                obj.gameObject.SetActive(true);
-        //        }
-        //    }
-        //}
     }
+
+
 
     // This method is used if the build button in the map editor is run
     public void BuildButton()
@@ -369,11 +369,10 @@ public class TerrainController : MonoBehaviour {
 
                     List<GameObject> curGameObjectList = worldObjects[biome][objs];
 
-                    if (curGameObjectList.Count < 2)
+                    if (curGameObjectList.Count < 2 && !curGameObjectList[curGameObjectList.Count - 1].GetComponent<TerrainObject>().hasReloaded)
                         continue;
 
-                    curGameObjectList[curGameObjectList.Count - 1].GetComponent<TerrainObject>().verticesNow = 10001;
-
+                    curGameObjectList[curGameObjectList.Count - 1].GetComponent<TerrainObject>().verticesNow = 65001;
                 }
             }
 
@@ -427,7 +426,7 @@ public class TerrainController : MonoBehaviour {
 
 
         if (SceneManager.GetActiveScene().name == "1_Persia")
-            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 50, 50, 50, 50, true);
+            WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 100, 100, 100, 100, true);
         else if (SceneManager.GetActiveScene().name == "4_UnitedStates")
             WorldController.SetBorders(new Vector3(width / 2, 0, length / 2), 30, 30, 40, 40, true);
         else if (SceneManager.GetActiveScene().name == "6_NorthSea")
@@ -442,7 +441,7 @@ public class TerrainController : MonoBehaviour {
 
     // Method that generates an object on the terrain based on the inputs
     void GenerateObject(Vector3 position, Quaternion rotation, Vector3 scale, int biome, int objIndex, GridTile gridTile, Chunk chunk)
-    {
+    { 
         // create a TerrainObject
         TerrainObject curterrainObject;
 
@@ -452,6 +451,12 @@ public class TerrainController : MonoBehaviour {
         // Determine the count
         int count = curGameObjectList.Count;
 
+        // If the gameobject has more vertices than the maximum allowed reload the mesh and set it to full
+        if (curGameObjectList[count - 1].GetComponent<TerrainObject>().verticesNow > curGameObjectList[count - 1].GetComponent<TerrainObject>().vertexMax)
+        {
+            curGameObjectList[count - 1].GetComponent<TerrainObject>().Reload();
+        }
+
         // if the count is lower than 2 or the current gameobject is full add a new gameobject to the list
         if (curGameObjectList.Count < 2 || curGameObjectList[count - 1].GetComponent<TerrainObject>().isFull)
         {
@@ -459,7 +464,7 @@ public class TerrainController : MonoBehaviour {
             GameObject obj = Instantiate(curGameObjectList[0]);
             curGameObjectList.Add(obj);
             chunk.AddTerrainObject(obj.GetComponent<TerrainObject>());
-
+            tempCount = 0;
             // recalculate the count
             count = curGameObjectList.Count;
 
@@ -480,7 +485,7 @@ public class TerrainController : MonoBehaviour {
             curterrainObject.biome = biome;
             curterrainObject.objectNR = objIndex;
         }
-
+        tempCount++;
         // Get the terrainobject component of the last gameobject in the list
         curterrainObject = curGameObjectList[count - 1].GetComponent<TerrainObject>();
 
@@ -503,11 +508,6 @@ public class TerrainController : MonoBehaviour {
             curterrainObject.verticesNow += subMeshes[i].vertexCount;
         }
 
-        // If the gameobject has more vertices than the maximum allowed reload the mesh and set it to full
-        if (curterrainObject.verticesNow > curterrainObject.vertexMax)
-        {
-            curterrainObject.Reload();
-        }
 
         // Set the occupant on the gridtile to this generated object
         GridTileOccupant gridOccupant = new GridTileOccupant(curterrainObject.gameObject, position, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale, GridTileOccupant.OccupantType.TerrainGenerated);

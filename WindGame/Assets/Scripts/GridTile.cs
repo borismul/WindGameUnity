@@ -56,7 +56,7 @@ public class GridTile{
     }
 
     // Find all GridTiles in a radius around point
-    public static GridTile[] FindGridTilesAround(Vector3 point, float circleRadius)
+    public static List<GridTile> FindGridTilesAround(Vector3 point, float circleRadius)
     {
 
         List<GridTile> gridTiles = new List<GridTile>();
@@ -67,7 +67,7 @@ public class GridTile{
         float endTile = circleRadius;
 
         if (middleTile == null)
-            return gridTiles.ToArray();
+            return gridTiles;
 
         for (float i = startTile-1; i < endTile; i += terrain.tileSize)
         {
@@ -84,11 +84,11 @@ public class GridTile{
             }
         }
 
-        return gridTiles.ToArray();
+        return gridTiles;
     }
 
     // Find all GridTiles in a radius around point with an added option to skip tiles in between tiles that are returned
-    public static GridTile[] FindAnnulusAround(Vector3 point, int radius, int annulusTileWidth)
+    public static List<GridTile> FindAnnulusAround(Vector3 point, int radius, int annulusTileWidth)
     {
         List<GridTile> gridTiles = new List<GridTile>();
         GridTile middleTile = FindClosestGridTile(point);
@@ -121,7 +121,7 @@ public class GridTile{
                 }
             }
         }
-        return gridTiles.ToArray();
+        return gridTiles;
     }
 
 

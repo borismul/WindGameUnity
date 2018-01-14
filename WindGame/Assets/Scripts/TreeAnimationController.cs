@@ -53,13 +53,13 @@ public class TreeAnimationController : MonoBehaviour
             for (int i = 0; i < threads.Length; i++)
             {
                 if ((tasks[i] == null || tasks[i].isDone) && treeObjects.Count != 0)
-                    tasks[i] = MyThreadPool.AddActionToQueue(AnimatePart, i);
+                    tasks[i] = MyThreadPool.AddActionToQueue(AnimatePart, i, TaskPriority.low);
             }
             yield return null;
 
             for (int i = 0; i < meshVertices.Count; i++)
             {
-                if(treeObjects[i].isEnabled)
+                if (treeObjects[i].isEnabled)
                     treeObjects[i].GetComponent<MeshFilter>().mesh.vertices = updatedMeshVertices[i];
             }
         }
@@ -79,21 +79,21 @@ public class TreeAnimationController : MonoBehaviour
         {
             int operationsPerThread = Mathf.CeilToInt(treeObjects.Count / threads.Length) + 1;
             // For each terrain object that this thread has to do
+            Vector3 windVector = -Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * WindController.direction), 0, Mathf.Cos(Mathf.Deg2Rad * WindController.direction)));
+
+
             for (int j = (int)i * operationsPerThread; j < (((int)i + 1) * operationsPerThread); j++)
             {
                 if (j >= updatedMeshVertices.Count)
                     break;
 
-                lock (treeObjects[j])
+                if (!treeObjects[j].isEnabled)
                 {
-                    if (!treeObjects[j].isEnabled)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
+                
 
-                Vector3[] newVertPos = new Vector3[meshVertices[j].Length];
-                Vector3 windVector = -Vector3.Normalize(new Vector3(Mathf.Sin(Mathf.Deg2Rad * WindController.direction), 0, Mathf.Cos(Mathf.Deg2Rad * WindController.direction)));
+                //Vector3[] newVertPos = new Vector3[meshVertices[j].Length];
 
                 // for each tree in this object
                 for (int k = 0; k < vertPosPerObject[j].Count; k++)
@@ -104,12 +104,12 @@ public class TreeAnimationController : MonoBehaviour
                     for (int l = 0; l < vertPosPerObject[j][k].Count; l++)
                     {
                         float height = meshVertices[j][vertPosPerObject[j][k][l]].y - lowestVertPerObject[j][k];
-                        newVertPos[vertPosPerObject[j][k][l]] = meshVertices[j][vertPosPerObject[j][k][l]] + Mathf.Sqrt(Mathf.Abs(height)) * move;
+                        updatedMeshVertices[j][vertPosPerObject[j][k][l]] = meshVertices[j][vertPosPerObject[j][k][l]] + Mathf.Sqrt(Mathf.Abs(height)) * move;
 
 
                     }
                 }                
-                updatedMeshVertices[j] = newVertPos;
+                //updatedMeshVertices[j] = newVertPos;
                 
             }
         }

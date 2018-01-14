@@ -66,7 +66,7 @@ public class CityController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        currentMaxHouses += 10;
+        currentMaxHouses += 1;
     }
 
     void UpdateCity()
@@ -78,8 +78,10 @@ public class CityController : MonoBehaviour {
 
     IEnumerator BuildStartCity()
     {
-        GridTile[] gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
+        List<GridTile> gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
         float timer = Time.realtimeSinceStartup;
+        float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+
         while (true)
         {
             while (currentMaxHouses > currentPlacedHouses)
@@ -97,7 +99,6 @@ public class CityController : MonoBehaviour {
                     Quaternion rotation;
 
                     // List of possible orientations
-                    float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
 
                     // Get an angle from the possible orientation
                     float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
@@ -130,7 +131,7 @@ public class CityController : MonoBehaviour {
 
                 yield return null;
 
-                if (currentRadius < 100)
+                if (currentRadius < 20)
                 {
                     currentRadius += 3;
                     gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);

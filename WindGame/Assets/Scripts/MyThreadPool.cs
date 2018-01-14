@@ -5,13 +5,18 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 
+public enum TaskPriority { low, medium, high };
+
 public class MyThreadPool
 {
 
     static int numThreads;
     public static PoolThread[] workers;
     public static bool abort = false;
-    public static List<Task> taskQueue = new List<Task>();
+    public static List<Task> lowTaskQueue = new List<Task>();
+    public static List<Task> mediumTaskQueue = new List<Task>();
+    public static List<Task> highTaskQueue = new List<Task>();
+
     public static int waitingThreads = 0;
     public static readonly object queueLocker = new object();
 
@@ -25,12 +30,20 @@ public class MyThreadPool
         Run();
     }
 
-    public static Task AddActionToQueue(WaitCallback callback, object args)
+    public static Task AddActionToQueue(WaitCallback callback, object args, TaskPriority priority = TaskPriority.low)
     {
 
-        Task task = new Task(callback, args);
+        Task task = new Task(callback, args, priority);
         lock (queueLocker)
-            taskQueue.Add(task);
+        {
+            if (priority == TaskPriority.low)
+                lowTaskQueue.Add(task);
+            else if (priority == TaskPriority.medium)
+                mediumTaskQueue.Add(task);
+            else
+                highTaskQueue.Add(task);
+
+        }
 
         for (int i = 0; i < workers.Length; i++)
         {
@@ -79,11 +92,13 @@ public class Task
     object args;
     public bool isRunning = false;
     public bool isDone = false;
+    TaskPriority priority;
 
-    public Task(WaitCallback callback, object args)
+    public Task(WaitCallback callback, object args, TaskPriority priority)
     {
         this.callback = callback;
         this.args = args;
+        this.priority = priority;
     }
 
     public void RunTask()
@@ -123,10 +138,20 @@ public class PoolThread
     {
         lock (MyThreadPool.queueLocker)
         {
-            if (MyThreadPool.taskQueue.Count > 0)
+            if (MyThreadPool.highTaskQueue.Count > 0)
             {
-                task = MyThreadPool.taskQueue[0];
-                MyThreadPool.taskQueue.RemoveAt(0);
+                task = MyThreadPool.highTaskQueue[0];
+                MyThreadPool.highTaskQueue.RemoveAt(0);
+            }
+            else if(MyThreadPool.mediumTaskQueue.Count > 0)
+            {
+                task = MyThreadPool.mediumTaskQueue[0];
+                MyThreadPool.mediumTaskQueue.RemoveAt(0);
+            }
+            else if (MyThreadPool.lowTaskQueue.Count > 0)
+            {
+                task = MyThreadPool.lowTaskQueue[0];
+                MyThreadPool.lowTaskQueue.RemoveAt(0);
             }
             else
             {
