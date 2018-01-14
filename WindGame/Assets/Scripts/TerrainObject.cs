@@ -26,7 +26,9 @@ public class TerrainObject : MonoBehaviour {
     List<CombineInstance> instances = new List<CombineInstance>();
 
     List<Mesh[]> removeList = new List<Mesh[]>();
+    int count;
 
+    public Renderer ren;
     // Use this for initialization
     void Awake ()
     {
@@ -44,11 +46,13 @@ public class TerrainObject : MonoBehaviour {
     {
         thisMesh = GetComponent<MeshFilter>().mesh;
         thisAnimationParameters = GetComponent<AnimationParameters>();
+        ren = GetComponent<Renderer>();
     }
 
     private void OnEnable()
     {
         StartCoroutine("RemoveObject");
+
     }
 
     private void Update()
@@ -220,7 +224,8 @@ public class TerrainObject : MonoBehaviour {
 
     public IEnumerator RemoveObject()
     {
-        int count = 0;
+
+        count = 0;
         while (true)
         {
             while (currentVertices == null || removeList.Count == 0)
@@ -230,8 +235,8 @@ public class TerrainObject : MonoBehaviour {
 
             if (removeList.Count > 0)
             {
-                List<Vector3[]> verticesToRemove = new List<Vector3[]>();
 
+                List<Vector3[]> verticesToRemove = new List<Vector3[]>();
                 for (int j = 0; j < removeList[0].Length; j++)
                     verticesToRemove.Add(removeList[0][j].vertices);
                 object args = verticesToRemove;
@@ -246,7 +251,7 @@ public class TerrainObject : MonoBehaviour {
                     GetComponent<MeshFilter>().mesh.vertices = currentVertices;
             }
 
-            if (count++ > 10)
+            if (count++ > 5)
             {
                 yield return null;
                 count = 0;

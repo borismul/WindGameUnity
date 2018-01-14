@@ -330,7 +330,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomeFrequency
-      value: 0.0003
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: radius
@@ -342,11 +342,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: length
-      value: 12000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: width
-      value: 12000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: terrainPersistance
@@ -374,7 +374,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: chunkSize
-      value: 500
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomes.Array.data[0].biomeObjects.Array.data[0].occurance
@@ -403,6 +403,14 @@ Prefab:
     - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
       propertyPath: biomes.Array.data[3].biomeObjects.Array.data[0].minRotation
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: chunkMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490242, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}
+      propertyPath: waterChunkSize
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16ed3a58cff29104eaead4843b4c895b, type: 2}

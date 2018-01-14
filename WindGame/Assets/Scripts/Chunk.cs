@@ -55,6 +55,8 @@ public class Chunk : MonoBehaviour {
 
     public bool isActive;
 
+    public Renderer ren;
+
     // Use this for initialization
     void Start()
     {
@@ -66,15 +68,17 @@ public class Chunk : MonoBehaviour {
             GenerateTerrain();
         }
         GenerateTerrainMesh(false, false);
+
+        ren = GetComponent<Renderer>();
     }
 
     public void Disable()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        ren.enabled = false;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].gameObject.SetActive(false);
+            terrainObjects[i].ren.enabled = false;
             lock (terrainObjects[i])
             {
                 terrainObjects[i].isEnabled = false;
@@ -88,11 +92,11 @@ public class Chunk : MonoBehaviour {
     public void Enable()
     {
 
-        GetComponent<MeshRenderer>().enabled = true;
+        ren.enabled = true;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].gameObject.SetActive(true);
+            terrainObjects[i].ren.enabled = true;
 
             terrainObjects[i].isEnabled = true;
 

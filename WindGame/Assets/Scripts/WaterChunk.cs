@@ -23,6 +23,7 @@ public class WaterChunk : MonoBehaviour {
     Mesh mesh;
 
     Vector3[,] map;
+    public Renderer ren;
 
     void Start()
     {
@@ -47,7 +48,8 @@ public class WaterChunk : MonoBehaviour {
 
         terrain = TerrainController.thisTerrainController;
         terrain.waterChunks.Add(this);
-        GetComponent<Renderer>().material.renderQueue = 3000;
+        ren = GetComponent<Renderer>();
+        ren.material.renderQueue = 3000;
 
         size = terrain.waterChunkSize;
         tileSize = terrain.waterTileSize;

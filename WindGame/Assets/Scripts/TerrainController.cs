@@ -110,7 +110,7 @@ public class TerrainController : MonoBehaviour {
 
         // Set this to the terraincontroller
         thisTerrainController = this;
-    }
+}
 
     void Start()
     {
@@ -142,7 +142,7 @@ public class TerrainController : MonoBehaviour {
         foreach (Chunk chunk in chunks)
         {
 
-            if (chunk.GetComponent<Renderer>().IsVisibleFrom(Camera.main))
+            if (chunk.ren.IsVisibleFrom(Camera.main))
             {
                 if (!chunk.isActive)
                     chunk.Enable();
@@ -152,6 +152,20 @@ public class TerrainController : MonoBehaviour {
             {
                 if (chunk.isActive)
                     chunk.Disable();
+            }
+        }
+
+        foreach (WaterChunk chunk in waterChunks)
+        {
+
+            if (chunk.ren.IsVisibleFrom(Camera.main))
+            {
+                chunk.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                chunk.gameObject.SetActive(false);
             }
         }
 
@@ -838,6 +852,11 @@ public class TerrainController : MonoBehaviour {
 
         // Destory the city
         Destroy(curCity);
+    }
+
+    private void OnDestroy()
+    {
+        MyThreadPool.DestroyThreadPool();
     }
 
     // Structs that are used to visualize the biome parameters in the editor
