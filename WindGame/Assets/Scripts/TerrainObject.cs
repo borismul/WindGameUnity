@@ -8,6 +8,8 @@ public class TerrainObject : MonoBehaviour {
     public int biome;
     public int objectNR;
     public List<List<Mesh>> newComponents = new List<List<Mesh>>();
+    public List<Vector3> vertices = new List<Vector3>();
+    public List<List<int>> trianglesPerSubMesh = new List<List<int>>();
     public int vertexMax = 65000;
     public int verticesNow;
     public bool isFull;
@@ -25,7 +27,7 @@ public class TerrainObject : MonoBehaviour {
 
     List<CombineInstance> instances = new List<CombineInstance>();
 
-    List<Mesh[]> removeList = new List<Mesh[]>();
+    List<MoveMeshObj> removeList = new List<MoveMeshObj>();
     int count;
 
     public Renderer ren;
@@ -36,9 +38,7 @@ public class TerrainObject : MonoBehaviour {
 
         for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
         {
-            newComponents.Add(new List<Mesh>());
-            nonCombinedMesh.Add(new Mesh());
-            instances.Add(new CombineInstance());
+            trianglesPerSubMesh.Add(new List<int>());
         }
 	}
 
@@ -60,7 +60,7 @@ public class TerrainObject : MonoBehaviour {
         isEnabled = true;
     }
 
-    public void Reload()
+    public void Reloadt()
     {
         if (result != null)
         {
@@ -116,9 +116,64 @@ public class TerrainObject : MonoBehaviour {
         }
     }
 
-    public void RemoveMesh(Mesh[] mesh)
+    public void Reload()
     {
-        removeList.Add(mesh);
+        if (result != null)
+        {
+            result.Clear();
+        }
+        else
+        {
+            result = new Mesh();
+        }
+
+        result.subMeshCount = trianglesPerSubMesh.Count;
+        result.SetVertices(vertices);
+
+        for (int i = 0; i < trianglesPerSubMesh.Count; i++)
+        {
+            result.SetTriangles(trianglesPerSubMesh[i], i);
+        }
+        result.RecalculateNormals();
+        Destroy(GetComponent<MeshFilter>().mesh);
+        this.GetComponent<MeshFilter>().mesh = result;
+
+        foreach (List<Mesh> destroyMeshList in newComponents)
+        {
+            foreach (Mesh destroyMesh in destroyMeshList)
+            {
+                Destroy(destroyMesh);
+            }
+        }
+        newComponents.Clear();
+        if (result.vertexCount > vertexMax || verticesNow > vertexMax || !hasReloaded)
+        {
+            if (GetComponent<AnimationParameters>() != null)
+                GetComponent<AnimationParameters>().DetermineAnimationParameters();
+
+            isFull = true;
+            hasReloaded = true;
+            currentVertices = GetComponent<MeshFilter>().mesh.vertices;
+        }
+    }
+
+    public void AddTriangles (int[] triangles, int submesh)
+    {
+        int startTri = vertices.Count;
+        for(int i = 0; i < triangles.Length; i++)
+        {
+            trianglesPerSubMesh[submesh].Add(triangles[i] + startTri);
+        }
+    }
+
+    public void AddVertices(List<Vector3> vertices)
+    {
+        this.vertices.AddRange(vertices);
+    }
+
+    public void RemoveMesh(MoveMeshObj moveMesh)
+    {
+        removeList.Add(moveMesh);
     }
 
     void RemoveMeshCompletely(Mesh[] mesh)
@@ -185,40 +240,38 @@ public class TerrainObject : MonoBehaviour {
     }
 
     void MoveMesh(object args)
-    { 
-        List<Vector3[]> verticesToRemoveList = (List<Vector3[]>)args;
+    {
+        MoveMeshObj removeObj = (MoveMeshObj)args;
         lock (verticesLocker)
         {
-            for (int k = 0; k < verticesToRemoveList.Count; k++)
+            
+            // Vertices
+            if (thisAnimationParameters != null)
+                currentVertices = TreeAnimationController.instance.meshVertices[animationNumber];
+
+            Vector3 firstVert = removeObj.startVert;
+
+            int minVertPos = 0;
+
+            for (int i = 0; i < currentVertices.Length; i++)
             {
-                // Vertices
-                if (thisAnimationParameters != null)
-                    currentVertices = TreeAnimationController.instance.meshVertices[animationNumber];
-
-                Vector3[] verticesToRemove = verticesToRemoveList[k];
-                Vector3 firstVert = verticesToRemove[0];
-
-                int minVertPos = 0;
-
-                for (int i = 0; i < currentVertices.Length; i++)
+                if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
                 {
-                    if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
-                    {
-                        minVertPos = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < verticesToRemove.Length; i++)
-                {
-                    currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
-                }
-
-                if (thisAnimationParameters != null)
-                {
-                    TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
+                    minVertPos = i;
+                    break;
                 }
             }
+
+            for (int i = 0; i < removeObj.totalVert; i++)
+            {
+                currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
+            }
+
+            if (thisAnimationParameters != null)
+            {
+                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
+                }
+            
         }
     }
 
@@ -236,20 +289,17 @@ public class TerrainObject : MonoBehaviour {
             if (removeList.Count > 0)
             {
 
-                List<Vector3[]> verticesToRemove = new List<Vector3[]>();
-                for (int j = 0; j < removeList[0].Length; j++)
-                    verticesToRemove.Add(removeList[0][j].vertices);
-                object args = verticesToRemove;
+
+                object args = removeList[0];
 
                 MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium);
                 removeList.RemoveAt(0);
             }
 
-            lock (verticesLocker)
-            {
-                if (thisAnimationParameters == null && currentVertices != null)
-                    GetComponent<MeshFilter>().mesh.vertices = currentVertices;
-            }
+
+            if (thisAnimationParameters == null && currentVertices != null)
+                GetComponent<MeshFilter>().mesh.vertices = currentVertices;
+            
 
             if (count++ > 5)
             {
@@ -259,4 +309,16 @@ public class TerrainObject : MonoBehaviour {
         }
     }
     
+}
+
+
+public struct MoveMeshObj
+{
+    public Vector3 startVert;
+    public int totalVert;
+    public MoveMeshObj(Vector3 startVert, int totalVert)
+    {
+        this.startVert = startVert;
+        this.totalVert = totalVert;
+    }
 }
