@@ -79,10 +79,7 @@ public class Chunk : MonoBehaviour {
         for (int i = 0; i < terrainObjects.Count; i++)
         {
             terrainObjects[i].ren.enabled = false;
-            lock (terrainObjects[i])
-            {
-                terrainObjects[i].isEnabled = false;
-            }
+            terrainObjects[i].isEnabled = false;
         }
 
         isActive = false;
@@ -97,7 +94,6 @@ public class Chunk : MonoBehaviour {
         for (int i = 0; i < terrainObjects.Count; i++)
         {
             terrainObjects[i].ren.enabled = true;
-
             terrainObjects[i].isEnabled = true;
 
         }

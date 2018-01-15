@@ -55,11 +55,6 @@ public class TerrainObject : MonoBehaviour {
 
     }
 
-    private void Update()
-    {
-        isEnabled = true;
-    }
-
     public void Reloadt()
     {
         if (result != null)
@@ -301,7 +296,7 @@ public class TerrainObject : MonoBehaviour {
                 GetComponent<MeshFilter>().mesh.vertices = currentVertices;
             
 
-            if (count++ > 5)
+            if (count++ > 10)
             {
                 yield return null;
                 count = 0;
