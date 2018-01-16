@@ -117,10 +117,10 @@ public class CityController : MonoBehaviour {
 
                     if (currentPlacedHouses >= currentMaxHouses)
                         break;
+                    yield return null;
 
                     if (Time.realtimeSinceStartup - timer > 1 / 60f)
                     {
-                        yield return null;
                         timer = Time.realtimeSinceStartup;
                     }
                 }
@@ -131,7 +131,7 @@ public class CityController : MonoBehaviour {
 
                 yield return null;
 
-                if (currentRadius < 20)
+                if (currentRadius < 100)
                 {
                     currentRadius += 3;
                     gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);

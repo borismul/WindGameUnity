@@ -8,6 +8,8 @@ public class TerrainObject : MonoBehaviour {
     public int biome;
     public int objectNR;
     public List<List<Mesh>> newComponents = new List<List<Mesh>>();
+    public List<Vector3> vertices = new List<Vector3>();
+    public List<List<int>> trianglesPerSubMesh = new List<List<int>>();
     public int vertexMax = 65000;
     public int verticesNow;
     public bool isFull;
@@ -19,14 +21,17 @@ public class TerrainObject : MonoBehaviour {
     Mesh thisMesh;
     AnimationParameters thisAnimationParameters;
     Vector3[] currentVertices;
+    bool updateCurrentVertices;
     List<Mesh> nonCombinedMesh = new List<Mesh>();
     Mesh result;
     public bool isEnabled = true;
 
     List<CombineInstance> instances = new List<CombineInstance>();
 
-    List<Mesh[]> removeList = new List<Mesh[]>();
+    List<MoveMeshObj> removeList = new List<MoveMeshObj>();
+    int count;
 
+    public Renderer ren;
     // Use this for initialization
     void Awake ()
     {
@@ -34,9 +39,7 @@ public class TerrainObject : MonoBehaviour {
 
         for (int i = 0; i< GetComponent<MeshRenderer>().materials.Length; i++)
         {
-            newComponents.Add(new List<Mesh>());
-            nonCombinedMesh.Add(new Mesh());
-            instances.Add(new CombineInstance());
+            trianglesPerSubMesh.Add(new List<int>());
         }
 	}
 
@@ -44,19 +47,16 @@ public class TerrainObject : MonoBehaviour {
     {
         thisMesh = GetComponent<MeshFilter>().mesh;
         thisAnimationParameters = GetComponent<AnimationParameters>();
+        ren = GetComponent<Renderer>();
     }
 
     private void OnEnable()
     {
         StartCoroutine("RemoveObject");
+
     }
 
-    private void Update()
-    {
-        isEnabled = true;
-    }
-
-    public void Reload()
+    public void Reloadt()
     {
         if (result != null)
         {
@@ -112,9 +112,64 @@ public class TerrainObject : MonoBehaviour {
         }
     }
 
-    public void RemoveMesh(Mesh[] mesh)
+    public void Reload()
     {
-        removeList.Add(mesh);
+        if (result != null)
+        {
+            result.Clear();
+        }
+        else
+        {
+            result = new Mesh();
+        }
+
+        result.subMeshCount = trianglesPerSubMesh.Count;
+        result.SetVertices(vertices);
+
+        for (int i = 0; i < trianglesPerSubMesh.Count; i++)
+        {
+            result.SetTriangles(trianglesPerSubMesh[i], i);
+        }
+        result.RecalculateNormals();
+        Destroy(GetComponent<MeshFilter>().mesh);
+        this.GetComponent<MeshFilter>().mesh = result;
+
+        foreach (List<Mesh> destroyMeshList in newComponents)
+        {
+            foreach (Mesh destroyMesh in destroyMeshList)
+            {
+                Destroy(destroyMesh);
+            }
+        }
+        newComponents.Clear();
+        if (result.vertexCount > vertexMax || verticesNow > vertexMax || !hasReloaded)
+        {
+            if (GetComponent<AnimationParameters>() != null)
+                GetComponent<AnimationParameters>().DetermineAnimationParameters();
+
+            isFull = true;
+            hasReloaded = true;
+            currentVertices = GetComponent<MeshFilter>().mesh.vertices;
+        }
+    }
+
+    public void AddTriangles (int[] triangles, int submesh)
+    {
+        int startTri = vertices.Count;
+        for(int i = 0; i < triangles.Length; i++)
+        {
+            trianglesPerSubMesh[submesh].Add(triangles[i] + startTri);
+        }
+    }
+
+    public void AddVertices(List<Vector3> vertices)
+    {
+        this.vertices.AddRange(vertices);
+    }
+
+    public void RemoveMesh(MoveMeshObj moveMesh)
+    {
+        removeList.Add(moveMesh);
     }
 
     void RemoveMeshCompletely(Mesh[] mesh)
@@ -181,46 +236,49 @@ public class TerrainObject : MonoBehaviour {
     }
 
     void MoveMesh(object args)
-    { 
-        List<Vector3[]> verticesToRemoveList = (List<Vector3[]>)args;
-        lock (verticesLocker)
-        {
-            for (int k = 0; k < verticesToRemoveList.Count; k++)
+    {
+        MoveMeshObj removeObj = (MoveMeshObj)args;
+
+            
+            // Vertices
+            if (thisAnimationParameters != null)
+                currentVertices = TreeAnimationController.instance.meshVertices[animationNumber];
+
+            Vector3 firstVert = removeObj.startVert;
+
+            int minVertPos = 0;
+
+            for (int i = 0; i < currentVertices.Length; i++)
             {
-                // Vertices
-                if (thisAnimationParameters != null)
-                    currentVertices = TreeAnimationController.instance.meshVertices[animationNumber];
-
-                Vector3[] verticesToRemove = verticesToRemoveList[k];
-                Vector3 firstVert = verticesToRemove[0];
-
-                int minVertPos = 0;
-
-                for (int i = 0; i < currentVertices.Length; i++)
+                if (Vector3.Distance(currentVertices[i], firstVert) < 0.01f)
                 {
-                    if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
-                    {
-                        minVertPos = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < verticesToRemove.Length; i++)
-                {
-                    currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
-                }
-
-                if (thisAnimationParameters != null)
-                {
-                    TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
+                    minVertPos = i;
+                    break;
                 }
             }
-        }
+
+
+            for (int i = 0; i < removeObj.totalVert; i++)
+            {
+                lock(currentVertices)
+                    currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
+            }
+
+            if (thisAnimationParameters != null)
+            {
+            
+                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
+            }
+            
+        
+
+        updateCurrentVertices = true;
     }
 
     public IEnumerator RemoveObject()
     {
-        int count = 0;
+        List<Task> tasks = new List<Task>();
+        count = 0;
         while (true)
         {
             while (currentVertices == null || removeList.Count == 0)
@@ -228,25 +286,30 @@ public class TerrainObject : MonoBehaviour {
                 yield return null;
             }
 
-            if (removeList.Count > 0)
+            while (removeList.Count > 0)
             {
-                List<Vector3[]> verticesToRemove = new List<Vector3[]>();
 
-                for (int j = 0; j < removeList[0].Length; j++)
-                    verticesToRemove.Add(removeList[0][j].vertices);
-                object args = verticesToRemove;
 
-                MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium);
+                object args = removeList[0];
+
+                tasks.Add(MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium));
                 removeList.RemoveAt(0);
             }
 
-            lock (verticesLocker)
+            for(int i = 0; i < tasks.Count;i++)
             {
-                if (thisAnimationParameters == null && currentVertices != null)
-                    GetComponent<MeshFilter>().mesh.vertices = currentVertices;
+                while (!tasks[i].isDone)
+                    yield return null;
             }
 
-            if (count++ > 10)
+            if (thisAnimationParameters == null && currentVertices != null && updateCurrentVertices)
+            {
+                GetComponent<MeshFilter>().mesh.vertices = currentVertices;
+                updateCurrentVertices = false;
+            }
+            
+
+            if (count++ > 1)
             {
                 yield return null;
                 count = 0;
@@ -254,4 +317,16 @@ public class TerrainObject : MonoBehaviour {
         }
     }
     
+}
+
+
+public struct MoveMeshObj
+{
+    public Vector3 startVert;
+    public int totalVert;
+    public MoveMeshObj(Vector3 startVert, int totalVert)
+    {
+        this.startVert = startVert;
+        this.totalVert = totalVert;
+    }
 }

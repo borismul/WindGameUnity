@@ -102,6 +102,8 @@ public class TerrainController : MonoBehaviour {
     int treeCounter = -1;
 
     int tempCount;
+    List<Vector3> vertNew = new List<Vector3>();
+
 
     void Awake()
     {
@@ -110,7 +112,7 @@ public class TerrainController : MonoBehaviour {
 
         // Set this to the terraincontroller
         thisTerrainController = this;
-    }
+}
 
     void Start()
     {
@@ -142,7 +144,7 @@ public class TerrainController : MonoBehaviour {
         foreach (Chunk chunk in chunks)
         {
 
-            if (chunk.GetComponent<Renderer>().IsVisibleFrom(Camera.main))
+            if (chunk.ren.IsVisibleFrom(Camera.main))
             {
                 if (!chunk.isActive)
                     chunk.Enable();
@@ -152,6 +154,20 @@ public class TerrainController : MonoBehaviour {
             {
                 if (chunk.isActive)
                     chunk.Disable();
+            }
+        }
+
+        foreach (WaterChunk chunk in waterChunks)
+        {
+
+            if (chunk.ren.IsVisibleFrom(Camera.main))
+            {
+                chunk.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                chunk.gameObject.SetActive(false);
             }
         }
 
@@ -502,7 +518,7 @@ public class TerrainController : MonoBehaviour {
         for (int i = 0; i < subMeshes.Length; i++)
         {
             // Add the submesh, moved to the right spot, scale and rotation, to the newcomponents list
-            curterrainObject.newComponents[i].Add(MoveMesh(subMeshes[i], position, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale));
+            MoveMesh(curterrainObject, subMeshes[i], i, position, Quaternion.Euler(new Vector3(-90, 0, 0) + rotation.eulerAngles), scale);
 
             // Determine the vertex count of the total mesh
             curterrainObject.verticesNow += subMeshes[i].vertexCount;
@@ -516,13 +532,10 @@ public class TerrainController : MonoBehaviour {
     }
 
     // Method that moves, rotates and scales a mesh
-    Mesh MoveMesh(Mesh mesh, Vector3 trans, Quaternion rotate, Vector3 scale)
+    void MoveMesh(TerrainObject terrainObject, Mesh mesh, int subMesh, Vector3 trans, Quaternion rotate, Vector3 scale)
     {
-        // create a new mesh
-        Mesh result = new Mesh();
-
         // make a new list of vector3 which will hold the vertices
-        Vector3[] vertNew = new Vector3[mesh.vertexCount];
+        vertNew.Clear();
 
         // Keep track of the index in the foreach loop
         int index = 0;
@@ -531,28 +544,16 @@ public class TerrainController : MonoBehaviour {
         foreach (Vector3 vert in mesh.vertices)
         {
             // scale, rotate and move the vertex according to inputs
-            vertNew[index] = new Vector3(vert.x * scale.x, vert.y* scale.y, vert.z* scale.z);
+            vertNew.Add(new Vector3(vert.x * scale.x, vert.y* scale.y, vert.z* scale.z));
             vertNew[index] = rotate * vertNew[index];
             vertNew[index] = vertNew[index] + trans;
 
             index++;
         }
-        
-        // set the vertices and the submeshcount in the new mesh
-        result.vertices = vertNew;
-        result.subMeshCount = mesh.subMeshCount;
 
-        // loop thourgh all submeshes in the inputted mesh
-        for (int i = 0; i < mesh.subMeshCount; i++)
-        {
-            // set the triangles in the submesh to the new mesh
-            result.SetTriangles(mesh.GetTriangles(i), i);
-        }
-        // set the uv and normals of the old mesh
-        result.uv = mesh.uv;
-        result.normals = mesh.normals;
+        terrainObject.AddTriangles(mesh.triangles, subMesh);
+        terrainObject.AddVertices(vertNew);
 
-        return result;
     }
 
     // Get submeshes of a prefab
@@ -662,19 +663,21 @@ public class TerrainController : MonoBehaviour {
                 // Get the submeshes that should be in this particular terrain object from the biomemeshes
                 Mesh[] objMeshes = thisTerrainController.biomeMeshes[terrainObj.biome].mesh[terrainObj.objectNR];
 
-                // create an array of meshes that should be removed
-                Mesh[] removeMesh = new Mesh[objMeshes.Length];
+                // create an object of with info of the object that should be removed
 
                 // for each of these meshes
                 for (int k = 0; k < objMeshes.Length; k++)
                 {
-                    // Add a copy of the mesh that should be removed. Move, rotate and scale it as it is in the game.
-                    removeMesh[k] = MoveMesh(objMeshes[k], tile.occupants[i].position - terrainObj.transform.position, tile.occupants[i].rotation, tile.occupants[i].scale);
-                }
+                    Vector3 startVert = objMeshes[k].vertices[0];
+                    startVert = new Vector3(startVert.x * tile.occupants[i].scale.x, startVert.y * tile.occupants[i].scale.y, startVert.z * tile.occupants[i].scale.z);
+                    // scale, rotate and move the vertex according to inputs
+                    startVert = tile.occupants[i].rotation * startVert;
+                    startVert = startVert + (tile.occupants[i].position - terrainObj.transform.position);
 
-                // remove the meshes
-                terrainObj.RemoveMesh(removeMesh);
-                
+                    int numVerts = objMeshes[k].vertexCount;
+                    // Add a copy of the mesh that should be removed. Move, rotate and scale it as it is in the game.
+                    terrainObj.RemoveMesh(new MoveMeshObj(startVert, numVerts));
+                }
             }
         }
 
@@ -838,6 +841,11 @@ public class TerrainController : MonoBehaviour {
 
         // Destory the city
         Destroy(curCity);
+    }
+
+    private void OnDestroy()
+    {
+        MyThreadPool.DestroyThreadPool();
     }
 
     // Structs that are used to visualize the biome parameters in the editor

@@ -22,9 +22,9 @@ public class Chunk : MonoBehaviour {
     // Chunk Details
     GameObject chunkPrefab;
     [HideInInspector]
-    int chunkSize;
+    public int chunkSize;
     [HideInInspector]
-    int tileSize;
+    public int tileSize;
 
     // List of 3D, 2D offsets that is used to calculate noise at different x,y,z and x,y
     List<Vector3> offset3D = new List<Vector3>();
@@ -55,6 +55,8 @@ public class Chunk : MonoBehaviour {
 
     public bool isActive;
 
+    public Renderer ren;
+
     // Use this for initialization
     void Start()
     {
@@ -66,19 +68,18 @@ public class Chunk : MonoBehaviour {
             GenerateTerrain();
         }
         GenerateTerrainMesh(false, false);
+
+        ren = GetComponent<Renderer>();
     }
 
     public void Disable()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        ren.enabled = false;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].gameObject.SetActive(false);
-            lock (terrainObjects[i])
-            {
-                terrainObjects[i].isEnabled = false;
-            }
+            terrainObjects[i].ren.enabled = false;
+            terrainObjects[i].isEnabled = false;
         }
 
         isActive = false;
@@ -87,13 +88,11 @@ public class Chunk : MonoBehaviour {
 
     public void Enable()
     {
-
-        GetComponent<MeshRenderer>().enabled = true;
+        ren.enabled = true;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].gameObject.SetActive(true);
-
+            terrainObjects[i].ren.enabled = true;
             terrainObjects[i].isEnabled = true;
 
         }
@@ -376,13 +375,13 @@ public class Chunk : MonoBehaviour {
         down = down - curPos;
 
         // Determine the normal
-        Vector3 normLeftUp = Vector3.Cross(left, up).normalized;
-        Vector3 normUpRight = Vector3.Cross(up, right).normalized;
-        Vector3 normRightDown = Vector3.Cross(right, down).normalized;
-        Vector3 normDownLeft = Vector3.Cross(down, left).normalized;
+        Vector3 normLeftUp = Vector3.Cross(left, up);
+        Vector3 normUpRight = Vector3.Cross(up, right);
+        Vector3 normRightDown = Vector3.Cross(right, down);
+        Vector3 normDownLeft = Vector3.Cross(down, left);
 
         // Determine the average normal
-        Vector3 normal = (normLeftUp + normUpRight + normRightDown + normDownLeft).normalized;
+        Vector3 normal = (normLeftUp + normUpRight + normRightDown + normDownLeft);
 
         // Add it to the list
         norm.Add(normal);
@@ -434,10 +433,10 @@ public class Chunk : MonoBehaviour {
         else
         {
             // Set mesh
-            mesh.vertices = vert.ToArray();
-            mesh.triangles = tri.ToArray();
-            mesh.uv = uv.ToArray();
-            mesh.normals = norm.ToArray();
+            mesh.SetVertices(vert);
+            mesh.SetTriangles(tri, 0);
+            mesh.SetUVs(0, uv);
+            mesh.SetNormals(norm);
 
         }
 
