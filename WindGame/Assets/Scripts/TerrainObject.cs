@@ -21,6 +21,7 @@ public class TerrainObject : MonoBehaviour {
     Mesh thisMesh;
     AnimationParameters thisAnimationParameters;
     Vector3[] currentVertices;
+    bool updateCurrentVertices;
     List<Mesh> nonCombinedMesh = new List<Mesh>();
     Mesh result;
     public bool isEnabled = true;
@@ -237,8 +238,7 @@ public class TerrainObject : MonoBehaviour {
     void MoveMesh(object args)
     {
         MoveMeshObj removeObj = (MoveMeshObj)args;
-        lock (verticesLocker)
-        {
+
             
             // Vertices
             if (thisAnimationParameters != null)
@@ -250,29 +250,34 @@ public class TerrainObject : MonoBehaviour {
 
             for (int i = 0; i < currentVertices.Length; i++)
             {
-                if (Vector3.Distance(currentVertices[i], firstVert) < 0.001)
+                if (Vector3.Distance(currentVertices[i], firstVert) < 0.01f)
                 {
                     minVertPos = i;
                     break;
                 }
             }
 
+
             for (int i = 0; i < removeObj.totalVert; i++)
             {
-                currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
+                lock(currentVertices)
+                    currentVertices[minVertPos + i] += new Vector3(0, 10000, 0);
             }
 
             if (thisAnimationParameters != null)
             {
-                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
-                }
             
-        }
+                TreeAnimationController.instance.meshVertices[animationNumber] = currentVertices;
+            }
+            
+        
+
+        updateCurrentVertices = true;
     }
 
     public IEnumerator RemoveObject()
     {
-
+        List<Task> tasks = new List<Task>();
         count = 0;
         while (true)
         {
@@ -281,22 +286,30 @@ public class TerrainObject : MonoBehaviour {
                 yield return null;
             }
 
-            if (removeList.Count > 0)
+            while (removeList.Count > 0)
             {
 
 
                 object args = removeList[0];
 
-                MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium);
+                tasks.Add(MyThreadPool.AddActionToQueue(MoveMesh, args, TaskPriority.medium));
                 removeList.RemoveAt(0);
             }
 
+            for(int i = 0; i < tasks.Count;i++)
+            {
+                while (!tasks[i].isDone)
+                    yield return null;
+            }
 
-            if (thisAnimationParameters == null && currentVertices != null)
+            if (thisAnimationParameters == null && currentVertices != null && updateCurrentVertices)
+            {
                 GetComponent<MeshFilter>().mesh.vertices = currentVertices;
+                updateCurrentVertices = false;
+            }
             
 
-            if (count++ > 10)
+            if (count++ > 1)
             {
                 yield return null;
                 count = 0;

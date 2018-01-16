@@ -88,7 +88,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biome: 0
   objectNR: 0
-  vertexMax: 65000
+  vertices: []
+  vertexMax: 10000
   verticesNow: 0
   isFull: 0
   hasReloaded: 0
@@ -96,6 +97,7 @@ MonoBehaviour:
   animationNumber: 0
   isEmpty: 1
   isEnabled: 0
+  ren: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

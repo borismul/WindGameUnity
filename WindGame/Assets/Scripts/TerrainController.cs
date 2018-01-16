@@ -678,7 +678,6 @@ public class TerrainController : MonoBehaviour {
                     // Add a copy of the mesh that should be removed. Move, rotate and scale it as it is in the game.
                     terrainObj.RemoveMesh(new MoveMeshObj(startVert, numVerts));
                 }
-                
             }
         }
 
