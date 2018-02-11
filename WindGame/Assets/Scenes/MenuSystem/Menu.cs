@@ -21,11 +21,11 @@ public abstract class Menu<T> : Menu where T : Menu<T>
     protected static void Open()
     {
         if (Instance == null)
-            MenuManager.Instance.CreateInstance<T>();
+            PersianMenuManager.Instance.CreateInstance<T>();
         else
             Instance.gameObject.SetActive(true);
 
-        MenuManager.Instance.OpenMenu(Instance);
+        PersianMenuManager.Instance.OpenMenu(Instance);
     }
 
     protected static void Close()
@@ -36,7 +36,7 @@ public abstract class Menu<T> : Menu where T : Menu<T>
             return;
         }
 
-        MenuManager.Instance.CloseMenu(Instance);
+        PersianMenuManager.Instance.CloseMenu(Instance);
     }
 
     public override void OnBackPressed()

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Threading;
 
-public class TileInfomationMenu : MonoBehaviour {
+public class TileInfomationMenu : SimpleMenu<TileInfomationMenu>
+{
 
     public Text biome;
     public Text occupant;

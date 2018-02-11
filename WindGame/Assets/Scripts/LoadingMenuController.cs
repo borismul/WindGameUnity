@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class LoadingMenuController : MonoBehaviour
+public class LoadingMenuController : SimpleMenu<LoadingMenuController>
 {
     public Text loadingText;
 
