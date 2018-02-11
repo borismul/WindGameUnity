@@ -826,7 +826,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 114000012863794868, guid: b95d6d745f99cc84f958b5e6ec711e7e,
     type: 2}
-  buildMenu: {fileID: 0}
+  buildMenu: {fileID: 114068446240341810, guid: 7ea41180b80a2e141bc944093db77811,
+    type: 2}
   loadMenu: {fileID: 114000010058638984, guid: 90a7cf7ac90cf7043ab060a38fe62910, type: 2}
   tileMenu: {fileID: 114000010143139358, guid: 57c9c82ef7d0d3647a4915db1f537ea0, type: 2}
   mainUI: {fileID: 114000012827077702, guid: 51a78a06547c8ab42a811cdfa863288d, type: 2}
