@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildMenu : SimpleMenu<BuildMenu>
-{
+//public class BuildMenu : SimpleMenu<BuildMenu>
+//{
 
 
-}
+//}
