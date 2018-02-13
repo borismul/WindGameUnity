@@ -131,6 +131,9 @@ public class CameraController : MonoBehaviour
         targetPos = new Vector3(terrain.width/2, transform.position.y - camHeight + maxHeight, terrain.length/2 - terrain.tileSize * 5);
         camScrollLerpSet = camLerpScrollStart;
         setStartPos = true;
+
+        LoadingMenuController.Hide();
+        UIResourcesManager.Show();
     }
 
     void CheckStart()

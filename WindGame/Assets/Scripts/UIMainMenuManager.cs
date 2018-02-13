@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class UIMainMenuManager : MonoBehaviour {
+public class UIMainMenuManager : SimpleMenu<UIMainMenuManager>
+{
     public Text objectivesValue;
 
     public Button restartButton;

@@ -44,8 +44,9 @@ public class WorldController : ScriptableObject
     public void ResetTempChunks()
     {
         foreach (Chunk chunk in tempChunks)
+        {
             chunk.GenerateTerrainMesh(true, true);
-
+        }
         tempChunks.Clear();
     }
 
@@ -193,7 +194,6 @@ public class WorldController : ScriptableObject
 
         if (pos.y <= TerrainController.thisTerrainController.waterLevel)
             return false;
-
         float lowPoint = pos.y;
         float highPoint = pos.y;
         bool heighSet = false;
@@ -217,8 +217,10 @@ public class WorldController : ScriptableObject
 
         }
         if ((highPoint - lowPoint > 40 || lowPoint < TerrainController.thisTerrainController.waterLevel) && heighSet)
+        {
+            Debug.Log("done");
             return false;
-
+        }
         if (BuildingHeight(pos, size * scale) == -1)
             return false;
 

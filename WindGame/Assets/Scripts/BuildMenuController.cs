@@ -81,11 +81,13 @@ public class BuildMenuController : MonoBehaviour
 
     bool canCancel;
 
-    WorldController world;
+    public WorldController world;
 
     float mouseX;
 
     public AudioClip doef;
+
+    bool inBuildMode;
 
     void OnEnable()
     {
@@ -118,7 +120,7 @@ public class BuildMenuController : MonoBehaviour
         ClickOutside();
 
         BuildPriceColorUpdate();
-        if (UIScript.GetInstance().GetInBuildMode())
+        if (inBuildMode)
         {
             UpdateSelectedPosition();
         }
@@ -144,8 +146,7 @@ public class BuildMenuController : MonoBehaviour
             UIScript.GetInstance().SetInBuildMode(false);
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
             instantHere.SetActive(false);
-            //UIScript.GetInstance().CloseBuildMenu();
-            BuildMenu.Instance.OnBackPressed();
+            BuildMenu.Hide();
         }
     }
 
@@ -366,7 +367,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 0;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
         infoCamera.enabled = false;
-        UIScript.GetInstance().SetInBuildMode(true);
+        inBuildMode = true;
 
         originalMaterial.Clear();
         foreach (Renderer ren in curInstantiated.GetComponentsInChildren<Renderer>())
@@ -388,7 +389,7 @@ public class BuildMenuController : MonoBehaviour
         GetComponentInChildren<CanvasGroup>().alpha = 1;
         GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
         infoCamera.enabled = true;
-        UIScript.GetInstance().SetInBuildMode(false);
+        inBuildMode = false;
         curInstantiated = (GameObject)Instantiate(curSelected);
         curInstantiated.transform.position = instantHere.transform.position;
         curInstantiated.transform.SetParent(instantHere.transform);
@@ -486,9 +487,9 @@ public class BuildMenuController : MonoBehaviour
             BuildNow(plantGrid, plantPos); // Run the build function
             infoCamera.enabled = false;
             curSelected = null;
-            UIScript.GetInstance().SetInBuildMode(false);
+            inBuildMode = false;
             instantHere.SetActive(false);
-            gameObject.transform.parent.gameObject.SetActive(false);
+            BuildMenu.Hide();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

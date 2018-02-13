@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class UIResourcesManager : MonoBehaviour {    
+public class UIResourcesManager : SimpleMenu<UIResourcesManager>
+{    
 
     public Text capitalText;
     //public Text publicAcceptanceText;
@@ -66,7 +67,7 @@ public class UIResourcesManager : MonoBehaviour {
 
     void BuildButton()
     {
-        UIScript.GetInstance().BuildMenu();
+        BuildMenu.Show();
     }
 
     void InfoButton()

@@ -64,10 +64,10 @@ public class CityController : MonoBehaviour {
 
     }
 
-    private void FixedUpdate()
-    {
-        currentMaxHouses += 1;
-    }
+    //private void FixedUpdate()
+    //{
+    //    currentMaxHouses += 1;
+    //}
 
     void UpdateCity()
     {
