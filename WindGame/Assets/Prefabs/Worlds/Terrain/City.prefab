@@ -42,23 +42,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildings:
-  - prefab: {fileID: 1746641527041422, guid: 7b035d0d5e303cb40bbcd1780753f890, type: 2}
+  - prefabs:
+    - {fileID: 1769470624815160, guid: 92a46158df8e15e4eac2fb5c3a1bccf6, type: 2}
+    - {fileID: 1761253880874678, guid: 79f6cdf1183dbf84a8d90a2cbb0b60cc, type: 2}
+    - {fileID: 1903548741576564, guid: e1ede131a5afe674781f334031e8af0a, type: 2}
+    - {fileID: 1826961202182624, guid: 015bcdd6d939d56479a484b033e2149a, type: 2}
     scale: 2
-  - prefab: {fileID: 1529658029489830, guid: b653fb6ec19e0634ba49001dc43da624, type: 2}
-    scale: 2
-  - prefab: {fileID: 1851315401010796, guid: 9665ca01b65dc2c43ab8c651c0f15b06, type: 2}
-    scale: 2
-  - prefab: {fileID: 1428240636555000, guid: 90dd445794569a04abf0cd6a34e218e8, type: 2}
-    scale: 2
-  - prefab: {fileID: 1578193929822716, guid: 8b060626bcdbfde418759f53e97823e4, type: 2}
-    scale: 2
-  - prefab: {fileID: 1872626206622632, guid: db52ebe7814ca0e419757d212b15ca48, type: 2}
-    scale: 2
-  - prefab: {fileID: 1330240308644488, guid: 67a9f016ef12e4a4891f2ef636054a2c, type: 2}
-    scale: 2
-  - prefab: {fileID: 1834140433301692, guid: 8f2799446e5911b40abbc768854194c8, type: 2}
-    scale: 2
-  - prefab: {fileID: 1813525555852460, guid: fcba7962079be7945b704fc2fea9155d, type: 2}
+  - prefabs:
+    - {fileID: 1554094802592606, guid: 115776e3ade316c4a91f9f6015651e55, type: 2}
+    - {fileID: 1816038293275646, guid: e1384cfca3b0ce947824871b94df3196, type: 2}
+    - {fileID: 1697820651112766, guid: 9adb612cd9648b947acc34ee69507e65, type: 2}
+    - {fileID: 1998977620365246, guid: a117c3e81ef670e40b686e93c00f260e, type: 2}
     scale: 2
   minLocX: 0.5
   maxLocX: 0.5
