@@ -121,10 +121,6 @@ public class PersianMenuManager : MonoBehaviour
 
     private void Update()
     {
-        // Back button on Android
-        if (Input.GetKeyDown(KeyCode.Escape) && menuStack.Count > 0)
-        {
-            menuStack.Peek().OnBackPressed();
-        }
+
     }
 }

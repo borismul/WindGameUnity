@@ -44,6 +44,7 @@ public class TileInfomationMenu : SimpleMenu<TileInfomationMenu>
     void ChangeWindHeight(float value)
     {
         WindVisualizer.instance.height = value;
+        WindVisualizer.instance.Redo();
         sliderValue.text = Mathf.RoundToInt(value).ToString();
     }
 
@@ -100,7 +101,7 @@ public class TileInfomationMenu : SimpleMenu<TileInfomationMenu>
 
     void CloseMenu()
     {
-        UIScript.GetInstance().CloseTileMenu();
+        TileInfomationMenu.Close();
         WorldInteractionController.GetInstance().SetInInfoMode(false);
     }
 

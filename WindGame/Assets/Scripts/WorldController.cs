@@ -21,6 +21,11 @@ public class WorldController : ScriptableObject
 
     List<Chunk> tempChunks = new List<Chunk>();
 
+    public void Reset()
+    {
+        tempChunks = new List<Chunk>();
+    }
+
     // Builder function, some class wants the world to add an object
     public void AddTurbine(GameObject t, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
@@ -119,20 +124,23 @@ public class WorldController : ScriptableObject
         Destroy(turbineController.gameObject);
     }
 
-    public void AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
+    public GameObject AddOther(GameObject something, Vector3 pos, Quaternion rotation, float scale, GridTileOccupant.OccupantType type, Transform parent)
     {
         float diameter = something.GetComponent<SizeController>().diameter;
         pos.y = BuildingHeight(pos, diameter * scale);
+
         GameObject t = (GameObject)Instantiate(something,pos,rotation, parent);
         t.transform.localScale = Vector3.one * scale;
 
         AddToGridTiles(something, pos, diameter * scale, type);
-        EqualTerrain(pos, diameter * scale, false);
+        EqualTerrain(pos + Vector3.up*0.5f, diameter * scale, false);
 
         if (TileInfomationMenu.instance != null && TileInfomationMenu.instance.toggle.isOn)
         {
             WindVisualizer.instance.UpdateChunks();
         }
+
+        return t;
     }
 
     public bool BuildingNearby(Vector3 pos, float diameter)
@@ -185,15 +193,18 @@ public class WorldController : ScriptableObject
     {
         List<GridTile> gridtiles = GridTile.FindGridTilesAround(pos, size + 60);
         GridTile thisTile = GridTile.FindClosestGridTile(pos);
-        Collider[] colliders = Physics.OverlapBox(buildObj.GetComponentInChildren<BoxCollider>().center * scale + pos, buildObj.GetComponentInChildren<BoxCollider>().size / 2 * scale, rotation, notTerrain);
+        Collider[] colliders = Physics.OverlapBox(buildObj.GetComponent<BoxCollider>().center * scale + pos, buildObj.GetComponent<BoxCollider>().size / 2 * scale, rotation, notTerrain);
 
         if (colliders.Length > 1)
-            return false;
-        else if (colliders.Length == 1 && colliders[0].gameObject.GetInstanceID() != buildObj.GetInstanceID())
+
             return false;
 
+        else if (colliders.Length == 1 && colliders[0].gameObject.GetInstanceID() != buildObj.gameObject.GetInstanceID())
+            return false;
+        
         if (pos.y <= TerrainController.thisTerrainController.waterLevel)
             return false;
+        
         float lowPoint = pos.y;
         float highPoint = pos.y;
         bool heighSet = false;
@@ -218,7 +229,7 @@ public class WorldController : ScriptableObject
         }
         if ((highPoint - lowPoint > 40 || lowPoint < TerrainController.thisTerrainController.waterLevel) && heighSet)
         {
-            Debug.Log("done");
+
             return false;
         }
         if (BuildingHeight(pos, size * scale) == -1)
@@ -278,6 +289,8 @@ public class WorldController : ScriptableObject
             foreach (GridTile tile in TerrainController.thisTerrainController.world)
             {
 
+                if (tile == null)
+                    continue;
                 if (Mathf.Abs(tile.position.x - mapMiddle.x) > width * TerrainController.thisTerrainController.tileSize ||
                     Mathf.Abs(tile.position.z - mapMiddle.z) > length * TerrainController.thisTerrainController.tileSize)
                     tile.isOutsideBorder = true;

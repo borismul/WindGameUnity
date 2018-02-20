@@ -86,6 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   biome: 0
   objectNR: 0
+  vertices: []
   vertexMax: 65000
   verticesNow: 0
   isFull: 0
@@ -94,6 +95,7 @@ MonoBehaviour:
   animationNumber: 0
   isEmpty: 1
   isEnabled: 1
+  ren: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -116,5 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893800648c041af49b99249ebaa35097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectHeight: 0.5
+  objectHeight: 5
   objectDensity: 0.1

@@ -38,6 +38,9 @@ public class CityController : MonoBehaviour {
     int currentMaxHouses = 30;
     int currentPlacedHouses = 0;
     int counter;
+
+    List<CityBuildingManager> curBuildings = new List<CityBuildingManager>();
+
     // Use this for initialization
     void Start ()
     {
@@ -64,10 +67,10 @@ public class CityController : MonoBehaviour {
 
     }
 
-    //private void FixedUpdate()
-    //{
-    //    currentMaxHouses += 1;
-    //}
+    private void FixedUpdate()
+    {
+        currentMaxHouses += 1;
+    }
 
     void UpdateCity()
     {
@@ -79,8 +82,7 @@ public class CityController : MonoBehaviour {
     IEnumerator BuildStartCity()
     {
         List<GridTile> gridTiles = GridTile.FindAnnulusAround(centerTile.position, currentRadius, 3);
-        float timer = Time.realtimeSinceStartup;
-        float[] possibleOrientations = { 0, 90, 180, 270 }; // Mainly only cardinal directions
+         // Mainly only cardinal directions
 
         while (true)
         {
@@ -89,45 +91,14 @@ public class CityController : MonoBehaviour {
                 // Get the grid tiles to build on
                 foreach (GridTile tile in gridTiles)
                 {
-                    // Pick a type of building randomly
-                    CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
-
-
-                    float diameter = buildObject.prefab.GetComponent<SizeController>().diameter;
-
-                    // Rotation quaternion for the building orientation
-                    Quaternion rotation;
-
-                    // List of possible orientations
-
-                    // Get an angle from the possible orientation
-                    float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
-
-                    // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
-                    angle += (float)rand.NextDouble() * 10;
-
-                    // Create the rotation quaternion
-                    rotation = Quaternion.AngleAxis(angle, Vector3.up);
-                    if (world.CanBuild(tile.position, diameter, buildObject.prefab, buildObject.scale, rotation, true))
-                    {
-                        // Place the building
-                        world.AddOther(buildObject.prefab, tile.position, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, transform);
-                        currentPlacedHouses++;
-                    }
-
+                    if (Random.Range(0f, 1f) > 0.5f)
+                        BuildBuilding(tile);
+                    else
+                        UpgradeBuilding();
                     if (currentPlacedHouses >= currentMaxHouses)
                         break;
                     yield return null;
-
-                    if (Time.realtimeSinceStartup - timer > 1 / 60f)
-                    {
-                        timer = Time.realtimeSinceStartup;
-                    }
                 }
-
-
-                if (currentPlacedHouses >= currentMaxHouses)
-                    break;
 
                 yield return null;
 
@@ -149,10 +120,85 @@ public class CityController : MonoBehaviour {
 
     }
 
-    [System.Serializable]
-    public struct CityObject
+    void BuildBuilding(GridTile tile)
     {
-        public GameObject prefab;
-        public float scale;
+        // Pick a type of building randomly
+        CityObject buildObject = buildings[rand.Next(0, buildings.Length)];
+
+
+        float diameter = buildObject.prefabs[0].GetComponent<SizeController>().diameter;
+
+        // Rotation quaternion for the building orientation
+        Quaternion rotation;
+
+        // List of possible orientations
+        float[] possibleOrientations = { 0, 90, 180, 270 };
+
+        // Get an angle from the possible orientation
+        float angle = possibleOrientations[rand.Next(0, possibleOrientations.Length)];
+
+        // Make a maximum of 10 degrees offset from the cardinal direction (purely for making it more visibly appealing)
+        //angle += (float)rand.NextDouble() * 10;
+
+        // Create the rotation quaternion
+        rotation = Quaternion.AngleAxis(angle, Vector3.up);
+        if (world.CanBuild(tile.position, diameter, buildObject.prefabs[0], buildObject.scale, rotation, true))
+        {
+            GameObject parentObj = new GameObject();
+            parentObj.transform.parent = transform;
+            CityBuildingManager parentController = parentObj.AddComponent<CityBuildingManager>();
+            parentController.cityObject = buildObject;
+            // Place the building
+            GameObject cityObj = world.AddOther(buildObject.prefabs[0], tile.position + Vector3.down*0.1f, rotation, buildObject.scale, GridTileOccupant.OccupantType.City, parentObj.transform);
+            parentController.curObject = cityObj;
+
+            curBuildings.Add(parentController);
+
+            currentPlacedHouses++;
+        }
+
+
     }
+
+    void UpgradeBuilding()
+    {
+        if (curBuildings.Count == 0)
+            return;
+
+        int index = RouletteSelection();
+        CityBuildingManager upgBuilding = curBuildings[index];
+        curBuildings.RemoveAt(index);
+        upgBuilding.Upgrade();
+        curBuildings.Add(upgBuilding);
+    }
+
+    int RouletteSelection()
+    {
+        int n = curBuildings.Count;
+        int index = Mathf.FloorToInt(Random.Range(0,1f) * (n * (n + 1) / 2));
+        int temp = 0;
+
+
+        for (int i = n-1; i >= 0; i--)
+        {
+            temp = temp + (n - (i - 1));
+
+
+            if (index < temp)
+                return i;
+            
+        }
+
+        return 0;
+
+    }
+
+
+}
+
+[System.Serializable]
+public struct CityObject
+{
+    public GameObject[] prefabs;
+    public float scale;
 }

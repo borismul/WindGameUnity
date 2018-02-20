@@ -25,22 +25,22 @@ MonoBehaviour:
         motionVectorsResolution: 24
         motionVectorsAmplitude: 64
   fog:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       excludeSkybox: 1
   antialiasing:
     m_Enabled: 1
     m_Settings:
-      method: 1
+      method: 0
       fxaaSettings:
-        preset: 4
+        preset: 2
       taaSettings:
         jitterSpread: 0.75
         sharpen: 0.3
         stationaryBlending: 0.95
         motionBlending: 0.85
   ambientOcclusion:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       intensity: 0.24
       radius: 7.47
@@ -69,7 +69,7 @@ MonoBehaviour:
       screenEdgeMask:
         intensity: 0.03
   depthOfField:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       focusDistance: 0.5
       aperture: 1.1
@@ -79,8 +79,8 @@ MonoBehaviour:
   motionBlur:
     m_Enabled: 1
     m_Settings:
-      shutterAngle: 270
-      sampleCount: 15
+      shutterAngle: 200
+      sampleCount: 10
       frameBlending: 0
   eyeAdaptation:
     m_Enabled: 0
@@ -100,9 +100,9 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       bloom:
-        intensity: 6.93
-        threshold: 1.62
-        softKnee: 0.78
+        intensity: 0.58
+        threshold: 0.92
+        softKnee: 0.43
         radius: 2.33
         antiFlicker: 1
       lensDirt:
@@ -120,7 +120,7 @@ MonoBehaviour:
         neutralWhiteLevel: 8.7
         neutralWhiteClip: 5.55
       basic:
-        postExposure: 0.46
+        postExposure: -0.2
         temperature: 10
         tint: 14
         hueShift: 0

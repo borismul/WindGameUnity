@@ -6,11 +6,13 @@ public class GridNode
 {
     public Vector3 position;
     public bool heighIsSet;
+    public int uvPos;
 
-    public GridNode(Vector3 position)
+    public GridNode(Vector3 position, int uvPos)
     {
         this.position = position;
         heighIsSet = false;
+        this.uvPos = uvPos;
     }
 
     public static GridNode FindGridNode(Vector3 position)

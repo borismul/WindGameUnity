@@ -87,7 +87,7 @@ public class BuildMenuController : MonoBehaviour
 
     public AudioClip doef;
 
-    bool inBuildMode;
+    public static bool inBuildMode;
 
     void OnEnable()
     {
@@ -143,7 +143,7 @@ public class BuildMenuController : MonoBehaviour
             Destroy(curInstantiated);
             infoCamera.enabled = false;
             curSelected = null;
-            UIScript.GetInstance().SetInBuildMode(false);
+            inBuildMode = false;
             Camera.main.GetComponent<CameraController>().SetHaveControl(true);
             instantHere.SetActive(false);
             BuildMenu.Hide();
@@ -384,6 +384,7 @@ public class BuildMenuController : MonoBehaviour
 
     void BuildMode2BuildMenu()
     {
+        print("done");
         Destroy(curInstantiated);
         canCancel = true;
         GetComponentInChildren<CanvasGroup>().alpha = 1;
@@ -521,6 +522,10 @@ public class BuildMenuController : MonoBehaviour
         {
             world.AddOther(curSelected, plantPos, curInstantiated.transform.rotation, curInstantiated.GetComponent<SizeController>().desiredScale, GridTileOccupant.OccupantType.Other, TerrainController.thisTerrainController.transform);
             Destroy(curInstantiated);
+            WindVaneController windVaneController = curInstantiated.GetComponent<WindVaneController>();
+
+            if (windVaneController != null)
+                windVaneController.enabled = true;
         }
         GameResources.Buy(curInstantiated.GetComponent<PriceController>().price);
         curInstantiated = null;
@@ -530,6 +535,8 @@ public class BuildMenuController : MonoBehaviour
         AudioSource doefAudioSource = newObject.AddComponent<AudioSource>();
         doefAudioSource.clip = doef;
         doefAudioSource.Play();
+        inBuildMode = false;
+
     }
 
     public void OnMouseEnter()

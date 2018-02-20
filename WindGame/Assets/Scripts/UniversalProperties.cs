@@ -66,6 +66,7 @@ public class UniversalProperties : MonoBehaviour {
     public GameObject baseTurbineObject;                    // Turbine object without the base to make it heigher
     public GameObject turbineHouse;
     public GameObject turbineBase;
+    public GameObject projector;
 
     void Awake()
     {

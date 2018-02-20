@@ -35,7 +35,7 @@ public class UIResourcesManager : SimpleMenu<UIResourcesManager>
         //speedButton10x.onClick.AddListener(SetSpeed10x);
         //menuButton.onClick.AddListener(Menu);
         buildButton.onClick.AddListener(BuildButton);
-        //infoButton.onClick.AddListener(InfoButton);
+        infoButton.onClick.AddListener(InfoButton);
     }
 	
 	// Update is called once per frame
@@ -72,7 +72,7 @@ public class UIResourcesManager : SimpleMenu<UIResourcesManager>
 
     void InfoButton()
     {
-        UIScript.GetInstance().OpenTileMenu();
+        TileInfomationMenu.Open();
 
     }
 

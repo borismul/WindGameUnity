@@ -18,6 +18,7 @@ public class TreeAnimationController : MonoBehaviour
 
     public static TreeAnimationController instance;
     bool initialized = false;
+    public bool runAnimation = true;
 
     public float shakeSpeed = 0.6f;
     void OnEnable()
@@ -55,6 +56,10 @@ public class TreeAnimationController : MonoBehaviour
                 if ((tasks[i] == null || tasks[i].isDone) && treeObjects.Count != 0)
                     tasks[i] = MyThreadPool.AddActionToQueue(AnimatePart, i, TaskPriority.low);
             }
+
+            while(!runAnimation)
+                yield return null;
+
             yield return null;
 
             for (int i = 0; i < meshVertices.Count; i++)

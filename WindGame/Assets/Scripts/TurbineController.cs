@@ -20,6 +20,8 @@ public class TurbineController : MonoBehaviour {
 
     [SerializeField]
     GameObject nacelle;     // Nacelle GameObject (Contains the Blades + Hub as a child)
+  
+    public GameObject selectorObj;
 
     float rotationSpeed;    // The current rotational speed of the blades
     float direction;        // Direction in which the turbine is pointed

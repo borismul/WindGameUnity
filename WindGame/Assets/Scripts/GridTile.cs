@@ -13,6 +13,7 @@ public class GridTile{
     public bool canSeeWind;
     public List<GridNode> gridNodes;
     public Chunk chunk;
+    public List<GridTile> windEffectTiles;
 
     public GridTile(Vector3 position, Chunk chunk, List<GridNode> gridNodes, float biome, bool isUnderWater, bool isOutsideBorder, List<GridTileOccupant> occupants)
     {
@@ -41,8 +42,8 @@ public class GridTile{
         GridTile[,] world = TerrainController.thisTerrainController.world;
         int tileSize = TerrainController.thisTerrainController.tileSize;
 
-        int x = Mathf.FloorToInt((point.x + tileSize / 2) / tileSize);
-        int z = Mathf.FloorToInt((point.z + tileSize / 2) / tileSize);
+        int x = (int)((point.x + tileSize / 2) / tileSize);
+        int z = (int)((point.z + tileSize / 2) / tileSize);
         if (world == null)
             return null;
 
@@ -124,5 +125,10 @@ public class GridTile{
         return gridTiles;
     }
 
+    public void SaveWindTiles()
+    {
+        if(!isOutsideBorder)
+            windEffectTiles =  FindGridTilesAround(position, 100);
+    }
 
 }

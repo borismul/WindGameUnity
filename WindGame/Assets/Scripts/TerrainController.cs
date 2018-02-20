@@ -72,6 +72,9 @@ public class TerrainController : MonoBehaviour {
     [HideInInspector]
     public bool levelLoaded = false;
 
+    // WorldController
+    public WorldController worldController;
+
     // The world, containing all gridtiles in matrix
     public GridTile[,] world;
     public GridNode[,] worldNodes;
@@ -81,6 +84,8 @@ public class TerrainController : MonoBehaviour {
     public List<Chunk> chunks = new List<Chunk>();
     [HideInInspector]
     public List<WaterChunk> waterChunks = new List<WaterChunk>();
+    [HideInInspector]
+    public List<WindChunk> windChunks = new List<WindChunk>();
 
     // The city that is being spawned (To be able to destroy it)
     GameObject curCity;
@@ -104,15 +109,17 @@ public class TerrainController : MonoBehaviour {
     int tempCount;
     List<Vector3> vertNew = new List<Vector3>();
 
-
     void Awake()
     {
+        Application.runInBackground = true;
         int poolThreads = Mathf.Min(3, Mathf.Max(SystemInfo.processorCount - 1, 1));
         MyThreadPool.StartThreadPool(poolThreads);
 
         // Set this to the terraincontroller
         thisTerrainController = this;
-}
+
+        worldController.Reset();
+    }
 
     void Start()
     {
@@ -171,9 +178,23 @@ public class TerrainController : MonoBehaviour {
             }
         }
 
+        foreach (WindChunk chunk in windChunks)
+        {
+
+            if (chunk.ren.IsVisibleFrom(Camera.main))
+            {
+                //chunk.gameObject.SetActive(true);
+                //chunk.isEnabled = true;
+
+            }
+            else
+            {
+                //chunk.gameObject.SetActive(false);
+                //chunk.isEnabled = false;
+            }
+        }
+
     }
-
-
 
     // This method is used if the build button in the map editor is run
     public void BuildButton()
@@ -209,7 +230,10 @@ public class TerrainController : MonoBehaviour {
         light.GetComponent<Light>().shadows = LightShadows.Soft;
         light.transform.rotation = Quaternion.Euler(45, 0, 0);
         light.name = "Sun";
-        light.GetComponent<Light>().shadowNormalBias = 1.2f;
+        light.GetComponent<Light>().shadowNormalBias = 0.94f;
+        light.GetComponent<Light>().shadowBias = 0.433f;
+        light.GetComponent<Light>().shadowNearPlane = 0.86f;
+
     }
 
     // Method creates meshes of all objects per biome
@@ -290,12 +314,10 @@ public class TerrainController : MonoBehaviour {
     // Create the water chunks by instantiating them at the desired positions
     void BuildWater()
     {
-        GameObject waterUnderlayer = (GameObject)Instantiate(waterUnderLayerPrefab, new Vector3(length / 2, -60f, width / 2), Quaternion.identity, transform);
-        waterUnderlayer.transform.localScale = new Vector3(3 * length / 10, 1200, 3 * width / 10);
         // Loop though all water chunks that need to be instantiated
-        for (int i = -length / waterChunkSize; i < length * 2 / waterChunkSize; i++)
+        for (int i = 0; i < length / waterChunkSize; i++)
         {
-            for (int j = -width / waterChunkSize; j < width * 2 / waterChunkSize; j++)
+            for (int j = 0; j < width / waterChunkSize; j++)
             {
                 // Instantiate them at the right positions
                 GameObject chunk = (GameObject)Instantiate(waterChunkPrefab, new Vector3(i * waterChunkSize, 0, j * waterChunkSize), Quaternion.identity);
@@ -448,11 +470,25 @@ public class TerrainController : MonoBehaviour {
         else if (SceneManager.GetActiveScene().name == "6_NorthSea")
             WorldController.SetBorders(new Vector3(width / 2 , 0, length / 2), 30, 20, 50, 30, false);
 
+        yield return StartCoroutine(GetWindTiles());
+
         // When that is done the level loading is complete
         levelLoaded = true;
 
-        //UIScript.GetInstance().DisableLoadingScreen();
+    }
 
+    IEnumerator GetWindTiles()
+    {
+        for(int i = 0; i < chunks.Count; i++)
+        {
+            for(int j = 0; j < chunks[i].tiles.Count; j++)
+            {
+                chunks[i].tiles[j].SaveWindTiles();
+            }
+
+            if (i % 10 == 0)
+                yield return null;
+        }
     }
 
     // Method that generates an object on the terrain based on the inputs

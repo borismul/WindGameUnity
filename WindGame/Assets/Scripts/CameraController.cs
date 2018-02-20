@@ -133,7 +133,6 @@ public class CameraController : MonoBehaviour
         setStartPos = true;
 
         LoadingMenuController.Hide();
-        UIResourcesManager.Show();
     }
 
     void CheckStart()
@@ -145,6 +144,7 @@ public class CameraController : MonoBehaviour
             {
                 hasStarted = true;
                 haveControl = true;
+                UIResourcesManager.Show();
                 camScrollLerpSet = camLerpScroll;
             }
         }

@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DestroyWhenClosed: 1
-  DisableMenusUnderneath: 1
+  DisableMenusUnderneath: 0
   biome: {fileID: 114000011548741390}
   occupant: {fileID: 114000012993245812}
   position: {fileID: 114000012153644406}

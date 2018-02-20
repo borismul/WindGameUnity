@@ -29,6 +29,7 @@ public class Chunk : MonoBehaviour {
     // List of 3D, 2D offsets that is used to calculate noise at different x,y,z and x,y
     List<Vector3> offset3D = new List<Vector3>();
     List<Vector2> offset2D = new List<Vector2>();
+
     // Number of offsets to create
     int nOffset = 3;
 
@@ -74,11 +75,11 @@ public class Chunk : MonoBehaviour {
 
     public void Disable()
     {
-        ren.enabled = false;
+        //ren.enabled = false;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].ren.enabled = false;
+            //terrainObjects[i].ren.enabled = false;
             terrainObjects[i].isEnabled = false;
         }
 
@@ -88,11 +89,11 @@ public class Chunk : MonoBehaviour {
 
     public void Enable()
     {
-        ren.enabled = true;
+        //ren.enabled = true;
 
         for (int i = 0; i < terrainObjects.Count; i++)
         {
-            terrainObjects[i].ren.enabled = true;
+            //terrainObjects[i].ren.enabled = true;
             terrainObjects[i].isEnabled = true;
 
         }
@@ -217,7 +218,7 @@ public class Chunk : MonoBehaviour {
     }
 
     // Function generates a grid tile in the world 2d Array in TerrainController
-    void GenerateGridTile(List<Vector3> positions, float biome, int iPos, int jPos)
+    void GenerateGridTile(List<Vector3> positions, float biome, int iPos, int jPos, int[] uvPos)
     {
         int startI = Mathf.RoundToInt(transform.position.x / tileSize);
         int startK = Mathf.RoundToInt(transform.position.z / tileSize);
@@ -232,10 +233,9 @@ public class Chunk : MonoBehaviour {
             xAvg += positions[i].x;
             yAvg += positions[i].y;
             zAvg += positions[i].z;
-
             GridNode existingNode = GridNode.FindGridNode(positions[i] + transform.position);
             if (existingNode == null)
-                existingNode = new GridNode(positions[i] + transform.position);
+                existingNode = new GridNode(positions[i] + transform.position, uvPos[i]);
            
             worldPositions.Add(existingNode);
         }
@@ -319,8 +319,8 @@ public class Chunk : MonoBehaviour {
     // Calculate triangles and Generate Grid tiles
     void AddTrisAndGridTiles(int n, bool update)
     {
-        // Loop through each of the vertics in the vert list
-        for (int i = 0; i < vert.Count - (n - 3 + n - 2); i++)
+        // Loop through each of the vertices in the vert list
+        for (int i = 0; i < vert.Count - (2*n - 5); i++)
         {
             // Determine the row in which vertex of the lower part of the panel is located
             int rowL = Mathf.FloorToInt(i / (n - 3));
@@ -361,7 +361,7 @@ public class Chunk : MonoBehaviour {
 
             if (!update)
                 // Generate the grid tile
-                GenerateGridTile(positions, biomeMap[rowL, col], rowL, col);
+                GenerateGridTile(positions, biomeMap[rowL, col], rowL, col, new int[4] { BL, UL, UR, BR });
         }
     }
 

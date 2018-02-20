@@ -85,10 +85,34 @@ public class WorldInteractionController : MonoBehaviour
 
             WindVaneController windVaneController = hit.transform.GetComponentInParent<WindVaneController>();
 
-            if (windVaneController != null)
-                UIScript.GetInstance().OpenWindVaneMenu(windVaneController);
+            //if (windVaneController != null)
+            //    OpenWindVaneMenu(windVaneController);
         }
 
+    }
+
+    void CheckHighlight()
+    {
+        if (BuildMenuController.inBuildMode)
+            return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+
+            TurbineController turbineController = hit.transform.GetComponentInParent<TurbineController>();
+            if (turbineController != null)
+            {
+                turbineController.selectorObj.SetActive(true);
+                turbineController.selectorObj.GetComponent<Projector>().orthographicSize *= turbineController.GetComponent<SizeController>().desiredScale;
+            }
+
+            //if (windVaneController != null)
+            //    OpenWindVaneMenu(windVaneController);
+        }
     }
 
     void Update()
@@ -99,11 +123,13 @@ public class WorldInteractionController : MonoBehaviour
         if (inInfoMode)
             CheckSelectedTile();
 
-        //if (!UIScript.GetInstance().GetInBuildMode() || PointerInfo.overUIElement)
-        //{
-        //    CheckLeftClick();
-        //    GetComponent<MeshFilter>().mesh = highlighter;
-        //}
+        if (!BuildMenuController.inBuildMode || PointerInfo.overUIElement)
+        {
+            CheckLeftClick();
+            GetComponent<MeshFilter>().mesh = highlighter;
+        }
+
+        CheckHighlight();
     }
 
     public void SetInInfoMode(bool mode)

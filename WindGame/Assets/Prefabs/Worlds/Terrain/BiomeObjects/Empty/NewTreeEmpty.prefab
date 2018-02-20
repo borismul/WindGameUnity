@@ -132,5 +132,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893800648c041af49b99249ebaa35097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectHeight: 20
-  objectDensity: 0.025
+  objectHeight: 50
+  objectDensity: 0.2
